@@ -1,636 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Direktori UMKM Lokal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: "#718355",
-              secondary: "#87986A",
-              accent: "#97A97C",
-              light: "#B5C99A",
-              lighter: "#CFE1B9",
-              lightest: "#E9F5DB",
-            },
-          },
-        },
-      };
-    </script>
-  </head>
-  <body class="bg-lightest">
-    <!-- Navbar -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-      <div class="container mx-auto px-4 py-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-store text-primary text-2xl"></i>
-            <span class="text-2xl font-bold text-primary">UMKM Lokal</span>
-          </div>
-          <div class="hidden md:flex items-center space-x-6">
-            <a href="#home" class="text-primary hover:text-secondary transition"
-              >Beranda</a
-            >
-            <a
-              href="#directory"
-              class="text-primary hover:text-secondary transition"
-              >Direktori</a
-            >
-            <a
-              href="#about"
-              class="text-primary hover:text-secondary transition"
-              >Tentang</a
-            >
-            <a
-              href="#contact"
-              class="text-primary hover:text-secondary transition"
-              >Kontak</a
-            >
-          </div>
-          <button class="md:hidden text-primary text-2xl">
-            <i class="fas fa-bars"></i>
-          </button>
-        </div>
-      </div>
-    </nav>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Detail UMKM — Kopi Senja</title>
+  <meta name="description" content="Profil usaha Kopi Senja — Kedai kopi hangat dengan suasana nyaman di Bandung." />
 
-    <!-- Hero Section -->
-    <section id="home" class="bg-gradient-to-br from-lighter to-lightest py-20">
-      <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-6xl font-bold text-primary mb-6">
-          Temukan UMKM Lokal di Sekitar Anda
-        </h1>
-        <p class="text-lg md:text-xl text-secondary mb-8 max-w-2xl mx-auto">
-          Platform direktori digital untuk mendukung dan menemukan usaha lokal
-          dengan mudah
-        </p>
-        <a
-          href="#directory"
-          class="inline-block bg-primary text-white px-8 py-3 rounded-lg hover:bg-secondary transition shadow-lg"
-        >
-          Jelajahi UMKM
-        </a>
+  <style>
+    :root{
+      --accent:#16a34a;
+      --muted:#6b7280;
+      --card:#ffffff;
+      --bg:#f8fafc;
+      --maxw:1100px;
+      --radius:12px;
+      --shadow:0 6px 24px rgba(15,23,42,0.06);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#0f172a;
+    }
+    body{margin:0;background:var(--bg);padding:28px;display:flex;justify-content:center}
+    .container{width:100%;max-width:var(--maxw)}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .header{display:flex;gap:18px;padding:20px;align-items:center}
+    .logo{width:96px;height:96px;border-radius:12px;overflow:hidden;flex:0 0 96px}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .title h1{margin:0;font-size:20px}
+    .title p{margin:6px 0 0;color:var(--muted);font-size:14px}
+    .badge{background:#ecfdf5;color:#065f46;padding:6px 10px;border-radius:999px;font-weight:600;font-size:13px;margin-top:6px;display:inline-block}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:18px;padding:20px}
+    .left .section{background:var(--card);padding:16px;border-radius:10px;margin-bottom:14px}
+    .left h2{margin:0 0 10px;font-size:16px}
+    .desc{color:var(--muted);line-height:1.6}
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .gallery img{width:100%;height:100px;object-fit:cover;border-radius:8px;cursor:pointer}
+    .contacts{display:flex;flex-direction:column;gap:8px}
+    .contact-row{display:flex;align-items:center;gap:10px}
+    .contact-row a{color:var(--accent);text-decoration:none;font-weight:600}
+    .store-links a{padding:8px 10px;border-radius:8px;border:1px solid #e6eef2;text-decoration:none;color:#0f172a;font-size:14px;margin-right:6px}
+    .right .card{padding:16px;border-radius:10px;margin-bottom:14px}
+    .map-embed{width:100%;height:260px;border-radius:8px;overflow:hidden;border:1px solid #e6eef2}
+    .address{color:var(--muted);font-size:14px}
+    .socials a{display:inline-block;padding:8px 10px;border-radius:8px;border:1px solid #e6eef2;text-decoration:none;color:var(--muted);font-weight:600;margin-right:6px}
+    .btn{padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+    .btn-primary{background:var(--accent);color:white}
+    .btn-outline{background:white;border:1px solid #e6eef2}
+    .cta{display:flex;gap:8px;margin-top:12px}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center}
+    .modal.open{display:flex}
+    .modal img{max-width:90%;max-height:80vh;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="container">
+    <!-- Header -->
+    <section class="card header">
+      <div class="logo">
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200" alt="Logo Kopi Senja">
+      </div>
+      <div class="title">
+        <h1>Kopi Senja</h1>
+        <p>Kedai kopi hangat dengan suasana nyaman di Bandung</p>
+        <div class="badge">⭐ 4.8 • 860 ulasan</div>
+      </div>
+      <div>
+        <a class="btn btn-primary" href="https://tokopedia.com" target="_blank">Kunjungi Toko</a><br><br>
+        <a class="btn btn-outline" href="https://wa.me/6281234567890" target="_blank">Chat WhatsApp</a>
       </div>
     </section>
 
-    <!-- Directory Section -->
-    <section id="directory" class="py-16">
-      <div class="container mx-auto px-4">
-        <h2
-          class="text-3xl md:text-4xl font-bold text-primary text-center mb-12"
-        >
-          Direktori UMKM
-        </h2>
-
-        <!-- Search and Filter -->
-        <div class="max-w-4xl mx-auto mb-12">
-          <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex flex-col md:flex-row gap-4">
-              <div class="flex-1">
-                <div class="relative">
-                  <input
-                    type="text"
-                    id="searchInput"
-                    placeholder="Cari UMKM berdasarkan nama..."
-                    class="w-full px-4 py-3 pl-12 border-2 border-lighter rounded-lg focus:outline-none focus:border-primary"
-                  />
-                  <i
-                    class="fas fa-search absolute left-4 top-4 text-secondary"
-                  ></i>
-                </div>
-              </div>
-              <div class="md:w-64">
-                <select
-                  id="categoryFilter"
-                  class="w-full px-4 py-3 border-2 border-lighter rounded-lg focus:outline-none focus:border-primary"
-                >
-                  <option value="">Semua Kategori</option>
-                  <option value="makanan">Makanan</option>
-                  <option value="minuman">Minuman</option>
-                  <option value="jasa">Jasa</option>
-                  <option value="fashion">Fashion</option>
-                  <option value="kerajinan">Kerajinan</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- UMKM Grid -->
-        <div
-          id="umkmGrid"
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          <!-- UMKM Cards akan diisi oleh JavaScript -->
-        </div>
-
-        <!-- No Results Message -->
-        <div id="noResults" class="hidden text-center py-12">
-          <i class="fas fa-search text-6xl text-lighter mb-4"></i>
-          <p class="text-xl text-secondary">Tidak ada UMKM yang ditemukan</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="bg-white py-16">
-      <div class="container mx-auto px-4">
-        <div class="max-w-3xl mx-auto text-center">
-          <h2 class="text-3xl md:text-4xl font-bold text-primary mb-6">
-            Tentang Kami
-          </h2>
-          <p class="text-lg text-secondary mb-6">
-            Platform direktori digital yang memudahkan masyarakat menemukan dan
-            mendukung UMKM lokal di sekitar mereka. Kami percaya bahwa setiap
-            usaha kecil memiliki cerita unik yang layak untuk dikenal.
+    <section class="grid">
+      <!-- Kiri -->
+      <div class="left">
+        <div class="section">
+          <h2>Deskripsi Singkat</h2>
+          <p class="desc">
+            Kopi Senja adalah kedai kopi lokal yang menyajikan berbagai varian kopi Nusantara dengan cita rasa khas.
+            Kami menggunakan biji kopi pilihan dari petani lokal Jawa Barat. Suasana tempat dibuat hangat dan tenang,
+            cocok untuk bekerja, berbincang, atau sekadar menikmati sore hari.
           </p>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            <div class="text-center">
-              <div
-                class="bg-lightest rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4"
-              >
-                <i class="fas fa-map-marked-alt text-3xl text-primary"></i>
-              </div>
-              <h3 class="text-xl font-bold text-primary mb-2">
-                Mudah Ditemukan
-              </h3>
-              <p class="text-secondary">
-                Lokasi yang jelas dengan peta interaktif
-              </p>
+        </div>
+
+        <div class="section">
+          <h2>Galeri Foto</h2>
+          <div class="gallery" id="gallery">
+            <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400" data-full="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=1200" alt="Suasana kedai">
+            <img src="https://images.unsplash.com/photo-1523942839745-7848d7159a8a?w=400" data-full="https://images.unsplash.com/photo-1523942839745-7848d7159a8a?w=1200" alt="Menu kopi">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400" data-full="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200" alt="Produk kemasan">
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Kontak & Toko Online</h2>
+          <div class="contacts">
+            <div class="contact-row">
+              <strong>Alamat:</strong> Jl. Braga No. 45, Bandung, Jawa Barat
             </div>
-            <div class="text-center">
-              <div
-                class="bg-lightest rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4"
-              >
-                <i class="fas fa-info-circle text-3xl text-primary"></i>
-              </div>
-              <h3 class="text-xl font-bold text-primary mb-2">
-                Informasi Lengkap
-              </h3>
-              <p class="text-secondary">
-                Detail usaha dan produk yang komprehensif
-              </p>
+            <div class="contact-row">
+              <strong>Telepon:</strong> <a href="tel:+6281234567890">0812-3456-7890</a>
             </div>
-            <div class="text-center">
-              <div
-                class="bg-lightest rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4"
-              >
-                <i class="fas fa-heart text-3xl text-primary"></i>
+            <div class="contact-row">
+              <strong>Email:</strong> <a href="mailto:kopisenja@gmail.com">kopisenja@gmail.com</a>
+            </div>
+            <div class="contact-row">
+              <strong>Toko Online:</strong>
+              <div class="store-links">
+                <a href="https://tokopedia.com" target="_blank">Tokopedia</a>
+                <a href="https://shopee.co.id" target="_blank">Shopee</a>
               </div>
-              <h3 class="text-xl font-bold text-primary mb-2">Dukung Lokal</h3>
-              <p class="text-secondary">Bangkitkan ekonomi lokal bersama</p>
+            </div>
+            <div class="contact-row">
+              <strong>Sosial Media:</strong>
+              <div class="socials">
+                <a href="https://instagram.com" target="_blank">Instagram</a>
+                <a href="https://facebook.com" target="_blank">Facebook</a>
+                <a href="https://tiktok.com" target="_blank">TikTok</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Kanan -->
+      <aside class="right">
+        <div class="card">
+          <h2>Lokasi</h2>
+          <div class="map-embed">
+            <iframe
+              src="https://www.google.com/maps?q=-6.917464,107.619123&z=15&output=embed"
+              width="100%" height="260" style="border:0" loading="lazy"></iframe>
+          </div>
+          <p class="address"><strong>Alamat:</strong> Jl. Braga No. 45, Bandung, Jawa Barat</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="https://www.google.com/maps/dir/?api=1&destination=-6.917464,107.619123" target="_blank">Petunjuk Arah</a>
+          </div>
+        </div>
+      </aside>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-16 bg-lightest">
-      <div class="container mx-auto px-4">
-        <div class="max-w-2xl mx-auto">
-          <h2
-            class="text-3xl md:text-4xl font-bold text-primary text-center mb-12"
-          >
-            Hubungi Kami
-          </h2>
-          <div class="bg-white rounded-lg shadow-md p-8">
-            <form>
-              <div class="mb-6">
-                <label class="block text-primary font-semibold mb-2"
-                  >Nama</label
-                >
-                <input
-                  type="text"
-                  class="w-full px-4 py-3 border-2 border-lighter rounded-lg focus:outline-none focus:border-primary"
-                  placeholder="Nama Anda"
-                />
-              </div>
-              <div class="mb-6">
-                <label class="block text-primary font-semibold mb-2"
-                  >Email</label
-                >
-                <input
-                  type="email"
-                  class="w-full px-4 py-3 border-2 border-lighter rounded-lg focus:outline-none focus:border-primary"
-                  placeholder="email@example.com"
-                />
-              </div>
-              <div class="mb-6">
-                <label class="block text-primary font-semibold mb-2"
-                  >Pesan</label
-                >
-                <textarea
-                  rows="5"
-                  class="w-full px-4 py-3 border-2 border-lighter rounded-lg focus:outline-none focus:border-primary"
-                  placeholder="Pesan Anda"
-                ></textarea>
-              </div>
-              <button
-                type="submit"
-                class="w-full bg-primary text-white py-3 rounded-lg hover:bg-secondary transition shadow-md"
-              >
-                Kirim Pesan
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-primary text-white py-8">
-      <div class="container mx-auto px-4 text-center">
-        <div class="flex items-center justify-center space-x-2 mb-4">
-          <i class="fas fa-store text-2xl"></i>
-          <span class="text-2xl font-bold">UMKM Lokal</span>
-        </div>
-        <p class="mb-4">Mendukung UMKM lokal untuk berkembang bersama</p>
-        <div class="flex justify-center space-x-6 mb-4">
-          <a href="#" class="hover:text-lightest transition"
-            ><i class="fab fa-facebook text-2xl"></i
-          ></a>
-          <a href="#" class="hover:text-lightest transition"
-            ><i class="fab fa-instagram text-2xl"></i
-          ></a>
-          <a href="#" class="hover:text-lightest transition"
-            ><i class="fab fa-twitter text-2xl"></i
-          ></a>
-        </div>
-        <p class="text-sm">&copy; 2025 UMKM Lokal. All rights reserved.</p>
-      </div>
-    </footer>
-
-    <!-- Detail Modal -->
-    <div
-      id="detailModal"
-      class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 overflow-y-auto"
-    >
-      <div class="min-h-screen px-4 py-8">
-        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl">
-          <div class="relative">
-            <button
-              id="closeModal"
-              class="absolute top-4 right-4 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-lighter transition z-10"
-            >
-              <i class="fas fa-times text-primary text-xl"></i>
-            </button>
-            <div id="modalContent">
-              <!-- Content akan diisi oleh JavaScript -->
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- Modal foto -->
+    <div class="modal" id="modal">
+      <img src="" alt="Foto besar" id="modal-img">
     </div>
-    <script>
-      // Data UMKM (10 dummy data)
-      const umkmData = [
-        {
-          id: 1,
-          name: "Warung Kopi Santai",
-          category: "minuman",
-          description:
-            "Warung kopi dengan suasana santai dan nyaman. Menyediakan berbagai jenis kopi lokal dan manual brew dengan harga terjangkau.",
-          address: "Jl. Merdeka No. 15, Jakarta Selatan",
-          images: [
-            "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800",
-            "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800",
-          ],
-          lat: -6.2608,
-          lng: 106.7818,
-        },
-        {
-          id: 2,
-          name: "Bakso Pak Kumis",
-          category: "makanan",
-          description:
-            "Bakso kenyal dengan kuah gurih yang sudah berdiri sejak 1995. Resep turun temurun dengan cita rasa autentik.",
-          address: "Jl. Raya Bogor KM 20, Depok",
-          images: [
-            "https://images.unsplash.com/photo-1504185945330-7a3ca1d3f78a?w=800",
-            "https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800",
-          ],
-          lat: -6.3728,
-          lng: 106.8345,
-        },
-        {
-          id: 3,
-          name: "Barbershop Classic",
-          category: "jasa",
-          description:
-            "Pangkas rambut profesional dengan gaya klasik dan modern. Barber berpengalaman lebih dari 10 tahun.",
-          address: "Jl. Sudirman No. 88, Tangerang",
-          images: [
-            "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800",
-            "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800",
-          ],
-          lat: -6.1754,
-          lng: 106.6405,
-        },
-        {
-          id: 4,
-          name: "Toko Batik Nusantara",
-          category: "fashion",
-          description:
-            "Koleksi batik tradisional dan modern dengan kualitas premium. Tersedia custom design untuk acara spesial.",
-          address: "Jl. Thamrin No. 45, Jakarta Pusat",
-          images: [
-            "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800",
-            "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800",
-          ],
-          lat: -6.1944,
-          lng: 106.8229,
-        },
-        {
-          id: 5,
-          name: "Kerajinan Bambu Asri",
-          category: "kerajinan",
-          description:
-            "Produk kerajinan tangan dari bambu berkualitas. Ramah lingkungan dan estetik untuk dekorasi rumah.",
-          address: "Jl. Veteran No. 12, Bekasi",
-          images: [
-            "https://images.unsplash.com/photo-1493106819501-66d381c466f1?w=800",
-            "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=800",
-          ],
-          lat: -6.2349,
-          lng: 107.0011,
-        },
-        {
-          id: 6,
-          name: "Nasi Goreng Kambing Mas Bro",
-          category: "makanan",
-          description:
-            "Nasi goreng kambing dengan bumbu rahasia dan porsi yang mengenyangkan. Tersedia paket hemat untuk keluarga.",
-          address: "Jl. Gatot Subroto No. 99, Jakarta Selatan",
-          images: [
-            "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800",
-            "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800",
-          ],
-          lat: -6.2297,
-          lng: 106.8087,
-        },
-        {
-          id: 7,
-          name: "Jus Buah Segar Ibu Mina",
-          category: "minuman",
-          description:
-            "Jus buah segar tanpa pengawet dengan berbagai pilihan buah lokal dan impor. Harga bersahabat dan higienis.",
-          address: "Jl. Cempaka No. 7, Bogor",
-          images: [
-            "https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=800",
-            "https://images.unsplash.com/photo-1546173159-315724a31696?w=800",
-          ],
-          lat: -6.5971,
-          lng: 106.806,
-        },
-        {
-          id: 8,
-          name: "Laundry Express 24 Jam",
-          category: "jasa",
-          description:
-            "Layanan laundry kilat dengan sistem antar jemput. Gratis pewangi dan setrika rapi.",
-          address: "Jl. Ahmad Yani No. 34, Depok",
-          images: [
-            "https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=800",
-            "https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?w=800",
-          ],
-          lat: -6.4025,
-          lng: 106.7942,
-        },
-        {
-          id: 9,
-          name: "Butik Hijab Cantik",
-          category: "fashion",
-          description:
-            "Koleksi hijab dan busana muslim terbaru dengan desain trendy. Harga wholesale tersedia.",
-          address: "Jl. Margonda Raya No. 156, Depok",
-          images: [
-            "https://images.unsplash.com/photo-1583008224959-988bb8a57389?w=800",
-            "https://images.unsplash.com/photo-1605763240000-b44417e8a875?w=800",
-          ],
-          lat: -6.3641,
-          lng: 106.8306,
-        },
-        {
-          id: 10,
-          name: "Taman Potong Rambut Kids",
-          category: "jasa",
-          description:
-            "Salon khusus anak dengan dekorasi ceria dan mainan. Membuat anak nyaman saat potong rambut.",
-          address: "Jl. Sisingamangaraja No. 21, Jakarta Selatan",
-          images: [
-            "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800",
-            "https://images.unsplash.com/photo-1519680772-f682e5cca1e1?w=800",
-          ],
-          lat: -6.2615,
-          lng: 106.7981,
-        },
-      ];
+  </main>
 
-      let filteredData = [...umkmData];
-
-      // Render UMKM Cards
-      function renderUMKM(data) {
-        const grid = document.getElementById("umkmGrid");
-        const noResults = document.getElementById("noResults");
-
-        if (data.length === 0) {
-          grid.innerHTML = "";
-          noResults.classList.remove("hidden");
-          return;
-        }
-
-        noResults.classList.add("hidden");
-
-        grid.innerHTML = data
-          .map(
-            (umkm) => `
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition cursor-pointer transform hover:-translate-y-1" onclick="showDetail(${
-                  umkm.id
-                })">
-                    <div class="h-48 overflow-hidden">
-                        <img src="${umkm.images[0]}" alt="${
-              umkm.name
-            }" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <span class="inline-block px-3 py-1 bg-lightest text-primary text-sm font-semibold rounded-full mb-3">
-                            ${
-                              umkm.category.charAt(0).toUpperCase() +
-                              umkm.category.slice(1)
-                            }
-                        </span>
-                        <h3 class="text-xl font-bold text-primary mb-2">${
-                          umkm.name
-                        }</h3>
-                        <p class="text-secondary mb-4 line-clamp-2">${
-                          umkm.description
-                        }</p>
-                        <div class="flex items-start text-sm text-secondary">
-                            <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
-                            <span>${umkm.address}</span>
-                        </div>
-                    </div>
-                </div>
-            `
-          )
-          .join("");
-      }
-
-      // Show Detail Modal
-      function showDetail(id) {
-        const umkm = umkmData.find((u) => u.id === id);
-        const modal = document.getElementById("detailModal");
-        const content = document.getElementById("modalContent");
-
-        content.innerHTML = `
-                <div class="relative">
-                    <div class="h-96 overflow-hidden rounded-t-lg">
-                        <img src="${umkm.images[0]}" alt="${
-          umkm.name
-        }" class="w-full h-full object-cover">
-                    </div>
-                </div>
-                <div class="p-8">
-                    <span class="inline-block px-4 py-2 bg-lightest text-primary font-semibold rounded-full mb-4">
-                        ${
-                          umkm.category.charAt(0).toUpperCase() +
-                          umkm.category.slice(1)
-                        }
-                    </span>
-                    <h2 class="text-3xl font-bold text-primary mb-4">${
-                      umkm.name
-                    }</h2>
-                    
-                    <div class="mb-6">
-                        <h3 class="text-xl font-semibold text-primary mb-2">Deskripsi</h3>
-                        <p class="text-secondary leading-relaxed">${
-                          umkm.description
-                        }</p>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <h3 class="text-xl font-semibold text-primary mb-2">Alamat</h3>
-                        <div class="flex items-start text-secondary">
-                            <i class="fas fa-map-marker-alt mt-1 mr-3"></i>
-                            <span>${umkm.address}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <h3 class="text-xl font-semibold text-primary mb-4">Lokasi</h3>
-                        <div class="rounded-lg overflow-hidden shadow-md h-96">
-                            <iframe 
-                                width="100%" 
-                                height="100%" 
-                                frameborder="0" 
-                                style="border:0"
-                                src="https://www.google.com/maps?q=${
-                                  umkm.lat
-                                },${umkm.lng}&hl=id&z=15&output=embed"
-                                allowfullscreen>
-                            </iframe>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <h3 class="text-xl font-semibold text-primary mb-4">Galeri Foto</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            ${umkm.images
-                              .map(
-                                (img) => `
-                                <div class="rounded-lg overflow-hidden shadow-md h-48">
-                                    <img src="${img}" alt="${umkm.name}" class="w-full h-full object-cover">
-                                </div>
-                            `
-                              )
-                              .join("")}
-                        </div>
-                    </div>
-                </div>
-            `;
-
-        modal.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
-      }
-
-      // Close Modal
-      document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("closeModal").addEventListener("click", () => {
-          document.getElementById("detailModal").classList.add("hidden");
-          document.body.style.overflow = "auto";
-        });
-
-        document
-          .getElementById("detailModal")
-          .addEventListener("click", (e) => {
-            if (e.target.id === "detailModal") {
-              document.getElementById("detailModal").classList.add("hidden");
-              document.body.style.overflow = "auto";
-            }
-          });
-
-        // Search Functionality
-        document
-          .getElementById("searchInput")
-          .addEventListener("input", (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const category = document.getElementById("categoryFilter").value;
-
-            filteredData = umkmData.filter((umkm) => {
-              const matchSearch = umkm.name.toLowerCase().includes(searchTerm);
-              const matchCategory =
-                category === "" || umkm.category === category;
-              return matchSearch && matchCategory;
-            });
-
-            renderUMKM(filteredData);
-          });
-
-        // Filter Functionality
-        document
-          .getElementById("categoryFilter")
-          .addEventListener("change", (e) => {
-            const category = e.target.value;
-            const searchTerm = document
-              .getElementById("searchInput")
-              .value.toLowerCase();
-
-            filteredData = umkmData.filter((umkm) => {
-              const matchSearch = umkm.name.toLowerCase().includes(searchTerm);
-              const matchCategory =
-                category === "" || umkm.category === category;
-              return matchSearch && matchCategory;
-            });
-
-            renderUMKM(filteredData);
-          });
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-          anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute("href"));
-            if (target) {
-              target.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-            }
-          });
-        });
-
-        // Initial Render
-        renderUMKM(umkmData);
+  <script>
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modal-img');
+    document.querySelectorAll('#gallery img').forEach(img=>{
+      img.addEventListener('click',()=>{
+        modalImg.src = img.dataset.full;
+        modal.classList.add('open');
       });
-    </script>
-  </body>
+    });
+    modal.addEventListener('click',()=>modal.classList.remove('open'));
+  </script>
+</body>
 </html>
