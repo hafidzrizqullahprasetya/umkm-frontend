@@ -108,3 +108,39 @@
   width: 35%;
   height: 35%;
 }
+
+/* untuk mengatur agar responsif */
+@media (max-width: 1024px) {
+  .embla {
+    --slide-height: 14rem;
+    --slide-size: 50%;
+    --slide-spacing: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .embla {
+    --slide-height: 12rem;
+    --slide-size: 70%;
+    --slide-spacing: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .embla {
+    --slide-height: 10rem;
+    --slide-size: 90%;
+    --slide-spacing: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .embla__button {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+  .embla__button__svg {
+    width: 40%;
+    height: 40%;
+  }
+}

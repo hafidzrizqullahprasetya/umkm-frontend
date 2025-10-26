@@ -83,7 +83,7 @@ export function DetailPage({ slug }: DetailPageProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="w-full mb-8">
+      <div className="w-full mb-4 md:mb-8">
         <EmblaFadeCarousel
           images={data.images}
           name={data.name}
@@ -92,11 +92,11 @@ export function DetailPage({ slug }: DetailPageProps) {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto py-5 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-5 space-y-4 md:space-y-6">
         {/* Description Section */}
-        <div className="bg-white rounded-2xl p-8 border-1 border-[#718355] shadow-xl">
-          <div className="flex gap-6">
-            <div className="w-64 h-48 relative flex-shrink-0 rounded-lg overflow-hidden">
+        <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-8 border-1 border-[#718355] shadow-xl">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+            <div className="w-full md:w-64 h-48 md:h-48 relative flex-shrink-0 rounded-lg overflow-hidden">
               <Image
                 src="https://images.unsplash.com/photo-1514066558159-fc8c737ef259?w=800&h=600&fit=crop"
                 alt="Deskripsi Gambar"
@@ -104,11 +104,11 @@ export function DetailPage({ slug }: DetailPageProps) {
                 className="object-cover"
               />
             </div>
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            <div className="flex-1">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 md:mb-3">
                 Deskripsi Singkat
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <p className="text-sm md:text-lg text-gray-700 leading-relaxed">
                 {data.fullDescription}
               </p>
             </div>
@@ -116,54 +116,68 @@ export function DetailPage({ slug }: DetailPageProps) {
         </div>
 
         {/* Gallery Section */}
-        <div className="bg-white rounded-2xl p-8 border-1 border-[#718355] shadow-xl">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+        <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-8 border-1 border-[#718355] shadow-xl">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">
             Galeri UMKM
           </h2>
           <GalleryCarousel images={data.gallery} />
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center mt-10">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center mt-6 md:mt-10">
             Galeri Products
           </h2>
           <GalleryCarousel images={data.products} />
         </div>
 
         {/* Contact and Location Section */}
-        <div className="grid grid-cols-2 gap-6">
-          {/* Contact Info - NEW LAYOUT */}
-          <div className="bg-white rounded-2xl p-8 border-1 border-[#718355] shadow-md">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Contact</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+          {/* Contact Info - RESPONSIVE */}
+          <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-8 border-1 border-[#718355] shadow-md">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-4">
+              Contact
+            </h2>
 
             {/* Alamat */}
-            <div className="mb-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Alamat:</h3>
-              <p className="text-base text-gray-700">{data.contact.address}</p>
+            <div className="mb-4 md:mb-6">
+              <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1 md:mb-2">
+                Alamat:
+              </h3>
+              <p className="text-sm md:text-base text-gray-700">
+                {data.contact.address}
+              </p>
             </div>
 
             {/* Telepon */}
-            <div className="mb-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Telepon:</h3>
-              <p className="text-base text-gray-700">{data.contact.phone}</p>
+            <div className="mb-4 md:mb-6">
+              <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1 md:mb-2">
+                Telepon:
+              </h3>
+              <p className="text-sm md:text-base text-gray-700">
+                {data.contact.phone}
+              </p>
             </div>
 
             {/* Email */}
-            <div className="mb-8">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Email:</h3>
-              <p className="text-base text-gray-700">{data.contact.email}</p>
+            <div className="mb-6 md:mb-8">
+              <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1 md:mb-2">
+                Email:
+              </h3>
+              <p className="text-sm md:text-base text-gray-700 break-all">
+                {data.contact.email}
+              </p>
             </div>
 
-            {/* Social Media Icons - Horizontal */}
-            <div className="flex items-center justify-start gap-4 mb-6">
+            {/* Social Media Icons - Horizontal & Responsive */}
+            <div className="flex items-center justify-start gap-3 md:gap-4 mb-4 md:mb-6">
               {/* Instagram */}
               <a
                 href={`https://instagram.com/${data.socialMedia.instagram}`}
                 target="_blank"
                 rel="noreferrer"
-                className="w-14 h-14 bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-md"
+                className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-md"
                 title="Instagram"
               >
                 <svg
-                  className="w-7 h-7 text-white"
+                  className="w-6 h-6 md:w-7 md:h-7 text-white"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -176,11 +190,11 @@ export function DetailPage({ slug }: DetailPageProps) {
                 href={`https://wa.me/${data.contact.whatsapp}`}
                 target="_blank"
                 rel="noreferrer"
-                className="w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-md"
+                className="w-12 h-12 md:w-14 md:h-14 bg-[#25D366] rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-md"
                 title="WhatsApp"
               >
                 <svg
-                  className="w-7 h-7 text-white"
+                  className="w-6 h-6 md:w-7 md:h-7 text-white"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -193,11 +207,11 @@ export function DetailPage({ slug }: DetailPageProps) {
                 href={data.onlineStores.shopee}
                 target="_blank"
                 rel="noreferrer"
-                className="w-14 h-14 bg-[#EE4D2D] rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-md"
+                className="w-12 h-12 md:w-14 md:h-14 bg-[#EE4D2D] rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-md"
                 title="Shopee"
               >
                 <svg
-                  className="w-7 h-7 text-white"
+                  className="w-6 h-6 md:w-7 md:h-7 text-white"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -206,30 +220,30 @@ export function DetailPage({ slug }: DetailPageProps) {
               </a>
             </div>
 
-            {/* Call & Email Buttons - Bottom */}
-            <div className="flex gap-3 mt-6">
+            {/* Call & Email Buttons - Responsive */}
+            <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-6">
               <a
                 href={`tel:${data.contact.phone}`}
-                className="flex-1 px-6 py-3 text-white bg-[#718355] rounded-xl  text-sm font-semibold hover:bg-[#5A6B44] transition-colors shadow-sm text-center"
+                className="flex-1 px-4 md:px-6 py-2.5 md:py-3 text-white bg-[#718355] rounded-xl text-sm md:text-sm font-semibold hover:bg-[#5A6B44] transition-colors shadow-sm text-center"
               >
                 ☎️ Call
               </a>
               <a
                 href={`mailto:${data.contact.email}`}
-                className="flex-1 px-6 py-3 text-white bg-[#718355] rounded-xl text-sm font-semibold hover:bg-[#5A6B44] transition-colors shadow-sm text-center"
+                className="flex-1 px-4 md:px-6 py-2.5 md:py-3 text-white bg-[#718355] rounded-xl text-sm md:text-sm font-semibold hover:bg-[#5A6B44] transition-colors shadow-sm text-center"
               >
                 📩 Email
               </a>
             </div>
           </div>
 
-          {/* Location Map */}
-          <div className="bg-white rounded-2xl p-6 border-1 border-[#718355] shadow-md">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          {/* Location Map - RESPONSIVE */}
+          <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 border-1 border-[#718355] shadow-md">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4">
               📍 Lokasi Kami
             </h2>
 
-            <div className="relative h-64 bg-gray-200 rounded-lg mb-3 overflow-hidden">
+            <div className="relative h-48 md:h-64 bg-gray-200 rounded-lg mb-3 overflow-hidden">
               <iframe
                 src={`https://maps.google.com/maps?q=${data.contact.coordinates.lat},${data.contact.coordinates.lng}&output=embed`}
                 width="100%"
@@ -240,7 +254,7 @@ export function DetailPage({ slug }: DetailPageProps) {
               />
             </div>
 
-            <div className="bg-[#EEF6EE] p-4 rounded-lg mb-3">
+            <div className="bg-[#EEF6EE] p-3 md:p-4 rounded-lg mb-3">
               <p className="text-xs font-semibold text-gray-700 mb-1">
                 Alamat:
               </p>
@@ -253,7 +267,7 @@ export function DetailPage({ slug }: DetailPageProps) {
               href={`https://www.google.com/maps/dir/?api=1&destination=${data.contact.coordinates.lat},${data.contact.coordinates.lng}`}
               target="_blank"
               rel="noreferrer"
-              className="block bg-[#718355] text-white px-4 py-3 rounded-lg text-sm font-semibold hover:bg-[#5A6B44] w-full text-center transition-colors shadow-md"
+              className="block bg-[#718355] text-white px-4 py-2.5 md:py-3 rounded-lg text-sm font-semibold hover:bg-[#5A6B44] w-full text-center transition-colors shadow-md"
             >
               Petunjuk Arah ke Lokasi
             </a>
