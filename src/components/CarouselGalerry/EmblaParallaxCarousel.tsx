@@ -13,6 +13,7 @@ import {
 type EmblaParallaxCarouselProps = {
   images: string[];
   options?: EmblaOptionsType;
+  onImageClick?: (index: number) => void; // ✅ TAMBAHKAN INI
 };
 
 const TWEEN_FACTOR_BASE = 0.2;
@@ -20,6 +21,7 @@ const TWEEN_FACTOR_BASE = 0.2;
 export default function EmblaParallaxCarousel({
   images,
   options = { loop: true },
+  onImageClick, // ✅ TAMBAHKAN INI
 }: EmblaParallaxCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const tweenFactor = useRef(0);
@@ -99,10 +101,14 @@ export default function EmblaParallaxCarousel({
         <div className="embla__container">
           {images.map((image, index) => (
             <div className="embla__slide" key={index}>
-              <div className="embla__parallax">
+              {/* ✅ TAMBAHKAN cursor-pointer dan onClick */}
+              <div 
+                className="embla__parallax cursor-pointer"
+                onClick={() => onImageClick?.(index)}
+              >
                 <div className="embla__parallax__layer">
                   <img
-                    className="embla__parallax__img hover:scale-108 transition-transform duration-400 ease-in-out"
+                    className="embla__parallax__img hover:scale-105 transition-transform duration-300 ease-in-out"
                     src={image}
                     alt={`Gallery ${index + 1}`}
                   />

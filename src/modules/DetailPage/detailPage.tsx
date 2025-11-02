@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { EmblaFadeCarousel } from "../../components/CarouselFade/EmblaFadeCarousel";
 import GalleryCarousel from "../../components/CarouselGalerry/EmblaParallaxCarousel";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 interface DetailPageProps {
   slug: string;
@@ -58,7 +59,12 @@ export function DetailPage({ slug }: DetailPageProps) {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
-  // ambil data dummy berdasarkan slug
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentGalleryType, setCurrentGalleryType] = useState<
+    "gallery" | "products"
+  >("gallery");
+
   const data = detailPageDummy(slug);
 
   useEffect(() => {
@@ -80,6 +86,38 @@ export function DetailPage({ slug }: DetailPageProps) {
       }
     };
   }, []);
+
+  const handleImageClick = (index: number, type: "gallery" | "products") => {
+    setCurrentImageIndex(index);
+    setCurrentGalleryType(type);
+    setIsDialogOpen(true);
+  };
+
+  const handleNext = () => {
+    const images =
+      currentGalleryType === "gallery" ? data.gallery : data.products;
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const handlePrev = () => {
+    const images =
+      currentGalleryType === "gallery" ? data.gallery : data.products;
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isDialogOpen) return;
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "ArrowRight") handleNext();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isDialogOpen, currentGalleryType, currentImageIndex]);
+
+  const currentImages =
+    currentGalleryType === "gallery" ? data.gallery : data.products;
 
   return (
     <div className="min-h-screen bg-white">
@@ -120,23 +158,27 @@ export function DetailPage({ slug }: DetailPageProps) {
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center">
             Galeri UMKM
           </h2>
-          <GalleryCarousel images={data.gallery} />
+          <GalleryCarousel
+            images={data.gallery}
+            onImageClick={(index) => handleImageClick(index, "gallery")}
+          />
 
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 text-center mt-6 md:mt-10">
             Galeri Products
           </h2>
-          <GalleryCarousel images={data.products} />
+          <GalleryCarousel
+            images={data.products}
+            onImageClick={(index) => handleImageClick(index, "products")}
+          />
         </div>
 
         {/* Contact and Location Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-          {/* Contact Info - RESPONSIVE */}
           <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-8 border-1 border-[#718355] shadow-md">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-4">
               Contact
             </h2>
 
-            {/* Alamat */}
             <div className="mb-4 md:mb-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1 md:mb-2">
                 Alamat:
@@ -146,7 +188,6 @@ export function DetailPage({ slug }: DetailPageProps) {
               </p>
             </div>
 
-            {/* Telepon */}
             <div className="mb-4 md:mb-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1 md:mb-2">
                 Telepon:
@@ -156,7 +197,6 @@ export function DetailPage({ slug }: DetailPageProps) {
               </p>
             </div>
 
-            {/* Email */}
             <div className="mb-6 md:mb-8">
               <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1 md:mb-2">
                 Email:
@@ -166,9 +206,7 @@ export function DetailPage({ slug }: DetailPageProps) {
               </p>
             </div>
 
-            {/* Social Media Icons - Horizontal & Responsive */}
             <div className="flex items-center justify-start gap-3 md:gap-4 mb-4 md:mb-6">
-              {/* Instagram */}
               <a
                 href={`https://instagram.com/${data.socialMedia.instagram}`}
                 target="_blank"
@@ -185,7 +223,6 @@ export function DetailPage({ slug }: DetailPageProps) {
                 </svg>
               </a>
 
-              {/* WhatsApp */}
               <a
                 href={`https://wa.me/${data.contact.whatsapp}`}
                 target="_blank"
@@ -202,7 +239,6 @@ export function DetailPage({ slug }: DetailPageProps) {
                 </svg>
               </a>
 
-              {/* Shopee */}
               <a
                 href={data.onlineStores.shopee}
                 target="_blank"
@@ -220,7 +256,6 @@ export function DetailPage({ slug }: DetailPageProps) {
               </a>
             </div>
 
-            {/* Call & Email Buttons - Responsive */}
             <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-6">
               <a
                 href={`tel:${data.contact.phone}`}
@@ -237,7 +272,6 @@ export function DetailPage({ slug }: DetailPageProps) {
             </div>
           </div>
 
-          {/* Location Map - RESPONSIVE */}
           <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 border-1 border-[#718355] shadow-md">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4">
               📍 Lokasi Kami
@@ -274,6 +308,145 @@ export function DetailPage({ slug }: DetailPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Dialog Modal */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] w-auto h-auto max-w-[90vw] max-h-[90vh] p-0 bg-transparent border-none overflow-visible data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200">
+          <DialogTitle className="sr-only">
+            {currentGalleryType === "gallery" ? "Gallery" : "Product"} Image{" "}
+            {currentImageIndex + 1} of {currentImages.length}
+          </DialogTitle>
+
+          <div className="relative">
+            {/* Image Counter */}
+            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm font-medium z-20 backdrop-blur-sm">
+              {currentImageIndex + 1} / {currentImages.length}
+            </div>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setIsDialogOpen(false)}
+              className="group absolute -right-4 -top-4 z-20 w-10 h-10 md:w-12 md:h-12 bg-white hover:bg-[#718355] hover:scale-110 rounded-full flex items-center justify-center transition-all shadow-lg focus:outline-none"
+              aria-label="Close"
+            >
+              <svg
+                className="w-6 h-6 text-gray-800 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Image Container with White Border */}
+            <div className="relative bg-white p-2 rounded-lg shadow-2xl">
+              {/* Previous Button - Inside container */}
+              <button
+                onClick={handlePrev}
+                className="group absolute left-2 top-1/2 -translate-y-1/2 md:hidden z-20 w-10 h-10 bg-white/90 hover:bg-[#718355] rounded-full flex items-center justify-center transition-all shadow-lg focus:outline-none"
+                aria-label="Previous"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-800 group-hover:text-white transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+
+              <div className="relative">
+                <Image
+                  src={currentImages[currentImageIndex]}
+                  alt={`${
+                    currentGalleryType === "gallery" ? "Gallery" : "Product"
+                  } ${currentImageIndex + 1}`}
+                  width={800}
+                  height={600}
+                  className="object-contain rounded max-w-[85vw] max-h-[70vh] md:max-w-[70vw] w-auto h-auto"
+                  quality={100}
+                  priority
+                />
+              </div>
+
+              {/* Next Button - Inside container */}
+              <button
+                onClick={handleNext}
+                className="group absolute right-2 top-1/2 -translate-y-1/2 md:hidden z-20 w-10 h-10 bg-white/90 hover:bg-[#718355] rounded-full flex items-center justify-center transition-all shadow-lg focus:outline-none"
+                aria-label="Next"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-800 group-hover:text-white transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Previous Button - Outside container (Desktop only) */}
+            <button
+              onClick={handlePrev}
+              className="group hidden md:flex absolute -left-16 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white hover:bg-[#718355] hover:scale-110 rounded-full items-center justify-center transition-all shadow-lg focus:outline-none"
+              aria-label="Previous"
+            >
+              <svg
+                className="w-6 h-6 text-gray-800 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+
+            {/* Next Button - Outside container (Desktop only) */}
+            <button
+              onClick={handleNext}
+              className="group hidden md:flex absolute -right-16 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white hover:bg-[#718355] hover:scale-110 rounded-full items-center justify-center transition-all shadow-lg focus:outline-none"
+              aria-label="Next"
+            >
+              <svg
+                className="w-6 h-6 text-gray-800 group-hover:text-white transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
