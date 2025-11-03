@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "name": "Warung Kopi Santai",
+    "category": "Minuman",
+    "description": "Warung kopi dengan suasana santai dan nyaman. Menyediakan berbagai jenis kopi lokal dan manual brew dengan harga terjangkau. Tempat favorit untuk nongkrong sambil menikmati kopi spesial.",
+    "address": "Jl. Merdeka No. 15, Jakarta Selatan, DKI Jakarta",
+    "province": "DKI Jakarta",
+    "images": [
+      "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800",
+      "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800"
+    ],
+    "lat": -6.2608,
+    "lng": 106.7818
+  },
+  {
+    "id": 2,
+    "name": "Bakso Pak Kumis",
+    "category": "Makanan",
+    "description": "Bakso kenyal dengan kuah gurih yang sudah berdiri sejak 1995. Resep turun temurun dengan cita rasa autentik. Cocok untuk makan siang atau malam bersama keluarga.",
+    "address": "Jl. Raya Bogor KM 20, Depok, Jawa Barat",
+    "province": "Jawa Barat",
+    "images": [
+      "https://images.unsplash.com/photo-1504185945330-7a3ca1d3f78a?w=800",
+      "https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=800"
+    ],
+    "lat": -6.3728,
+    "lng": 106.8345
+  },
+  {
+    "id": 3,
+    "name": "Barbershop Classic",
+    "category": "Jasa",
+    "description": "Pangkas rambut profesional dengan gaya klasik dan modern. Barber berpengalaman lebih dari 10 tahun. Layanan cepat dan higienis dengan harga terjangkau.",
+    "address": "Jl. Sudirman No. 88, Tangerang, Banten",
+    "province": "Banten",
+    "images": [
+      "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800",
+      "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800"
+    ],
+    "lat": -6.1754,
+    "lng": 106.6405
+  },
+  {
+    "id": 4,
+    "name": "Toko Batik Nusantara",
+    "category": "Fashion",
+    "description": "Koleksi batik tradisional dan modern dengan kualitas premium. Tersedia custom design untuk acara spesial. Mendukung budaya Indonesia melalui fashion.",
+    "address": "Jl. Thamrin No. 45, Jakarta Pusat, DKI Jakarta",
+    "province": "DKI Jakarta",
+    "images": [
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800",
+      "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800"
+    ],
+    "lat": -6.1944,
+    "lng": 106.8229
+  },
+  {
+    "id": 5,
+    "name": "Kerajinan Bambu Asri",
+    "category": "Kerajinan",
+    "description": "Produk kerajinan tangan dari bambu berkualitas. Ramah lingkungan dan estetik untuk dekorasi rumah. Dibuat oleh pengrajin lokal dengan cinta.",
+    "address": "Jl. Veteran No. 12, Bekasi, Jawa Barat",
+    "province": "Jawa Barat",
+    "images": [
+      "https://images.unsplash.com/photo-1493106819501-66d381c466f1?w=800",
+      "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=800"
+    ],
+    "lat": -6.2349,
+    "lng": 107.0011
+  },
+  {
+    "id": 6,
+    "name": "Nasi Goreng Kambing Mas Bro",
+    "category": "Makanan",
+    "description": "Nasi goreng kambing dengan bumbu rahasia dan porsi yang mengenyangkan. Tersedia paket hemat untuk keluarga. Rasakan cita rasa unik dari resep turun temurun.",
+    "address": "Jl. Gatot Subroto No. 99, Jakarta Selatan, DKI Jakarta",
+    "province": "DKI Jakarta",
+    "images": [
+      "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800",
+      "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800"
+    ],
+    "lat": -6.2297,
+    "lng": 106.8087
+  },
+  {
+    "id": 7,
+    "name": "Jus Buah Segar Ibu Mina",
+    "category": "Minuman",
+    "description": "Jus buah segar tanpa pengawet dengan berbagai pilihan buah lokal dan impor. Harga bersahabat dan higienis. Segar setiap hari dari buah pilihan.",
+    "address": "Jl. Cempaka No. 7, Bogor, Jawa Barat",
+    "province": "Jawa Barat",
+    "images": [
+      "https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=800",
+      "https://images.unsplash.com/photo-1546173159-315724a31696?w=800"
+    ],
+    "lat": -6.5971,
+    "lng": 106.8060
+  },
+  {
+    "id": 8,
+    "name": "Laundry Express 24 Jam",
+    "category": "Jasa",
+    "description": "Layanan laundry kilat dengan sistem antar jemput. Gratis pewangi dan setrika rapi. Cepat, bersih, dan terpercaya untuk kebutuhan sehari-hari.",
+    "address": "Jl. Ahmad Yani No. 34, Depok, Jawa Barat",
+    "province": "Jawa Barat",
+    "images": [
+      "https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=800",
+      "https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?w=800"
+    ],
+    "lat": -6.4025,
+    "lng": 106.7942
+  },
+  {
+    "id": 9,
+    "name": "Butik Hijab Cantik",
+    "category": "Fashion",
+    "description": "Koleksi hijab dan busana muslim terbaru dengan desain trendy. Harga wholesale tersedia. Mendukung fashion muslim modern dan elegan.",
+    "address": "Jl. Margonda Raya No. 156, Depok, Jawa Barat",
+    "province": "Jawa Barat",
+    "images": [
+      "https://images.unsplash.com/photo-1583008224959-988bb8a57389?w=800",
+      "https://images.unsplash.com/photo-1605763240000-b44417e8a875?w=800"
+    ],
+    "lat": -6.3641,
+    "lng": 106.8306
+  },
+  {
+    "id": 10,
+    "name": "Taman Potong Rambut Kids",
+    "category": "Jasa",
+    "description": "Salon khusus anak dengan dekorasi ceria dan mainan. Membuat anak nyaman saat potong rambut. Layanan ramah anak dengan harga terjangkau.",
+    "address": "Jl. Sisingamangaraja No. 21, Jakarta Selatan, DKI Jakarta",
+    "province": "DKI Jakarta",
+    "images": [
+      "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800",
+      "https://images.unsplash.com/photo-1519680772-f682e5cca1e1?w=800"
+    ],
+    "lat": -6.2615,
+    "lng": 106.7981
+  }
+]
