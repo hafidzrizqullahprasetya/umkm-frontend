@@ -206,6 +206,7 @@ export function DetailPage({ slug }: DetailPageProps) {
               </p>
             </div>
 
+            {/* Social Media Icons - Update className */}
             <div className="flex items-center justify-start gap-3 md:gap-4 mb-4 md:mb-6">
               <a
                 href={`https://instagram.com/${data.socialMedia.instagram}`}
@@ -215,7 +216,7 @@ export function DetailPage({ slug }: DetailPageProps) {
                 title="Instagram"
               >
                 <svg
-                  className="w-6 h-6 md:w-7 md:h-7 text-white"
+                  className="w-6 h-6 md:w-7 md:h-7 text-white dark:text-white"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -231,7 +232,7 @@ export function DetailPage({ slug }: DetailPageProps) {
                 title="WhatsApp"
               >
                 <svg
-                  className="w-6 h-6 md:w-7 md:h-7 text-white"
+                  className="w-6 h-6 md:w-7 md:h-7 text-white dark:text-white"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -247,7 +248,7 @@ export function DetailPage({ slug }: DetailPageProps) {
                 title="Shopee"
               >
                 <svg
-                  className="w-6 h-6 md:w-7 md:h-7 text-white"
+                  className="w-6 h-6 md:w-7 md:h-7 text-white dark:text-white"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -256,16 +257,17 @@ export function DetailPage({ slug }: DetailPageProps) {
               </a>
             </div>
 
+            {/* Call & Email Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-6">
               <a
                 href={`tel:${data.contact.phone}`}
-                className="flex-1 px-4 md:px-6 py-2.5 md:py-3 text-white bg-[#718355] rounded-xl text-sm md:text-sm font-semibold hover:bg-[#5A6B44] transition-colors shadow-sm text-center"
+                className="flex-1 px-4 md:px-6 py-2.5 md:py-3 text-white dark:text-white bg-[#718355] rounded-xl text-sm md:text-sm font-semibold hover:bg-[#5A6B44] transition-colors shadow-sm text-center"
               >
                 ☎️ Call
               </a>
               <a
                 href={`mailto:${data.contact.email}`}
-                className="flex-1 px-4 md:px-6 py-2.5 md:py-3 text-white bg-[#718355] rounded-xl text-sm md:text-sm font-semibold hover:bg-[#5A6B44] transition-colors shadow-sm text-center"
+                className="flex-1 px-4 md:px-6 py-2.5 md:py-3 text-white dark:text-white bg-[#718355] rounded-xl text-sm md:text-sm font-semibold hover:bg-[#5A6B44] transition-colors shadow-sm text-center"
               >
                 📩 Email
               </a>
@@ -301,7 +303,7 @@ export function DetailPage({ slug }: DetailPageProps) {
               href={`https://www.google.com/maps/dir/?api=1&destination=${data.contact.coordinates.lat},${data.contact.coordinates.lng}`}
               target="_blank"
               rel="noreferrer"
-              className="block bg-[#718355] text-white px-4 py-2.5 md:py-3 rounded-lg text-sm font-semibold hover:bg-[#5A6B44] w-full text-center transition-colors shadow-md"
+              className="block bg-[#718355] text-white dark:text-white px-4 py-2.5 md:py-3 rounded-lg text-sm font-semibold hover:bg-[#5A6B44] w-full text-center transition-colors shadow-md"
             >
               Petunjuk Arah ke Lokasi
             </a>
@@ -353,7 +355,7 @@ export function DetailPage({ slug }: DetailPageProps) {
                 aria-label="Previous"
               >
                 <svg
-                  className="w-5 h-5 text-gray-800 group-hover:text-white transition-colors"
+                  className="w-5 h-5 text-gray-800 dark:text-gray-800 group-hover:text-white transition-colors"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -388,7 +390,7 @@ export function DetailPage({ slug }: DetailPageProps) {
                 aria-label="Next"
               >
                 <svg
-                  className="w-5 h-5 text-gray-800 group-hover:text-white transition-colors"
+                  className="w-5 h-5 text-gray-800 dark:text-gray-800 group-hover:text-white transition-colors"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

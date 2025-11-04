@@ -9,23 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.15",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "embla-carousel-fade": "^8.6.0",
-    "embla-carousel-react": "^8.6.0",
-    "lucide-react": "^0.552.0",
     "next": "15.5.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "tailwind-merge": "^3.3.1"
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-toastify": "^4.0.2",
     "eslint": "^9",
     "eslint-config-next": "15.5.6",
     "tailwindcss": "^4",
