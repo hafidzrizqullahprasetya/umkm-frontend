@@ -1,5 +1,5 @@
-import UmkmCard from "@/components/UmkmPage";
+import { redirect } from 'next/navigation';
 
-export default function HomePage() {
-  return <UmkmCard />;
+export default async function Page() {
+  redirect('/umkm');
 }

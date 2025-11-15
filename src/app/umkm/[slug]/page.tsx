@@ -1,15 +1,13 @@
-import { DetailPage } from "@/modules/DetailPage/detailPage";
+import { getAllUmkm } from "@/lib/data-fetch";
+import UMKMDetailPage from "@/components/features/umkm/UMKMDetailPage";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  // Await params terlebih dahulu
-  const { slug } = await params;
+export default async function Page({ params }: { params: { slug: string } }) {
+  const allUmkm = await getAllUmkm();
+  const umkm = allUmkm.find((u) => u.id === parseInt(params.slug));
 
-  // Nanti tinggal ganti dengan actual API call:
-  // const data = await fetch(`${process.env.API_URL}/umkm/${slug}`).then(r => r.json());
+  if (!umkm) {
+    return <div>UMKM tidak ditemukan</div>;
+  }
 
-  return <DetailPage slug={slug} />;
+  return <UMKMDetailPage umkm={umkm} />;
 }

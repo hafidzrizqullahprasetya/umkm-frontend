@@ -1,6 +1,6 @@
-import {Inter} from "next/font/google"
+import {Plus_Jakarta_Sans} from "next/font/google"
 
-const body = Inter({
+const body = Plus_Jakarta_Sans({
     subsets: ['latin']
 })
 

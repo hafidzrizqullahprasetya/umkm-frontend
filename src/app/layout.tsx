@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
 import { body } from "@/utils/font";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "UMKM Platform",
@@ -27,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className={` ${body.className} antialiased`}
+        className={`${body.className} antialiased`}
       >
         {children}
         <ToastContainer />
