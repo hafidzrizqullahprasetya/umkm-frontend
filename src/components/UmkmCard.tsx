@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { Calendar, MapPin } from "lucide-react";
 import { dummyUmkm } from "../lib/data";
 
 interface CardProps {
@@ -83,17 +83,11 @@ export default function UmkmCard({
 
             <div className="space-y-2 mb-3">
               <div className="flex items-center text-muted-foreground text-sm">
-                <FaCalendarAlt
-                  className="mr-2 text-primary flex-shrink-0"
-                  size={14}
-                />
+<Calendar className="mr-1" />
                 <span>{umkm.date}</span>
               </div>
               <div className="flex items-center text-muted-foreground text-sm">
-                <FaMapMarkerAlt
-                  className="mr-2 text-primary flex-shrink-0"
-                  size={14}
-                />
+<MapPin className="mr-1" />
                 <span>{umkm.location}</span>
               </div>
             </div>

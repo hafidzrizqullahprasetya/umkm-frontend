@@ -7,7 +7,7 @@ import UmkmFilter from "./UmkmFilter";
 import Pagination from "./Pagination";
 import Search from "./Search";
 import { dummyUmkm } from "../lib/data";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { MapPin } from "lucide-react";
 
 export default function UmkmPage() {
   const [selectedTab, setSelectedTab] = useState("Semua");
@@ -87,7 +87,7 @@ export default function UmkmPage() {
           </p>
           {userLocation && (
             <div className="flex items-center gap-2 text-white/95">
-              <FaMapMarkerAlt className="text-lg" />
+              <MapPin className="mr-2 text-primary" />
               <span className="font-medium">Lokasi Anda: {userLocation}</span>
             </div>
           )}

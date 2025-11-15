@@ -1,5 +1,5 @@
 "use client";
-import { FaTh, FaList } from "react-icons/fa";
+import { LayoutGrid, List } from "lucide-react";
 
 interface ViewToggleProps {
   view: "grid" | "list";
@@ -18,7 +18,11 @@ export default function ViewToggle({ view, onToggle }: ViewToggleProps) {
         }`}
         aria-label="Grid view"
       >
-        <FaTh size={16} />
+        <LayoutGrid
+        className={`w-5 h-5 ${
+          view === "grid" ? "text-primary" : "text-gray-400"
+        }`}
+      />
       </button>
       <button
         onClick={() => onToggle("list")}
@@ -29,7 +33,11 @@ export default function ViewToggle({ view, onToggle }: ViewToggleProps) {
         }`}
         aria-label="List view"
       >
-        <FaList size={16} />
+        <List
+        className={`w-5 h-5 ${
+          view === "list" ? "text-primary" : "text-gray-400"
+        }`}
+      />
       </button>
     </div>
   );

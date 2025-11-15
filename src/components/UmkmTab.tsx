@@ -1,21 +1,22 @@
 import {
-  FaStar,
-  FaUtensils,
-  FaTshirt,
-  FaHammer,
-  FaLaptop,
-  FaBriefcase,
-  FaEllipsisH,
-} from "react-icons/fa";
+  Utensils,
+  Shirt,
+  Star,
+  Hammer,
+  Laptop,
+  Briefcase,
+  MoreHorizontal,
+} from "lucide-react";
+import React from "react";
 
-const tabs = [
-  { label: "Semua", icon: <FaStar /> },
-  { label: "Makanan", icon: <FaUtensils /> },
-  { label: "Fashion", icon: <FaTshirt /> },
-  { label: "Kerajinan", icon: <FaHammer /> },
-  { label: "Teknologi", icon: <FaLaptop /> },
-  { label: "Jasa", icon: <FaBriefcase /> },
-  { label: "Lainnya", icon: <FaEllipsisH /> },
+const tabs: { label: string; icon: React.ReactElement }[] = [
+  { label: "Semua", icon: <Star size={16} /> },
+  { label: "Makanan", icon: <Utensils size={16} /> },
+  { label: "Fashion", icon: <Shirt size={16} /> },
+  { label: "Kerajinan", icon: <Hammer size={16} /> },
+  { label: "Teknologi", icon: <Laptop size={16} /> },
+  { label: "Jasa", icon: <Briefcase size={16} /> },
+  { label: "Lainnya", icon: <MoreHorizontal size={16} /> },
 ];
 
 export default function UmkmTab({
@@ -38,7 +39,7 @@ export default function UmkmTab({
           }`}
         >
           <span
-            className={`text-sm ${
+            className={` ${
               value === tab.label ? "text-white" : "text-primary"
             }`}
           >

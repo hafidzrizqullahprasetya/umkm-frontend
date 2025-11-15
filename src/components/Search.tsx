@@ -1,4 +1,4 @@
-import { FaSearch } from "react-icons/fa";
+import { Search as SearchIcon } from "lucide-react";
 import React from "react";
 import ViewToggle from "./ViewToggle";
 
@@ -25,7 +25,7 @@ export default function Search({
     >
       <div className="relative flex-1">
         <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-primary">
-          <FaSearch size={16} />
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
         </div>
         <input
           type="text"

@@ -1,4 +1,4 @@
-import { FaCalendarAlt, FaMapMarkerAlt, FaStar } from "react-icons/fa";
+import { Calendar, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import { dummyUmkm } from "../lib/data";
 
@@ -96,18 +96,12 @@ export default function UmkmList({
 
             <div className="space-y-2 mb-3">
               <div className="flex items-center text-muted-foreground">
-                <FaCalendarAlt
-                  className="mr-2 text-primary flex-shrink-0"
-                  size={14}
-                />
+<Calendar size={14} className="mr-1" />
                 <span className="text-sm">{umkm.date}</span>
               </div>
 
               <div className="flex items-center text-muted-foreground">
-                <FaMapMarkerAlt
-                  className="mr-2 text-primary flex-shrink-0"
-                  size={14}
-                />
+<MapPin size={14} className="mr-1" />
                 <span className="text-sm">{umkm.location}</span>
               </div>
             </div>
@@ -118,11 +112,11 @@ export default function UmkmList({
 
             <div className="flex items-center justify-between pt-3 border-t border-gray-100">
               <div className="flex items-center gap-1">
-                <FaStar className="text-yellow-400" size={16} />
-                <FaStar className="text-yellow-400" size={16} />
-                <FaStar className="text-yellow-400" size={16} />
-                <FaStar className="text-yellow-400" size={16} />
-                <FaStar className="text-gray-300" size={16} />
+                <Star className="text-yellow-400" size={16} />
+                <Star className="text-yellow-400" size={16} />
+                <Star className="text-yellow-400" size={16} />
+                <Star className="text-yellow-400" size={16} />
+                <Star className="text-gray-300" size={16} />
                 <span className="text-sm text-muted-foreground ml-2">
                   (4.5)
                 </span>
