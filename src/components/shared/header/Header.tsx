@@ -111,7 +111,7 @@ function Header({ user }: HeaderProps) {
                                             className={`flex items-center gap-2 px-5 py-2.5 rounded-lg transition-all font-bold shadow-md hover:shadow-lg ${
                                                 isSticky
                                                     ? 'bg-[var(--primary)] text-white hover:bg-[var(--dark)]'
-                                                    : 'bg-[var(--secondary)] text-[var(--dark)] hover:bg-[var(--orange)] hover:text-white'
+                                                    : 'bg-[var(--secondary)] text-[var(--dark)] hover:bg-[var(--white)] hover:text-primary'
                                             }`}
                                         >
                                             <Storefront size={20} weight="bold" />
