@@ -1,172 +1,241 @@
 "use client"
 
-import { credentialRegister, credetialLogin } from "@/lib/action"
-import { Lock, User } from "phosphor-react"
-import { signIn } from "next-auth/react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { FormEvent, useEffect, useState } from "react"
-import { toast } from "react-toastify"
+import { credentialRegister, credetialLogin } from "@/lib/action";
+import { Lock, User } from "phosphor-react";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function FormAuth({isRegister}: {
     isRegister: boolean
 } ){
-    const router = useRouter()
-    const [error, setError] = useState<string | null>(null)
-    const [loading, setLoading] = useState(false)
-    useEffect( ()=>{
-        toast(error,{
-            position:'bottom-right',
-            autoClose: false,
+    const router = useRouter();
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
-        })
-    },[error])
+    useEffect(() => {
+        if (error) {
+            toast.error(error, {
+                position: 'bottom-right',
+                autoClose: 5000,
+            });
+        }
+    }, [error]);
+
     async function handleSubmitRegister(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault()
-        setError(null)
-        setLoading(true)
+        event.preventDefault();
+        setError(null);
+        setLoading(true);
+
         try {
-            const formData = new FormData(event.currentTarget)
-            const password = formData.get('password')?.toString()
-            if (!formData.get('username')) { throw new Error('Username Cannot be Empty!')}
-            if (!formData.get('email')) { throw new Error('Email Cannot be Empty!')}
-            if (!password) { throw new Error('Password Cannot be Empty!')}
+            const formData = new FormData(event.currentTarget);
+
+            // Client-side validation
+            const username = formData.get('username')?.toString()?.trim();
+            const email = formData.get('email')?.toString()?.trim();
+            const password = formData.get('password')?.toString();
+
+            if (!username || username.length === 0) {
+                throw new Error('Username tidak boleh kosong');
+            }
+
+            if (username.length < 3) {
+                throw new Error('Username minimal terdiri dari 3 karakter');
+            }
+
+            if (!email || email.length === 0) {
+                throw new Error('Email tidak boleh kosong');
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                throw new Error('Format email tidak valid');
+            }
+
+            if (!password || password.length === 0) {
+                throw new Error('Password tidak boleh kosong');
+            }
+
             if (password.length < 8) {
-                throw new Error('Password at least have 8 characters')
+                throw new Error('Password minimal terdiri dari 8 karakter');
             }
-            const response = await credentialRegister(formData)
-            console.log(response)
-            if (!!response?.error) {
-                setError(response.error)
-            } 
-            if(response?.ok){
-                router.push('/home')
+
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+            if (!(hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar)) {
+                throw new Error('Password harus mengandung huruf besar, huruf kecil, angka, dan karakter spesial');
             }
-        } catch (error){
-            setError(error instanceof Error ? error.message : 'Error unknown')
-            console.log(error)
+
+            const response = await credentialRegister(formData);
+            console.log(response);
+
+            if (response?.error) {
+                setError(response.error);
+                throw new Error(response.error);
+            }
+
+            // If no error and we got a successful response, proceed to home
+            toast.success(isRegister ? 'Pendaftaran berhasil! Selamat datang.' : 'Login berhasil! Selamat datang kembali.');
+            router.push('/home');
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan tak terduga';
+            setError(errorMessage);
+            console.log(error);
+            toast.error(errorMessage);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     }
 
     async function handleSubmitLogin(event:FormEvent<HTMLFormElement>) {
-        event.preventDefault()
-        setError(null)
-        setLoading(true)
+        event.preventDefault();
+        setError(null);
+        setLoading(true);
+
         try {
-            const formData = new FormData(event.currentTarget)
-            const email = formData.get('email') as string
-            const password = formData.get('password')?.toString()
-            if (!email ||!password) {
-                throw new Error('Email and Password cannot be empty')
+            const formData = new FormData(event.currentTarget);
+            const email = formData.get('email')?.toString()?.trim();
+            const password = formData.get('password')?.toString();
+
+            // Client-side validation
+            if (!email || email.length === 0) {
+                throw new Error('Email tidak boleh kosong');
             }
-            if (password.length <8) {
-                throw new Error('Password at least have 8 characters')
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                throw new Error('Format email tidak valid');
             }
-            const result = await credetialLogin(formData)
-            console.log(result)
+
+            if (!password || password.length === 0) {
+                throw new Error('Password tidak boleh kosong');
+            }
+
+            if (password.length < 8) {
+                throw new Error('Password minimal terdiri dari 8 karakter');
+            }
+
+            const result = await credetialLogin(formData);
+            console.log(result);
+
             if (result?.error) {
-                throw new Error (result.error)
-            } else {
-                router.push('/home')
+                throw new Error(result.error);
             }
+
+            // If no error, proceed to home
+            toast.success('Login berhasil! Selamat datang kembali.');
+            router.push('/home');
         } catch (error) {
-            setError(error instanceof Error ? error.message : 'Error unknown')
-            console.log(error)
-        }finally{
-            setLoading(false)
+            const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan tak terduga';
+            setError(errorMessage);
+            console.log(error);
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
         }
     }
+
     return (
         <form onSubmit={isRegister? handleSubmitRegister : handleSubmitLogin} className="w-full max-w-md mx-auto px-2 max-md:max-w-sm">
-            { isRegister? (<>
-            <label htmlFor="username" className="text-black font-bold text-base max-sm:text-sm">
-                Username
+            { isRegister && (
+                <>
+                    <label htmlFor="username" className="text-[#222222] font-semibold text-base max-sm:text-sm block mb-2">
+                        Username
+                    </label>
+                    <div className="relative flex w-full mb-5 mt-1">
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Masukkan username Anda"
+                            className="w-full rounded-lg border border-[#D9E55B] bg-[#FDF7E0] flex-1 text-[#222222] py-3 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6946] focus:border-transparent transition-all"
+                        />
+                        <div className="absolute pointer-events-none top-3.5 left-3.5 flex items-center">
+                            <User className="text-[#2E6946]" size={20} weight="bold" />
+                        </div>
+                    </div>
+                </>
+            )}
+
+            <label htmlFor="email" className="text-[#222222] font-semibold text-base max-sm:text-sm block mb-2">
+                {isRegister ? 'Email' : 'Email atau Username'}
             </label>
-            <div className={`relative flex w-full ${isRegister? 'mb-5 mt-1' : 'mb-7 mt-2'} `}>
-                <input
-                    type="username"
-                    name="username"
-                    placeholder="Jhon doe"
-                    className="rounded border border-[#718355] flex-1 text-black py-3 pl-8 pr-3 text-sm max-sm:py-2"
-                />
-                <div className="absolute pointer-events-none top-2.5 left-1.5">
-                    <User className="text-[#A1A8B5]" fontWeight={700} />
-                </div>
-            </div></>) : ''}
-            <label htmlFor="email" className="text-black font-bold text-base max-sm:text-sm">
-                Email atau Username
-            </label>
-            <div className={`relative flex w-full ${isRegister?'mb-5 mt-1' : 'mb-7 mt-2'} `}>
+            <div className={`relative flex w-full ${isRegister ? 'mb-5 mt-1' : 'mb-5 mt-1'}`}>
                 <input
                     type="email"
                     name="email"
-                    placeholder="nama@gmail.com atau username"
-                    className="rounded border border-[#718355] flex-1 text-black py-3 pl-8 pr-3 text-sm max-sm:py-2"
+                    placeholder={isRegister ? "Masukkan email Anda" : "Masukkan email atau username Anda"}
+                    className="w-full rounded-lg border border-[#D9E55B] bg-[#FDF7E0] flex-1 text-[#222222] py-3 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6946] focus:border-transparent transition-all"
                 />
-                <div className="absolute pointer-events-none top-2.5 left-1.5">
-                    <User className="text-[#A1A8B5]" fontWeight={700} />
+                <div className="absolute pointer-events-none top-3.5 left-3.5 flex items-center">
+                    <User className="text-[#2E6946]" size={20} weight="bold" />
                 </div>
             </div>
 
-            <label htmlFor="password" className="text-black font-bold text-base max-sm:text-sm">
+            <label htmlFor="password" className="text-[#222222] font-semibold text-base max-sm:text-sm block mb-2">
                 Password
             </label>
-            <div className={`relative flex w-full ${isRegister? 'mt-1' : 'mt-2'}`}>
+            <div className="relative flex w-full mt-1">
                 <input
                     type="password"
                     name="password"
-                    placeholder="masukkan password anda"
-                    className="rounded border border-[#718355] flex-1 text-black py-3 pl-8 pr-3 text-sm max-sm:py-2"
+                    placeholder="Masukkan password Anda"
+                    className="w-full rounded-lg border border-[#D9E55B] bg-[#FDF7E0] flex-1 text-[#222222] py-3 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2E6946] focus:border-transparent transition-all"
                 />
-                <div className="absolute pointer-events-none top-2.5 left-1.5">
-                    <LockKeyhole className="text-[#A1A8B5]" fontWeight={700} />
+                <div className="absolute pointer-events-none top-3.5 left-3.5 flex items-center">
+                    <Lock className="text-[#2E6946]" size={20} weight="bold" />
                 </div>
             </div>
-             {/* {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 text-sm p-3 rounded-md mt-4">
-                {error}
-                </div>
-            )} */}
+
             <div className="flex items-center justify-between mt-4 mb-6 max-sm:flex-col max-sm:items-start max-sm:gap-2">
-                <label htmlFor="remember" className="inline-flex items-center text-sm text-[#718355] font-semibold">
+                <label htmlFor="remember" className="inline-flex items-center text-sm text-[#2E6946] font-medium">
                     <input
                         id="remember"
                         name="remember"
                         type="checkbox"
-                        className="mr-2 h-4 w-4 rounded-md border-[#718355] text-[#718355] focus:ring-[#718355]"
+                        className="mr-2 h-4 w-4 rounded border-[#2E6946] text-[#2E6946] focus:ring-[#2E6946] focus:ring-offset-0"
                     />
                     Ingat saya
                 </label>
-                <Link
-                    href="/forgot-password"
-                    className="text-sm text-[#718355] font-semibold hover:underline"
-                >
-                    Lupa password?
-                </Link>
+                { !isRegister && (
+                    <Link
+                        href="/forgot-password"
+                        className="text-sm text-[#2E6946] font-medium hover:underline hover:text-[#F68B40]"
+                    >
+                        Lupa password?
+                    </Link>
+                )}
             </div>
 
             <div className="flex flex-col gap-4">
                 <button
                     type="submit"
-                    className="bg-[#718355] text-white font-bold text-lg w-full rounded-md p-3 cursor-pointer hover:bg-[#5e6e48] transition-colors max-sm:text-base"
+                    disabled={loading}
+                    className={`w-full rounded-lg p-3 font-bold text-lg text-white transition-colors ${
+                        loading
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'bg-[#2E6946] hover:bg-[#222222] active:scale-95'
+                    }`}
                 >
-                    Masuk ke Dashboard
+                    {loading ? 'Memproses...' : isRegister ? 'Daftar Sekarang' : 'Masuk ke Dashboard'}
                 </button>
 
-                <div className="flex items-center gap-2 text-sm max-sm:text-xs">
-                    <hr className="flex-grow border-t border-gray-300" />
-                    <span className="text-gray-500">atau masuk dengan</span>
-                    <hr className="flex-grow border-t border-gray-300" />
+                <div className="flex items-center gap-3 text-sm my-4">
+                    <div className="flex-grow border-t border-[#D9E55B]"></div>
+                    <span className="text-gray-500 text-xs">atau masuk dengan</span>
+                    <div className="flex-grow border-t border-[#D9E55B]"></div>
                 </div>
 
                 <button
                     type="button"
                     onClick={() => signIn("google", { callbackUrl: "/home" })}
-                    className="w-full bg-white text-[#495564] p-3 font-semibold flex items-center justify-center rounded-md border-2 border-[#718355] text-lg cursor-pointer hover:bg-gray-50 transition-colors max-sm:text-base"
+                    className="w-full bg-white text-[#222222] font-medium py-3 flex items-center justify-center rounded-lg border-2 border-[#D9E55B] text-base cursor-pointer hover:bg-[#FDF7E0] transition-colors active:scale-95"
                 >
-                    <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                         <path
                             fill="#4285F4"
                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -187,23 +256,24 @@ export default function FormAuth({isRegister}: {
                     Google
                 </button>
 
-                <p className="text-center w-full text-gray-500 text-sm max-sm:text-xs">
-                    {isRegister? 
-                    <>
-                        Sudah punya akun?{" "}
-                        <Link href={isRegister? '/login':'/register'} className="text-[#718355] font-bold hover:underline">
-                            Login sekarang
-                        </Link>
-                    </>: 
-                    <>
-                        Belum punya akun?{" "}
-                        <Link href={isRegister? '/login':'/register'} className="text-[#718355] font-bold hover:underline">
-                            Daftar sekarang
-                        </Link>
-                    </>
-                    }
+                <p className="text-center w-full text-gray-600 text-sm mt-6">
+                    {isRegister ? (
+                        <>
+                            Sudah punya akun?{" "}
+                            <Link href="/login" className="text-[#2E6946] font-bold hover:underline hover:text-[#F68B40]">
+                                Login sekarang
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            Belum punya akun?{" "}
+                            <Link href="/register" className="text-[#2E6946] font-bold hover:underline hover:text-[#F68B40]">
+                                Daftar sekarang
+                            </Link>
+                        </>
+                    )}
                 </p>
             </div>
         </form>
-    )
+    );
 }
