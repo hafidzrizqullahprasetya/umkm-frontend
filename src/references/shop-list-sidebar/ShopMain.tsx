@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useCart } from "@/components/header/CartContext";
 import { useCompare } from '@/components/header/CompareContext';
-import { useWishlist } from "@/components/header/WishlistContext";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -110,19 +109,6 @@ const addcart = () => toast('Successfully Add To Cart !');
     };
     const compare = () => toast('Successfully Add To Compare !');
 
-
-    const { addToWishlist } = useWishlist();
-    const handleWishlist = () => {
-        addToWishlist({
-            id: Date.now(),
-            image: `/assets/images/grocery/${ProductImage}`,
-            title: ProductTitle ?? 'Default Product Title',
-            price: parseFloat(Price ?? '0'),
-            quantity: 1,
-        });
-    };
-   const wishList = () => toast('Successfully Add To Wishlist !');
-
     return (
         <>
             {/* iamge and sction area start */}
@@ -139,17 +125,6 @@ const addcart = () => toast('Successfully Add To Cart !');
                 </a>
                 <div className="action-share-option">
                     <span
-                        className="single-action openuptip message-show-action"
-                        data-flow="up"
-                        title="Add To Wishlist"
-                              onClick={() => {
-                            handleWishlist();
-                            wishList();
-                        }}
-                    >
-                        <i className="fa-light fa-heart" />
-                    </span>
-                    <span
                         className="single-action openuptip"
                         data-flow="up"
                         title="Compare"
@@ -157,7 +132,7 @@ const addcart = () => toast('Successfully Add To Cart !');
                             handleCompare();
                             compare();
                         }}
-                        
+
                     >
                         <i className="fa-solid fa-arrows-retweet" />
                     </span>

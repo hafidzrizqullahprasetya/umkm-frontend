@@ -1,9 +1,5 @@
-import LoginPage from "@/components/features/auth/components/login";
+import { redirect } from 'next/navigation';
 
 export default function Login() {
-    return(
-        <>
-            <LoginPage isRegister={false}/>
-        </>
-    )
+    redirect('/');
 }

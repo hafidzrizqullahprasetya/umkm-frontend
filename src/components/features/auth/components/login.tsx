@@ -1,47 +1,135 @@
 import FormAuth from "../forms/form-auth";
-import Image from "next/image";
+import { X, Storefront, TrendUp, Users, ChartLineUp } from "phosphor-react";
 
-export default function LoginPage({ isRegister }: {
+interface LoginPageProps {
   isRegister: boolean;
-}) {
-  return (
-    <section className="w-full min-h-screen flex justify-center items-center bg-gradient-to-br from-[#2E6946] to-[#222222] max-md:py-4">
-      <div className="bg-white rounded-2xl flex flex-row w-4xl max-w-6xl h-[620px] max-md:flex-col max-md:w-[90%] max-md:h-auto max-md:rounded-2xl shadow-xl">
+  onClose: () => void;
+  onModeChange?: (mode: 'login' | 'register') => void;
+}
 
-        <div className="relative w-1/2 h-full rounded-l-2xl overflow-hidden max-md:w-full max-md:h-[300px] max-md:rounded-t-2xl max-md:rounded-b-none bg-gradient-to-br from-[#2E6946] to-[#D9E55B] flex items-center justify-center">
-          <div className="text-center p-8 max-md:p-4">
-            <h1 className="text-white text-3xl font-bold mb-4 max-md:text-xl">
-              {isRegister ? 'Daftarkan UMKM Mu!' : 'Temukan UMKM Terbaik di Sekitarmu'}
-            </h1>
-            <p className="text-white text-base opacity-90 max-md:text-sm mb-8">
-              {isRegister
-                ? 'Bergabunglah bersama ribuan UMKM lainnya'
-                : 'Akses berbagai produk UMKM lokal terbaik'}
-            </p>
-            <div className="flex justify-center">
-              <div className="bg-white/30 backdrop-blur-sm rounded-xl p-4 max-w-xs">
-                <div className="bg-[#FDF7E0] border-2 border-dashed border-[#2E6946] rounded-xl w-64 h-64 max-md:w-48 max-md:h-48 flex items-center justify-center">
-                  <span className="text-[#2E6946] text-sm font-medium">UMKM Image</span>
+export default function LoginPage({ isRegister, onClose, onModeChange }: LoginPageProps) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden animate-fadeIn">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          {/* Left Side - Illustration & Copywriting */}
+          <div className="hidden lg:flex flex-col justify-center bg-gradient-to-br from-primary via-primary to-dark p-12 text-white relative overflow-hidden">
+            {/* Decorative circles */}
+            <div className="absolute top-10 right-10 w-32 h-32 bg-secondary/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-10 left-10 w-40 h-40 bg-orange/20 rounded-full blur-3xl"></div>
+
+            <div className="relative z-10">
+              {/* Icon */}
+              <div className="mb-6 inline-flex items-center justify-center w-16 h-16 bg-secondary rounded-2xl shadow-lg">
+                <Storefront size={32} weight="bold" className="text-dark" />
+              </div>
+
+              {/* Main Copywriting */}
+              <h2 className="text-4xl font-bold mb-4 leading-tight">
+                {isRegister
+                  ? 'Wujudkan Impian Bisnis Anda!'
+                  : 'Kelola UMKM Lebih Mudah!'}
+              </h2>
+
+              <p className="text-lg text-white/90 mb-8 leading-relaxed">
+                {isRegister
+                  ? 'Bergabunglah dengan ribuan UMKM yang telah berkembang bersama platform kami. Saatnya bisnis Anda dikenal lebih luas!'
+                  : 'Akses dashboard lengkap untuk mengelola profil UMKM, produk, dan jangkauan pelanggan Anda.'}
+              </p>
+
+              {/* Benefits */}
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                    <TrendUp size={20} weight="bold" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">Tingkatkan Visibilitas</h4>
+                    <p className="text-sm text-white/80">Tampilkan produk UMKM Anda kepada ribuan calon pembeli</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                    <Users size={20} weight="bold" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">Jangkau Lebih Banyak Pelanggan</h4>
+                    <p className="text-sm text-white/80">Terhubung dengan konsumen yang mencari produk lokal berkualitas</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                    <ChartLineUp size={20} weight="bold" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">Kembangkan Usaha</h4>
+                    <p className="text-sm text-white/80">Dapatkan insight dan tools untuk mengembangkan bisnis Anda</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="mt-10 pt-8 border-t border-white/20 grid grid-cols-3 gap-4">
+                <div>
+                  <div className="text-3xl font-bold text-secondary">1000+</div>
+                  <div className="text-sm text-white/80">UMKM Terdaftar</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-secondary">50K+</div>
+                  <div className="text-sm text-white/80">Pengunjung/Bulan</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-secondary">4.8★</div>
+                  <div className="text-sm text-white/80">Rating Platform</div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="w-1/2 p-8 flex flex-col justify-center items-center max-md:w-full max-md:p-4">
-          <div className="w-full text-center max-md:text-center mb-6">
-            <h1 className="text-[#222222] text-3xl font-bold max-md:text-2xl">
-              {isRegister ? 'Daftar Sekarang!' : 'Selamat Datang Kembali!'}
-            </h1>
-            <p className="text-[#718355] text-base mt-2 max-md:text-sm">
-              {isRegister
-                ? 'Buat akun untuk memulai perjalanan UMKM Anda'
-                : 'Masuk untuk mengelola UMKM Anda'}
-            </p>
+          {/* Right Side - Form */}
+          <div className="p-8 lg:p-12">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-dark">
+                  {isRegister ? 'Daftar UMKM Anda' : 'Masuk ke Dashboard'}
+                </h2>
+                <p className="text-gray-500 text-sm mt-1">
+                  {isRegister ? 'Mulai perjalanan digital UMKM Anda' : 'Kelola bisnis Anda dengan mudah'}
+                </p>
+              </div>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-dark transition-colors p-1 rounded-full hover:bg-cream"
+                aria-label="Close modal"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Mobile Benefits Badge */}
+            <div className="lg:hidden mb-6 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20">
+              <div className="flex items-center gap-3 mb-2">
+                <Storefront size={24} weight="bold" className="text-primary" />
+                <h3 className="font-bold text-dark">Bergabung dengan Komunitas UMKM</h3>
+              </div>
+              <p className="text-sm text-gray-600">
+                {isRegister
+                  ? 'Tampilkan produk Anda dan jangkau lebih banyak pelanggan!'
+                  : 'Kelola profil UMKM Anda dengan dashboard lengkap'}
+              </p>
+            </div>
+
+            {/* Form */}
+            <FormAuth
+              isRegister={isRegister}
+              onModeChange={onModeChange}
+            />
           </div>
-          <FormAuth isRegister={isRegister} />
         </div>
       </div>
-    </section>
+    </div>
   );
 }

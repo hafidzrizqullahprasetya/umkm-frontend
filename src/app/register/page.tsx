@@ -1,9 +1,6 @@
-import LoginPage from "@/components/features/auth/components/login";
+import { redirect } from 'next/navigation';
 
 export default function Register(){
-    return(
-        <>
-            <LoginPage isRegister={true} />
-        </>
-    )
+    // Redirect to home page since register is now a popup
+    redirect('/');
 }

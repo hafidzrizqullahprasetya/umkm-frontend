@@ -203,12 +203,6 @@ export default function Home() {
                           <div className="share-option-shop-details">
                             <div className="single-share-option">
                               <div className="icon">
-                                <i className="fa-regular fa-heart" />
-                              </div>
-                              <span>Add To Wishlist</span>
-                            </div>
-                            <div className="single-share-option">
-                              <div className="icon">
                                 <i className="fa-solid fa-share" />
                               </div>
                               <span>Share On social</span>

@@ -1,8 +1,6 @@
-import { getAllUmkm } from "@/lib/data-fetch";
-import UmkmClientPageSimple from "@/components/features/umkm";
+import { redirect } from 'next/navigation';
 
-export default async function Page() {
-  const allUmkm = await getAllUmkm();
-
-  return <UmkmClientPageSimple allUmkm={allUmkm} />;
+export default function UMKMPage() {
+  // Redirect /umkm to the root as requested
+  redirect('/');
 }

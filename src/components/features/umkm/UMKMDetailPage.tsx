@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { Heart, ShareNetwork, Star, MapPin, Phone, Envelope, Globe, ShoppingBag, At, InstagramLogo, FacebookLogo, TiktokLogo, TwitterLogo } from "phosphor-react";
+import { ShareNetwork, Star, MapPin, Phone, Envelope, Globe, ShoppingBag, At, InstagramLogo, FacebookLogo, TiktokLogo, TwitterLogo } from "phosphor-react";
 import Header from "@/components/shared/header/Header";
 import Footer from "@/components/shared/Footer";
 import { Umkm } from "@/types/umkm";
@@ -176,10 +176,6 @@ const UMKMDetailPage = ({ umkm }: UMKMDetailPageProps) => {
 
                   {/* Social Share */}
                   <div className="flex items-center gap-3 pt-6 border-t border-gray-200">
-                    <button className="flex items-center gap-2 text-gray-600 hover:text-[var(--primary)] transition-colors">
-                      <Heart size={20} weight="regular" />
-                      <span className="text-sm">Tambah ke Favorit</span>
-                    </button>
                     <button className="flex items-center gap-2 text-gray-600 hover:text-[var(--primary)] transition-colors">
                       <ShareNetwork size={20} weight="regular" />
                       <span className="text-sm">Bagikan</span>
