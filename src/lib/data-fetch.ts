@@ -11,7 +11,7 @@ export async function getAllUmkm(): Promise<Umkm[]> {
     console.log('Fetching UMKM from:', `${baseUrl}/api/umkm`);
 
     const res = await fetch(normalizeUrl(baseUrl, '/api/umkm'), {
-      next: { revalidate: 3600 },
+      cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
       },
