@@ -1,4 +1,6 @@
 import React from 'react'
+import Link from 'next/link';
+import LoadingLink from '@/components/shared/LoadingLink';
 import { FacebookLogo, TwitterLogo, LinkedinLogo, YoutubeLogo, InstagramLogo, ArrowRight } from "phosphor-react"
 
 const Footer = () => {
@@ -30,21 +32,21 @@ const Footer = () => {
                     <div className="footer-section">
                         <h3 className="text-lg font-semibold mb-4">UMKM</h3>
                         <ul className="space-y-2">
-                            <li><a href="/umkm" className="text-gray-400 hover:text-white transition-colors">Direktori UMKM</a></li>
-                            <li><a href="/umkm?category=kuliner" className="text-gray-400 hover:text-white transition-colors">Kuliner</a></li>
-                            <li><a href="/umkm?category=fashion" className="text-gray-400 hover:text-white transition-colors">Fashion</a></li>
-                            <li><a href="/umkm?category=kerajinan" className="text-gray-400 hover:text-white transition-colors">Kerajinan</a></li>
-                            <li><a href="/umkm?category=retail" className="text-gray-400 hover:text-white transition-colors">Retail</a></li>
+                            <li><LoadingLink href="/umkm" className="text-gray-400 hover:text-white transition-colors">Direktori UMKM</LoadingLink></li>
+                            <li><LoadingLink href="/umkm?category=kuliner" className="text-gray-400 hover:text-white transition-colors">Kuliner</LoadingLink></li>
+                            <li><LoadingLink href="/umkm?category=fashion" className="text-gray-400 hover:text-white transition-colors">Fashion</LoadingLink></li>
+                            <li><LoadingLink href="/umkm?category=kerajinan" className="text-gray-400 hover:text-white transition-colors">Kerajinan</LoadingLink></li>
+                            <li><LoadingLink href="/umkm?category=retail" className="text-gray-400 hover:text-white transition-colors">Retail</LoadingLink></li>
                         </ul>
                     </div>
 
                     <div className="footer-section">
                         <h3 className="text-lg font-semibold mb-4">Perusahaan</h3>
                         <ul className="space-y-2">
-                            <li><a href="/about" className="text-gray-400 hover:text-white transition-colors">Tentang Kami</a></li>
-                            <li><a href="/contact" className="text-gray-400 hover:text-white transition-colors">Kontak</a></li>
-                            <li><a href="/faq" className="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
-                            <li><a href="/blog" className="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+                            <li><LoadingLink href="/about" className="text-gray-400 hover:text-white transition-colors">Tentang Kami</LoadingLink></li>
+                            <li><LoadingLink href="/contact" className="text-gray-400 hover:text-white transition-colors">Kontak</LoadingLink></li>
+                            <li><LoadingLink href="/faq" className="text-gray-400 hover:text-white transition-colors">FAQ</LoadingLink></li>
+                            <li><LoadingLink href="/blog" className="text-gray-400 hover:text-white transition-colors">Blog</LoadingLink></li>
                         </ul>
                     </div>
 

@@ -20,20 +20,21 @@ export const authConfig: NextAuthOptions = {
         }
         try {
           const request = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/user?email=${credentials?.email}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/check?email=${credentials?.email}`,
             {
               method: "GET",
             }
           );
-          const user = await request.json();
-          const data = user.data;
-          console.log(data);
-          if (data) {
-            console.log(credentials)
-            console.log(JSON.stringify({
-                  email: credentials?.email,
-                  password: credentials?.password,
-                }),)
+          const result = await request.json();
+          console.log(result);
+          if (result.data && result.data.exists) {
+            console.log(credentials);
+            console.log(
+              JSON.stringify({
+                email: credentials?.email,
+                password: credentials?.password,
+              })
+            );
             const req = await fetch(
               `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
               {
@@ -45,11 +46,13 @@ export const authConfig: NextAuthOptions = {
                 }),
               }
             );
-            console.log(await req.json());
-            if (req.ok) {
-              return data;
+            const loginResult = await req.json();
+            console.log(loginResult);
+            if (req.ok && loginResult.data) {
+              // Return the user data including token and role
+              return { ...loginResult.data };
             } else {
-              throw new Error("Please Check The Password");
+              throw new Error(loginResult.message || "Please Check The Password");
             }
           } else {
             throw new Error("Please Register The Email First");
@@ -71,11 +74,11 @@ export const authConfig: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       console.log("SignIn callback triggered");
-      console.log(user)
+      console.log(user);
       if (!user?.email) return false;
-      if(account?.provider == 'google'){
+      if (account?.provider == "google") {
         try {
-          console.log(process.env.NEXT_PUBLIC_BACKEND_URL)
+          console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
             {
@@ -89,10 +92,10 @@ export const authConfig: NextAuthOptions = {
           );
           const result = await res.json();
           console.log(result);
-          if (res.ok) {
+          if (res.ok && result.data) {
             return true;
           }
-  
+
           if (res.status === 404) {
             const registerRes = await fetch(
               `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
@@ -105,18 +108,20 @@ export const authConfig: NextAuthOptions = {
                 }),
               }
             );
-  
+
+            const registerResult = await registerRes.json();
+
             if (registerRes.ok) return true;
             else return false;
           }
-  
+
           return false;
         } catch (err) {
           console.error("Error in signIn callback:", err);
           return false;
         }
       }
-      return true
+      return true;
     },
     async jwt({ token, user, account }) {
       if (account) {
@@ -125,12 +130,37 @@ export const authConfig: NextAuthOptions = {
       }
       if (user) {
         token.email = user.email;
+        token.role = (user as any).role;
+        token.name = (user as any).name;
+        token.address = (user as any).address;
+        // Store token if provided by user object (from login response)
+        if ((user as any).token) {
+          token.token = (user as any).token;
+        }
       }
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
+      // Include token in session if available
+      if (token.token) {
+        (session as any).token = token.token as string;
+      }
+      if (session.user) {
+        (session.user as any).role = token.role;
+        (session.user as any).name = token.name;
+        (session.user as any).address = token.address;
+        // Also include token in user object for easier access
+        if (token.token) {
+          (session.user as any).token = token.token as string;
+        }
+      }
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // After successful sign in, redirect based on role
+      // This is primarily for Google OAuth redirects
+      return url.startsWith(baseUrl) ? url : baseUrl + "/home";
     },
   },
   pages: {

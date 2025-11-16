@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(
+  request: Request,
+  { params }: { params: { userId: string } }
+) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://be-mia-umkm.vercel.app';
-    const response = await fetch(`${baseUrl}/api/umkm`, {
+    const response = await fetch(`${baseUrl}/api/umkm/user/${params.userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -19,7 +22,7 @@ export async function GET() {
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error fetching UMKM data from backend:', error);
+    console.error('Error fetching user UMKM data from backend:', error);
     return NextResponse.json({ message: 'Internal Server Error', error: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
 }

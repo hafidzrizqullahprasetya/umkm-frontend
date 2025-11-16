@@ -35,10 +35,14 @@ export interface Umkm {
   description: string | null;
   contact: string | null;
   location: string | null;
+  gmaps: string | null;
   logo: string | null;
+  lat?: number;
+  lng?: number;
   created_at: Date;
   updated_at: Date;
   online_shop: OnlineShop[];
   umkm_galeri: UmkmGaleri[];
   media_sosial: MediaSosial[];
+  images?: string[];
 }

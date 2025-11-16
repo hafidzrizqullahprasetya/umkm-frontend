@@ -6,14 +6,23 @@ import Header from '@/components/shared/header/Header';
 
 export default async function Page() {
   const session = await getServerSession(authConfig);
+
+  // Fetch UMKM data from API
   const allUmkm = await getAllUmkm();
+
+  // Get unique categories
+  const allCategories = Array.from(new Set(allUmkm.map((u: any) => u.type).filter(Boolean))).sort();
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header user={session?.user} />
+      <Header
+        user={session?.user}
+        allUmkm={allUmkm}
+        allCategories={allCategories}
+      />
 
       {/* Main Content - UMKM Listings */}
-      <main className="mt-20"> {/* Add margin to account for fixed header */}
+      <main className="pt-32"> {/* Add padding to account for fixed header + breadcrumb */}
         <UmkmClientPageSimple allUmkm={allUmkm} />
       </main>
     </div>

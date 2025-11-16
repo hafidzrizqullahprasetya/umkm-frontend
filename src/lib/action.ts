@@ -27,7 +27,11 @@ export async function credetialLogin(formData: FormData) {
             redirect: false
         });
 
-        return login;
+        // Return login result with role from backend response
+        return {
+            ...login,
+            role: data.data?.role
+        };
     } catch (error) {
         console.error('Login error:', error);
         return {

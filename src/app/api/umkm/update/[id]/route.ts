@@ -1,13 +1,19 @@
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
+    const umkmId = parseInt(params.id);
+    const body = await request.json();
     const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://be-mia-umkm.vercel.app';
-    const response = await fetch(`${baseUrl}/api/umkm`, {
-      method: 'GET',
+    const response = await fetch(`${baseUrl}/api/umkm/update/${umkmId}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
@@ -19,7 +25,10 @@ export async function GET() {
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error fetching UMKM data from backend:', error);
-    return NextResponse.json({ message: 'Internal Server Error', error: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
+    console.error('Error updating UMKM in backend:', error);
+    return NextResponse.json(
+      { success: false, message: 'Failed to update UMKM', error: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
   }
 }

@@ -20,14 +20,6 @@ export default function FormAuth({
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    if (error) {
-      toast.error(error, {
-        position: "bottom-right",
-        autoClose: 5000,
-      });
-    }
-  }, [error]);
 
   async function handleSubmitRegister(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -63,19 +55,8 @@ export default function FormAuth({
         throw new Error("Password tidak boleh kosong");
       }
 
-      if (password.length < 8) {
-        throw new Error("Password minimal terdiri dari 8 karakter");
-      }
-
-      const hasUpperCase = /[A-Z]/.test(password);
-      const hasLowerCase = /[a-z]/.test(password);
-      const hasNumbers = /\d/.test(password);
-      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-      if (!(hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar)) {
-        throw new Error(
-          "Password harus mengandung huruf besar, huruf kecil, angka, dan karakter spesial"
-        );
+      if (password.length < 6) {
+        throw new Error("Password minimal terdiri dari 6 karakter");
       }
 
       const response = await credentialRegister(formData);
@@ -87,11 +68,10 @@ export default function FormAuth({
       }
 
       // If no error and we got a successful response, proceed to home
-      toast.success(
-        isRegister
-          ? "UMKM Anda berhasil terdaftar! Selamat bergabung."
-          : "Selamat datang kembali! Kelola UMKM Anda sekarang."
-      );
+      toast.success("UMKM Anda berhasil terdaftar! Selamat bergabung.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
       router.push("/home");
     } catch (error) {
       const errorMessage =
@@ -100,7 +80,10 @@ export default function FormAuth({
           : "Terjadi kesalahan tak terduga";
       setError(errorMessage);
       console.log(error);
-      toast.error(errorMessage);
+      toast.error(errorMessage, {
+        position: "top-center",
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }
@@ -130,8 +113,8 @@ export default function FormAuth({
         throw new Error("Password tidak boleh kosong");
       }
 
-      if (password.length < 8) {
-        throw new Error("Password minimal terdiri dari 8 karakter");
+      if (password.length < 6) {
+        throw new Error("Password minimal terdiri dari 6 karakter");
       }
 
       const result = await credetialLogin(formData);
@@ -141,9 +124,19 @@ export default function FormAuth({
         throw new Error(result.error);
       }
 
-      // If no error, proceed to home
-      toast.success("Selamat datang kembali! Kelola UMKM Anda sekarang.");
-      router.push("/home");
+      // Redirect based on user role
+      const redirectPath = result?.role === "administrator" ? "/admin" : "/home";
+
+      toast.success(
+        result?.role === "administrator"
+          ? "Selamat datang, Administrator!"
+          : "Selamat datang kembali! Kelola UMKM Anda sekarang.",
+        {
+          position: "top-center",
+          autoClose: 3000,
+        }
+      );
+      router.push(redirectPath);
     } catch (error) {
       const errorMessage =
         error instanceof Error
@@ -151,7 +144,10 @@ export default function FormAuth({
           : "Terjadi kesalahan tak terduga";
       setError(errorMessage);
       console.log(error);
-      toast.error(errorMessage);
+      toast.error(errorMessage, {
+        position: "top-center",
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }
@@ -241,29 +237,29 @@ export default function FormAuth({
         </div>
       </div>
 
-      {/* Remember Me & Forgot Password */}
-      <div className="flex items-center justify-between pt-1">
-        <label
-          htmlFor="remember"
-          className="inline-flex items-center text-sm text-primary font-medium cursor-pointer"
-        >
-          <input
-            id="remember"
-            name="remember"
-            type="checkbox"
-            className="mr-2 h-4 w-4 rounded border-2 border-primary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
-          />
-          Ingat saya
-        </label>
-        {!isRegister && (
+      {/* Remember Me & Forgot Password - Login Only */}
+      {!isRegister && (
+        <div className="flex items-center justify-between pt-1">
+          <label
+            htmlFor="remember"
+            className="inline-flex items-center text-sm text-primary font-medium cursor-pointer"
+          >
+            <input
+              id="remember"
+              name="remember"
+              type="checkbox"
+              className="mr-2 h-4 w-4 rounded border-2 border-primary text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
+            />
+            Ingat saya
+          </label>
           <Link
             href="/forgot-password"
             className="text-sm text-primary font-medium hover:text-secondary transition-colors"
           >
             Lupa password?
           </Link>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Submit Button */}
       <div className="pt-2">
