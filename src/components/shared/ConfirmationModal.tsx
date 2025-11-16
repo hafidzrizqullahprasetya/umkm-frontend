@@ -28,7 +28,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-white rounded-lg shadow-lg p-6 z-50">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold text-[var(--dark)]">{title}</DialogTitle>
         </DialogHeader>

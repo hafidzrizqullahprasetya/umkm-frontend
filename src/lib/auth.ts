@@ -1,6 +1,7 @@
 import { NextAuthOptions, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import { normalizeUrl } from "./utils";
 
 export const authConfig: NextAuthOptions = {
   providers: [
@@ -20,7 +21,7 @@ export const authConfig: NextAuthOptions = {
         }
         try {
           const request = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/check?email=${credentials?.email}`,
+            normalizeUrl(process.env.NEXT_PUBLIC_BACKEND_URL, `/user/check?email=${credentials?.email}`),
             {
               method: "GET",
             }
@@ -30,7 +31,7 @@ export const authConfig: NextAuthOptions = {
           if (result.data && result.data.exists) {
             console.log(credentials);
             const req = await fetch(
-              `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+              normalizeUrl(process.env.NEXT_PUBLIC_BACKEND_URL, '/auth/login'),
               {
                 method: "POST",
                 credentials: 'include',
@@ -82,7 +83,7 @@ export const authConfig: NextAuthOptions = {
     async jwt({ token, user, account }) {
       if (account) {
         // Untuk Google OAuth
-        const fetching = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, {
+        const fetching = await fetch(normalizeUrl(process.env.NEXT_PUBLIC_BACKEND_URL, '/auth/login'), {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },

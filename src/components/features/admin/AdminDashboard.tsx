@@ -33,6 +33,7 @@ import {
 } from "phosphor-react";
 import Link from "next/link";
 import UmkmFormModal from "../dashboard/UmkmFormModal"; // Import the shared modal
+import ConfirmationModal from "@/components/shared/ConfirmationModal";
 
 interface AdminDashboardProps {
   user: any;
@@ -101,6 +102,9 @@ export default function AdminDashboard({
 
   // State for restriction modal
   const [showRestrictionModal, setShowRestrictionModal] = useState(false);
+  
+  // State for logout confirmation
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
 
 
@@ -114,9 +118,12 @@ export default function AdminDashboard({
   };
 
   const handleLogout = async () => {
-    if (confirm("Apakah Anda yakin ingin keluar?")) {
-      await signOut({ callbackUrl: "/" });
-    }
+    setShowLogoutConfirm(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    await signOut({ callbackUrl: "/" });
+    setShowLogoutConfirm(false);
   };
 
   // Pagination calculations
@@ -1914,6 +1921,17 @@ export default function AdminDashboard({
           </div>
         </div>
       )}
+
+      {/* Logout Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleConfirmLogout}
+        title="Konfirmasi Keluar"
+        message="Apakah Anda yakin ingin keluar dari akun Anda?"
+        confirmText="Ya, Keluar"
+        cancelText="Batal"
+      />
     </div>
   );
 }
