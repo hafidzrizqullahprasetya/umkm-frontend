@@ -6,6 +6,7 @@ import DashboardPage from "@/components/features/dashboard/DashboardPage";
 
 export default async function HomePage() {
   const session = await getServerSession(authConfig);
+  console.log("HomePage session:", session);
 
   // Redirect to home if not logged in
   if (!session?.user) {

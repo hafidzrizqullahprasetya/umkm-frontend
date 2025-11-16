@@ -29,16 +29,11 @@ export const authConfig: NextAuthOptions = {
           console.log(result);
           if (result.data && result.data.exists) {
             console.log(credentials);
-            console.log(
-              JSON.stringify({
-                email: credentials?.email,
-                password: credentials?.password,
-              })
-            );
             const req = await fetch(
               `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
               {
                 method: "POST",
+                credentials: 'include',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   email: credentials?.email,
@@ -49,8 +44,14 @@ export const authConfig: NextAuthOptions = {
             const loginResult = await req.json();
             console.log(loginResult);
             if (req.ok && loginResult.data) {
-              // Return the user data including token and role
-              return { ...loginResult.data };
+              return {
+                id: loginResult.data.id.toString(),
+                email: loginResult.data.email,
+                name: loginResult.data.username,
+                role: loginResult.data.role,
+                address: loginResult.data.address,
+                accessToken: loginResult.data.token,
+              };
             } else {
               throw new Error(loginResult.message || "Please Check The Password");
             }
@@ -76,90 +77,60 @@ export const authConfig: NextAuthOptions = {
       console.log("SignIn callback triggered");
       console.log(user);
       if (!user?.email) return false;
-      if (account?.provider == "google") {
-        try {
-          console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email: user.email,
-                username: user.name,
-              }),
-            }
-          );
-          const result = await res.json();
-          console.log(result);
-          if (res.ok && result.data) {
-            return true;
-          }
-
-          if (res.status === 404) {
-            const registerRes = await fetch(
-              `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  email: user.email,
-                  username: user.name,
-                }),
-              }
-            );
-
-            const registerResult = await registerRes.json();
-
-            if (registerRes.ok) return true;
-            else return false;
-          }
-
-          return false;
-        } catch (err) {
-          console.error("Error in signIn callback:", err);
-          return false;
-        }
-      }
       return true;
     },
     async jwt({ token, user, account }) {
       if (account) {
-        token.accessToken = account.access_token;
-        token.email = user.email;
-      }
-      if (user) {
-        token.email = user.email;
-        token.role = (user as any).role;
-        token.name = (user as any).name;
-        token.address = (user as any).address;
-        // Store token if provided by user object (from login response)
-        if ((user as any).token) {
-          token.token = (user as any).token;
+        // Untuk Google OAuth
+        const fetching = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: user.email,
+            username: user.name
+          }),
+        });
+        const result = await fetching.json();
+        token.accessToken = result.data.token
+        
+        if (fetching.ok && result.data) {
+          console.log("Google OAuth login successful:", result);
+          token.role = result.data.role;
+          token.accessToken = result.data.token;
+          token.email = user.email;
+          token.name = user.name;
+          token.address = result.data.address;
         }
+        return token;
+      }
+      
+      if (user) {
+        // Untuk Credentials provider - user sudah berisi semua data dari authorize
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.role = (user as any).role;
+        token.accessToken = (user as any).accessToken;
+        token.address = (user as any).address;
+        return token;
       }
       return token;
     },
     async session({ session, token }) {
+      // Expose token data ke session
+      session.accessToken = token.accessToken
       session.accessToken = token.accessToken as string;
-      // Include token in session if available
-      if (token.token) {
-        (session as any).token = token.token as string;
-      }
+
       if (session.user) {
         (session.user as any).role = token.role;
         (session.user as any).name = token.name;
+        (session.user as any).email = token.email;
         (session.user as any).address = token.address;
-        // Also include token in user object for easier access
-        if (token.token) {
-          (session.user as any).token = token.token as string;
-        }
       }
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // After successful sign in, redirect based on role
-      // This is primarily for Google OAuth redirects
       return url.startsWith(baseUrl) ? url : baseUrl + "/home";
     },
   },

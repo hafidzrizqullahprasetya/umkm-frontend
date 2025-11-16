@@ -44,7 +44,8 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
   const [showRestrictionModal, setShowRestrictionModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
-
+  const token = session?.accessToken
+  console.log(userEmail)
   // Get user initials from name
   const getUserInitials = (name: string) => {
     const nameParts = name.trim().split(' ');
@@ -112,7 +113,8 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
 
     try {
       const baseUrl = getBackendUrl();
-      const token = (session as any)?.token;
+      // const token = (session as any)?.accessToken;
+      // console.log(token)
       const response = await fetch(`${baseUrl}/api/umkm?id=${umkmId}`, {
         method: 'DELETE',
         headers: {
@@ -138,9 +140,9 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
 
     try {
       const baseUrl = getBackendUrl();
-      const token = (session as any)?.token;
+      // const token = (session as any)?.token;
 
-      let url = `${baseUrl}/api/umkm`;
+      let url = `${baseUrl}/api/umkm?email=${userEmail}`;
       if (method === 'PUT') {
         url += `?email=${encodeURIComponent(userEmail)}`;
       }
@@ -153,12 +155,15 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
         },
         body: JSON.stringify(data),
       });
-
+      console.log(token)
+      console.log(JSON.stringify(data))
+      console.log(url)
+      const result = await response.json();
+      console.log(result)
       if (!response.ok) {
         throw new Error(method === 'POST' ? 'Failed to create UMKM' : 'Failed to update UMKM');
       }
 
-      const result = await response.json();
       const updatedUmkm = result.data;
 
       if (modalMode === 'add') {

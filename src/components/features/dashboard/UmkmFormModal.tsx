@@ -135,12 +135,17 @@ export default function UmkmFormModal({ isOpen, onClose, onSubmit, umkm, mode, u
       formData.append('image', file);
 
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+      console.log(formData)
       const response = await fetch(`${backendUrl}/upload/single`, {
         method: 'POST',
+        headers: {
+          authorization: '', 
+        },
         body: formData,
       });
 
       const data = await response.json();
+      console.log(data)
 
       if (!response.ok) {
         throw new Error(data.message || 'Upload failed');
