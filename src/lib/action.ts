@@ -1,9 +1,10 @@
 import { signIn } from "next-auth/react";
+import { normalizeUrl } from "./utils";
 
 export async function credetialLogin(formData: FormData) {
     try {
         // First, try to login via the backend to validate credentials and get proper error messages
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, {
+        const response = await fetch(normalizeUrl(process.env.NEXT_PUBLIC_BACKEND_URL, '/auth/login'), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -48,7 +49,7 @@ export async function credentialRegister(formData: FormData) {
             password: formData.get('password')
         });
 
-        const registerRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`, {
+        const registerRes = await fetch(normalizeUrl(process.env.NEXT_PUBLIC_BACKEND_URL, '/auth/register'), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

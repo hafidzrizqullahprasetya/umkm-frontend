@@ -1,4 +1,5 @@
 import { Umkm } from "@/types/umkm";
+import { normalizeUrl } from "./utils";
 
 const getBaseUrl = () => {
   return process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
@@ -9,7 +10,7 @@ export async function getAllUmkm(): Promise<Umkm[]> {
     const baseUrl = getBaseUrl();
     console.log('Fetching UMKM from:', `${baseUrl}/api/umkm`);
 
-    const res = await fetch(`${baseUrl}/api/umkm`, {
+    const res = await fetch(normalizeUrl(baseUrl, '/api/umkm'), {
       next: { revalidate: 3600 },
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +56,7 @@ export async function getUserUmkm(userEmail: string, token?: string): Promise<Um
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const res = await fetch(`${baseUrl}/api/umkm/detail?email=${encodeURIComponent(userEmail)}`, {
+    const res = await fetch(normalizeUrl(baseUrl, `/api/umkm/detail?email=${encodeURIComponent(userEmail)}`), {
       method: 'GET',
       cache: 'no-store',
       headers: headers,
