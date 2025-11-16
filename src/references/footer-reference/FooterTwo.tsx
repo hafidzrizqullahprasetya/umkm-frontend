@@ -24,7 +24,7 @@ function FooterTwo() {
                                                     if (parent) {
                                                         const textSpan = document.createElement('span');
                                                         textSpan.className = 'text-xl font-bold text-white';
-                                                        textSpan.textContent = 'UMKM Indonesia';
+                                                        textSpan.textContent = 'Tampung';
                                                         parent.appendChild(textSpan);
                                                     }
                                                 }}
@@ -170,7 +170,7 @@ function FooterTwo() {
                             <div className="col-lg-12">
                                 <div className="copyright-arae-two-wrapper">
                                     <p className="disc">
-                                        Copyright 2025 <a href="#">©UMKM Indonesia</a>. All rights reserved.
+                                        Copyright 2025 <a href="#">©Tampung</a>. All rights reserved.
                                     </p>
                                     <div className="payment-processw-area">
                                         <span>Metode Pembayaran:</span>

@@ -1,0 +1,169 @@
+{
+  "umkms": [
+    {
+      "email": "dapuribu@email.com",
+      "name": "Dapur Ibu",
+      "type": "Kuliner",
+      "description": "Warung Makan Dapur Ibu merupakan warung makan yang berasal dari Yogyakarta, tepatnya berlokasi di Jl. Bonjotan, Candi Winangun, Sariharjo, Kec. Ngaglik, Kab. Sleman, Yogyakarta. Dikenal dengan cita rasa rumahan yang autentik, warung ini menyajikan beragam menu lezat seperti aneka nasi ayam mulai dari ayam bumbu, ayam salted egg, dan lainnya serta aneka daging seperti iga bakar, iga kremes, dan daging slice. Tak hanya itu, masih banyak pilihan menu menarik lainnya.\n\nBerdiri sejak tahun 2024, Warung Makan Dapur Ibu menjadi tempat favorit bagi berbagai kalangan, terutama mahasiswa yang ingin menikmati hidangan lezat dengan harga terjangkau. Suasana warung yang sederhana, nyaman, dan bernuansa cerah kuning hijau memberikan kesan hangat bagi siapa pun yang berkunjung. Fasilitas seperti kamar mandi, mushola dan Wi-Fi gratis juga menambah kenyamanan pengunjung. \n\nSelain makan di tempat, tersedia layanan pesan antar melalui ShopeeFood dan GoFood untuk memudahkan pelanggan menikmati menu favorit di mana saja. Dengan motto “Rasa Autentik Harga Mahasiswa,” Warung Makan Dapur Ibu terus berkomitmen untuk menyajikan makanan yang lezat, higienis, dan memuaskan bagi setiap pelanggan.",
+      "location": "Jl. Candi Winangun, Candi Winangun, Sardonoharjo, Kec. Ngaglik, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55581",
+      "contact": "085640251999",
+      "logo": "",
+      "gmaps": "https://maps.app.goo.gl/2fb4cipBMWEoXJYr9?g_st=iw",
+      "online_shop": [],
+      "media_sosial": [
+        {
+          "type": "Instagram",
+          "url": "https://instagram.com/dapuribu.jakal"
+        }
+      ],
+      "umkm_galeri": []
+    },
+    {
+      "email": "matchati@email.com",
+      "name": "Matcha Ti",
+      "type": "Kuliner",
+      "description": "",
+      "location": "Jl. Pogung Kidul, Pogung Kidul, Sinduadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55284",
+      "contact": "",
+      "logo": "",
+      "gmaps": "https://maps.app.goo.gl/BSQdTJDkBM6Kti1Z6",
+      "online_shop": [],
+      "media_sosial": [
+        {
+          "type": "Instagram",
+          "url": "https://instagram.com/macthati.idn"
+        }
+      ],
+      "umkm_galeri": []
+    },
+    {
+      "email": "crystallaundry@email.com",
+      "name": "Crystal Laundry Express",
+      "type": "Jasa",
+      "description": "Melayani :\nCuci Reguler (3hari)\nCuci Kilat 1 Hari(24jam)\nCuci Express 6jam/8jam\nCuci Kering\nCuci Lipat\nCuci Setrika\nSatuan & Kiloan\nMINIMAL ORDER 2KG\nPAKAIAN PUTIH/BRANDED/LUNTUR HARAP DI PISAH DAN MASUK LAYANAN SATUAN, JIKA TETAP MASUK LAYANAN KILOAN ADA KERUSAKAN SEPERTI LUNTUR/BERKERUT/BERBULU BUKAN TANGGUNG JAWAB KAMI\nFREE ANTAR JEMPUT MIN 3KG & RADIUS 3KM\nBERLANGGANAN FREE GODIE BAG CRYSTAL LAUNDRY\nBATAS KOMPLAIN 1×24 JAM SETELAH PAKAIAN DITERIMA\nTERIMAKASIH, CRYSTAL LAUNDRY EXPRESS",
+      "location": "Jl. Blimbingsari No.4, RT.04/RW.16, Blimbing Sari, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55282",
+      "contact": "087711895987",
+      "logo": "",
+      "gmaps": "Crystal Laundry Express",
+      "online_shop": [],
+      "media_sosial": [],
+      "umkm_galeri": []
+    },
+    {
+      "email": "sandava@email.com",
+      "name": "Sandava Coffee & Space",
+      "type": "Kuliner",
+      "description": "Sandava Coffee & Space menyediakan berbagai olahan coffee & snack bernuansa Nusantara dan suasana pasca kolonial",
+      "location": "Jl. Sendowo No.C47, Sendowo, Sinduadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281",
+      "contact": "082134897245",
+      "logo": "",
+      "gmaps": "Sandava | Coffee & Space",
+      "online_shop": [],
+      "media_sosial": [
+        {
+          "type": "Instagram",
+          "url": "https://www.instagram.com/di.sandava/"
+        }
+      ],
+      "umkm_galeri": []
+    },
+    {
+      "email": "warungyoben@email.com",
+      "name": "Warung Yo Ben",
+      "type": "Kuliner",
+      "description": "Menu Spesial Mie",
+      "location": "Jl. Cik Di Tiro No.31, Terban, Kec. Gondokusuman, Kota Yogyakarta, Daerah Istimewa Yogyakarta 55223",
+      "contact": "087734984518",
+      "logo": "",
+      "gmaps": "Warung Yo Ben",
+      "online_shop": [
+        {
+          "type": "GoJek",
+          "url": "https://gofood.co.id/yogyakarta/restaurant/warung-yo-ben-depan-rs-panti-rapih-73340cd6-893a-4b27-8aff-a31ba3ce38c4"
+        }
+      ],
+      "media_sosial": [
+        {
+          "type": "Instagram",
+          "url": "https://www.instagram.com/warungyoben/"
+        }
+      ],
+      "umkm_galeri": []
+    },
+    {
+      "email": "bouquetjogja@email.com",
+      "name": "Buket Snack dan Bunga \"Bouquet Jogja\"",
+      "type": "Kerajinan",
+      "description": "Kami menjual berbagai macam buket dan hadiah, seperti buket bunga, buket uang, buket makanan, papan nama, serta menyediakan jasa pembuatan hantaran pernikahan dan berbagai jenis hadiah lainnya yang dapat disesuaikan dengan permintaan pelanggan.\n\nWe sell a variety of bouquets and gifts, such as flower bouquets, money bouquets, food bouquets, name boards, and provide wedding gift arrangement services, as well as other customized gifts based on customer requests.",
+      "location": "Sendowo E 99, RW.007/055, Sinduadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimwewa Yogyakarta 55284",
+      "contact": "083836115959",
+      "logo": "",
+      "gmaps": "Buket Snack dan Bunga \"Bouquet Jogja\"",
+      "online_shop": [],
+      "media_sosial": [
+        {
+          "type": "Instagram",
+          "url": "https://www.instagram.com/_bouquetjogja/"
+        }
+      ],
+      "umkm_galeri": []
+    },
+    {
+      "email": "yummdimsum@email.com",
+      "name": "Yumm Dimsum",
+      "type": "Kuliner",
+      "description": "Yumm Dimsum merupakan pabrik dimsum yang berasal dari Kota Bandung dan sudah berdiri sejak tahun 2018.\nTelah dipercaya oleh para pelaku usaha seperti hotel, resto, cafe dan catering sebagai supplier Dimsum berkualitas premium tanpa bahan pengawet yang sudah halal dan BPOM.\nYumm Dimsum hadir dengan menawarkan lebih dari 30 varian dimsum baik dimsum kukus, dimsum goreng, bento dan bakpao.\nKami siap mensupply kebutuhan dimsum anda dan siap menerima pesanan custom dimsum mulai dari ukuran, bentuk, topping dan bahkan warna kulit.",
+      "location": "KM 5 No. 94, Jl. Kaliurang, Kocoran, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281",
+      "contact": "082241588445",
+      "logo": "",
+      "gmaps": "Yumm Dimsum Yogyakarta",
+      "online_shop": [],
+      "media_sosial": [
+        {
+          "type": "Instagram",
+          "url": "https://www.instagram.com/yumm.dimsum/"
+        }
+      ],
+      "umkm_galeri": []
+    },
+    {
+      "email": "kopisembilan@email.com",
+      "name": "Kopi Sembilan",
+      "type": "Kuliner",
+      "description": "",
+      "location": "",
+      "contact": "",
+      "logo": "",
+      "gmaps": "",
+      "online_shop": [],
+      "media_sosial": [],
+      "umkm_galeri": []
+    },
+    {
+      "email": "leveluplaundry@email.com",
+      "name": "level up laundry jogja",
+      "type": "Jasa",
+      "description": "",
+      "location": "",
+      "contact": "",
+      "logo": "",
+      "gmaps": "",
+      "online_shop": [],
+      "media_sosial": [],
+      "umkm_galeri": []
+    },
+    {
+      "email": "pempekwongkito@email.com",
+      "name": "Pempek Asli Wong Kito",
+      "type": "Kuliner",
+      "description": "",
+      "location": "Gondangan RT 06 RW 50 Maguwoharjo Depok Sleman Yogyakarta",
+      "contact": "081325081046",
+      "logo": "",
+      "gmaps": "",
+      "online_shop": [],
+      "media_sosial": [],
+      "umkm_galeri": []
+    }
+  ]
+}

@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { Umkm } from '@/types/umkm';
 import { X, Plus, Trash, Upload, ShoppingBag, ShareNetwork, ImageSquare, Pencil, FloppyDisk } from 'phosphor-react';
+import ConfirmationModal from '@/components/shared/ConfirmationModal';
+import InputModal from '@/components/shared/InputModal';
 
 interface UmkmFormModalProps {
   isOpen: boolean;
@@ -53,7 +56,9 @@ export default function UmkmFormModal({ isOpen, onClose, onSubmit, umkm, mode, u
   // Gallery
   const [gallery, setGallery] = useState<Array<{ section: string; img_url: string }>>([]);
   const [editingSection, setEditingSection] = useState<{ old: string; new: string } | null>(null);
-
+  const [showDeleteSectionConfirm, setShowDeleteSectionConfirm] = useState(false);
+  const [sectionToDelete, setSectionToDelete] = useState<string | null>(null);
+  const [showAddSectionModal, setShowAddSectionModal] = useState(false);
 
   // Load existing data when editing
   useEffect(() => {
@@ -122,7 +127,7 @@ export default function UmkmFormModal({ isOpen, onClose, onSubmit, umkm, mode, u
 
     // Validate file size (10MB)
     if (file.size > 10 * 1024 * 1024) {
-      alert('Ukuran file maksimal 10MB');
+      toast.error('Ukuran file maksimal 10MB');
       e.target.value = '';
       return;
     }
@@ -156,32 +161,38 @@ export default function UmkmFormModal({ isOpen, onClose, onSubmit, umkm, mode, u
       }
     } catch (error: any) {
       console.error('Error uploading logo:', error);
-      alert(error.message || 'Gagal upload logo');
+      toast.error(error.message || 'Gagal upload logo');
     } finally {
       setUploadingLogo(false);
     }
   };
 
   const handleAddSection = () => {
-    const newSectionName = prompt('Masukkan nama section baru:');
+    setShowAddSectionModal(true);
+  };
+
+  const handleConfirmAddSection = (newSectionName: string) => {
     if (newSectionName && newSectionName.trim()) {
       const trimmedName = newSectionName.trim();
       if (gallery.some(item => item.section === trimmedName)) {
-        alert('Nama section sudah ada.');
+        toast.error('Nama section sudah ada.');
         return;
       }
       // Add a placeholder to show the section immediately
       setGallery([...gallery, { section: trimmedName, img_url: 'placeholder' }]);
+      setShowAddSectionModal(false);
+    } else {
+      toast.error('Nama section tidak boleh kosong.');
     }
   };
 
   const handleSaveSectionName = (oldSection: string) => {
     if (!editingSection || editingSection.new.trim() === '') {
-      alert('Nama section tidak boleh kosong.');
+      toast.error('Nama section tidak boleh kosong.');
       return;
     }
     if (gallery.some(item => item.section === editingSection.new.trim() && item.section !== oldSection)) {
-      alert('Nama section sudah ada.');
+      toast.error('Nama section sudah ada.');
       return;
     }
     setGallery(
@@ -193,8 +204,15 @@ export default function UmkmFormModal({ isOpen, onClose, onSubmit, umkm, mode, u
   };
 
   const handleDeleteSection = (section: string) => {
-    if (confirm(`Apakah Anda yakin ingin menghapus section "${section}" dan semua fotonya?`)) {
-      setGallery(gallery.filter(item => item.section !== section));
+    setSectionToDelete(section);
+    setShowDeleteSectionConfirm(true);
+  };
+
+  const handleConfirmDeleteSection = () => {
+    if (sectionToDelete) {
+      setGallery(gallery.filter(item => item.section !== sectionToDelete));
+      setSectionToDelete(null);
+      setShowDeleteSectionConfirm(false);
     }
   };
 
@@ -204,7 +222,7 @@ export default function UmkmFormModal({ isOpen, onClose, onSubmit, umkm, mode, u
     const fileList = Array.from(files);
     const oversized = fileList.filter(f => f.size > 10 * 1024 * 1024);
     if (oversized.length > 0) {
-      alert('Beberapa file melebihi batas ukuran 10MB.');
+      toast.error('Beberapa file melebihi batas ukuran 10MB.');
       return;
     }
 
@@ -232,7 +250,7 @@ export default function UmkmFormModal({ isOpen, onClose, onSubmit, umkm, mode, u
       setGallery([...galleryWithoutPlaceholder, ...newImages]);
 
     } catch (error: any) {
-      alert(`Gagal mengupload gambar: ${error.message}`);
+      toast.error(`Gagal mengupload gambar: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -247,7 +265,7 @@ export default function UmkmFormModal({ isOpen, onClose, onSubmit, umkm, mode, u
     e.preventDefault();
 
     if (!name.trim()) {
-      alert('Nama UMKM harus diisi');
+      toast.error('Nama UMKM harus diisi');
       return;
     }
 
@@ -273,7 +291,7 @@ export default function UmkmFormModal({ isOpen, onClose, onSubmit, umkm, mode, u
       onClose();
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('Gagal menyimpan data UMKM');
+      toast.error('Gagal menyimpan data UMKM');
     } finally {
       setLoading(false);
     }
@@ -756,6 +774,29 @@ export default function UmkmFormModal({ isOpen, onClose, onSubmit, umkm, mode, u
           </button>
         </div>
       </div>
+
+      {/* Delete Section Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteSectionConfirm}
+        onClose={() => setShowDeleteSectionConfirm(false)}
+        onConfirm={handleConfirmDeleteSection}
+        title="Konfirmasi Hapus Section"
+        message={`Apakah Anda yakin ingin menghapus section "${sectionToDelete}" dan semua fotonya?`}
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+      />
+
+      {/* Add Section Input Modal */}
+      <InputModal
+        isOpen={showAddSectionModal}
+        onClose={() => setShowAddSectionModal(false)}
+        onConfirm={handleConfirmAddSection}
+        title="Tambah Section Baru"
+        message="Masukkan nama section baru:"
+        placeholder="Contoh: Produk Utama"
+        confirmText="Tambah"
+        cancelText="Batal"
+      />
     </div>
   );
 }

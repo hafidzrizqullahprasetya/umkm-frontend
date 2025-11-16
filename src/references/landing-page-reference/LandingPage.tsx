@@ -93,7 +93,7 @@ const LandingPage = () => {
                         </div>
                         <div className="flex-1">
                           <h6 className="text-sm font-semibold text-[var(--dark)] mb-1">Dukung Lokal</h6>
-                          <p className="text-xs text-gray-600">Bantu UMKM Indonesia berkembang</p>
+                          <p className="text-xs text-gray-600">Bantu UMKM Tampung berkembang</p>
                         </div>
                       </div>
                     </div>
@@ -183,7 +183,7 @@ const LandingPage = () => {
                           <div className="flex-1">
                             <h4 className="font-semibold text-[var(--dark)] mb-2">Komunitas Solid</h4>
                             <p className="text-sm text-gray-600">
-                              Bergabung dengan komunitas UMKM Indonesia yang saling mendukung dan tumbuh bersama
+                              Bergabung dengan komunitas Tampung yang saling mendukung dan tumbuh bersama
                             </p>
                           </div>
                         </div>

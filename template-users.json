@@ -1,0 +1,94 @@
+{
+  "users": [
+    {
+      "username": "dapuribu",
+      "email": "dapuribu@email.com",
+      "password": "password123",
+      "name": "Dapur Ibu",
+      "address": "Jl. Candi Winangun, Candi Winangun, Sardonoharjo, Kec. Ngaglik, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55581",
+      "whatsapp": "085640251999",
+      "role": "admin_umkm"
+    },
+    {
+      "username": "matchati",
+      "email": "matchati@email.com",
+      "password": "password123",
+      "name": "Matcha Ti",
+      "address": "Jl. Pogung Kidul, Pogung Kidul, Sinduadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55284",
+      "whatsapp": "",
+      "role": "admin_umkm"
+    },
+    {
+      "username": "crystallaundry",
+      "email": "crystallaundry@email.com",
+      "password": "password123",
+      "name": "Crystal Laundry Express",
+      "address": "Jl. Blimbingsari No.4, RT.04/RW.16, Blimbing Sari, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55282",
+      "whatsapp": "087711895987",
+      "role": "admin_umkm"
+    },
+    {
+      "username": "sandava",
+      "email": "sandava@email.com",
+      "password": "password123",
+      "name": "Sandava Coffee & Space",
+      "address": "Jl. Sendowo No.C47, Sendowo, Sinduadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281",
+      "whatsapp": "082134897245",
+      "role": "admin_umkm"
+    },
+    {
+      "username": "warungyoben",
+      "email": "warungyoben@email.com",
+      "password": "password123",
+      "name": "Warung Yo Ben",
+      "address": "Jl. Cik Di Tiro No.31, Terban, Kec. Gondokusuman, Kota Yogyakarta, Daerah Istimewa Yogyakarta 55223",
+      "whatsapp": "087734984518",
+      "role": "admin_umkm"
+    },
+    {
+      "username": "bouquetjogja",
+      "email": "bouquetjogja@email.com",
+      "password": "password123",
+      "name": "Buket Snack dan Bunga \"Bouquet Jogja\"",
+      "address": "Sendowo E 99, RW.007/055, Sinduadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55284",
+      "whatsapp": "083836115959",
+      "role": "admin_umkm"
+    },
+    {
+      "username": "yummdimsum",
+      "email": "yummdimsum@email.com",
+      "password": "password123",
+      "name": "Yumm Dimsum",
+      "address": "KM 5 No. 94, Jl. Kaliurang, Kocoran, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281",
+      "whatsapp": "082241588445",
+      "role": "admin_umkm"
+    },
+    {
+      "username": "kopisembilan",
+      "email": "kopisembilan@email.com",
+      "password": "password123",
+      "name": "Kopi Sembilan",
+      "address": "",
+      "whatsapp": "",
+      "role": "admin_umkm"
+    },
+    {
+      "username": "leveluplaundry",
+      "email": "leveluplaundry@email.com",
+      "password": "password123",
+      "name": "level up laundry jogja",
+      "address": "",
+      "whatsapp": "",
+      "role": "admin_umkm"
+    },
+    {
+      "username": "pempekwongkito",
+      "email": "pempekwongkito@email.com",
+      "password": "password123",
+      "name": "Pempek Asli Wong Kito",
+      "address": "Gondangan RT 06 RW 50 Maguwoharjo Depok Sleman Yogyakarta",
+      "whatsapp": "081325081046",
+      "role": "admin_umkm"
+    }
+  ]
+}
