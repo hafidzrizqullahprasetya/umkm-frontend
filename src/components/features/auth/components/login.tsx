@@ -13,8 +13,14 @@ export default function LoginPage({
   onModeChange,
 }: LoginPageProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden animate-fadeIn">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden animate-fadeIn"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="grid grid-cols-1 lg:grid-cols-2">
           {/* Left Side - Illustration & Copywriting */}
           <div className="hidden lg:flex flex-col justify-center bg-gradient-to-br from-primary via-primary to-dark p-12 text-white relative overflow-hidden">

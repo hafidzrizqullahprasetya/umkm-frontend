@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from "@/components/shared/header/Header";
 import Footer from "@/components/shared/Footer";
-import { CaretLeft, CaretRight, Tag, FunnelSimple, SquaresFour, Rows, MapTrifold, SortAscending } from "phosphor-react";
+import { CaretLeft, CaretRight, Tag, FunnelSimple, SquaresFour, Rows, MapTrifold, SortAscending, CaretDown } from "phosphor-react";
 import { Umkm } from "@/types/umkm";
 import UmkmGridCard from "./UmkmGridCard";
 import UmkmListCard from "./UmkmListCard";
@@ -33,6 +33,8 @@ export default function UmkmClientPageSimple({ allUmkm }: UmkmClientPageSimplePr
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [sortBy, setSortBy] = useState<'default' | 'distance-asc' | 'distance-desc' | 'time-asc' | 'time-desc'>('default');
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
+  const sortDropdownRef = useRef<HTMLDivElement>(null);
 
   // Handle URL search parameters
   useEffect(() => {
@@ -48,6 +50,20 @@ export default function UmkmClientPageSimple({ allUmkm }: UmkmClientPageSimplePr
     }
   }, [searchParams]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target as Node)) {
+        setShowSortDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Items per page
   const itemsPerPage = activeTab === 'tab1' ? 6 : 4;
 
@@ -57,11 +73,8 @@ export default function UmkmClientPageSimple({ allUmkm }: UmkmClientPageSimplePr
   }, [umkmWithCoords]);
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategories(prev =>
-      prev.includes(category)
-        ? prev.filter(cat => cat !== category)
-        : [...prev, category]
-    );
+    // Single selection: replace instead of toggle
+    setSelectedCategories([category]);
   };
 
   // Filter and sort UMKM
@@ -177,20 +190,71 @@ export default function UmkmClientPageSimple({ allUmkm }: UmkmClientPageSimplePr
 
             {/* Right Side: Sort and View Toggle */}
             <div className="flex flex-col gap-3 flex-shrink-0">
-              {/* Sort Dropdown */}
-              <div className="flex items-center gap-2 bg-white rounded-lg border-2 border-gray-200 px-3 py-2 hover:border-[var(--primary)] transition-all">
-                <SortAscending size={18} weight="bold" className="text-[var(--primary)]" />
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                  className="text-sm font-medium bg-transparent border-none text-[var(--dark)] focus:outline-none cursor-pointer"
+              {/* Sort Dropdown - matching header style */}
+              <div className="relative" ref={sortDropdownRef}>
+                <button
+                  type="button"
+                  className="w-full flex items-center justify-between px-4 py-2.5 bg-white border-2 border-[var(--border)] rounded-lg hover:border-[var(--secondary)] transition-colors whitespace-nowrap h-[42px]"
+                  onClick={() => setShowSortDropdown(!showSortDropdown)}
                 >
-                  <option value="default">Urutkan: Default</option>
-                  <option value="distance-asc">Jarak: Terdekat</option>
-                  <option value="distance-desc">Jarak: Terjauh</option>
-                  <option value="time-asc">Waktu: Tercepat</option>
-                  <option value="time-desc">Waktu: Terlama</option>
-                </select>
+                  <div className="flex items-center gap-2">
+                    <FunnelSimple size={18} weight="bold" className="text-[var(--primary)]" />
+                    <span className="text-sm font-medium text-[var(--dark)]">
+                      {sortBy === 'default' && 'Urutkan: Default'}
+                      {sortBy === 'distance-asc' && 'Jarak: Terdekat'}
+                      {sortBy === 'distance-desc' && 'Jarak: Terjauh'}
+                      {sortBy === 'time-asc' && 'Waktu: Tercepat'}
+                      {sortBy === 'time-desc' && 'Waktu: Terlama'}
+                    </span>
+                  </div>
+                  <CaretDown size={14} weight="bold" className={`text-gray-500 transition-transform ${showSortDropdown ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Sort Options Dropdown */}
+                {showSortDropdown && (
+                  <div className="absolute top-full mt-2 left-0 w-full bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 max-h-96 overflow-y-auto">
+                    <button
+                      onClick={() => {setSortBy('default'); setShowSortDropdown(false);}}
+                      className={`w-full px-4 py-2.5 text-left text-sm hover:bg-gray-50 transition-colors ${
+                        sortBy === 'default' ? 'bg-[var(--primary)]/5 text-[var(--primary)] font-semibold' : 'text-gray-700'
+                      }`}
+                    >
+                      Urutkan: Default
+                    </button>
+                    <button
+                      onClick={() => {setSortBy('distance-asc'); setShowSortDropdown(false);}}
+                      className={`w-full px-4 py-2.5 text-left text-sm hover:bg-gray-50 transition-colors ${
+                        sortBy === 'distance-asc' ? 'bg-[var(--primary)]/5 text-[var(--primary)] font-semibold' : 'text-gray-700'
+                      }`}
+                    >
+                      Jarak: Terdekat
+                    </button>
+                    <button
+                      onClick={() => {setSortBy('distance-desc'); setShowSortDropdown(false);}}
+                      className={`w-full px-4 py-2.5 text-left text-sm hover:bg-gray-50 transition-colors ${
+                        sortBy === 'distance-desc' ? 'bg-[var(--primary)]/5 text-[var(--primary)] font-semibold' : 'text-gray-700'
+                      }`}
+                    >
+                      Jarak: Terjauh
+                    </button>
+                    <button
+                      onClick={() => {setSortBy('time-asc'); setShowSortDropdown(false);}}
+                      className={`w-full px-4 py-2.5 text-left text-sm hover:bg-gray-50 transition-colors ${
+                        sortBy === 'time-asc' ? 'bg-[var(--primary)]/5 text-[var(--primary)] font-semibold' : 'text-gray-700'
+                      }`}
+                    >
+                      Waktu: Tercepat
+                    </button>
+                    <button
+                      onClick={() => {setSortBy('time-desc'); setShowSortDropdown(false);}}
+                      className={`w-full px-4 py-2.5 text-left text-sm hover:bg-gray-50 transition-colors ${
+                        sortBy === 'time-desc' ? 'bg-[var(--primary)]/5 text-[var(--primary)] font-semibold' : 'text-gray-700'
+                      }`}
+                    >
+                      Waktu: Terlama
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* View Toggle */}

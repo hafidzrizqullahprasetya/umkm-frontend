@@ -674,56 +674,66 @@ export default function AdminDashboard({
     <div className="min-h-screen bg-[var(--background)] pb-12">
       {/* Dashboard Header */}
       <div className="bg-[var(--primary)] text-white">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div className="text-2xl font-bold text-white">
-                  UMKM Indonesia
+        <div className="container mx-auto px-4 py-4 sm:py-6 md:py-8">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
+            {/* Left Section - Logo and Title */}
+            <div className="w-full lg:w-auto">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+                {/* Logo */}
+                <div className="flex flex-col">
+                  <div className="text-2xl sm:text-3xl font-black text-white">
+                    Tampung
+                  </div>
+                  <div className="text-xs text-white/90">
+                    Tempat Aksi Mendukung UMKM Nagari/Gapura
+                  </div>
                 </div>
-              </div>
 
-              <div className="border-l border-white/30 h-12"></div>
+                {/* Divider - Hidden on mobile */}
+                <div className="hidden sm:block border-l border-white/30 h-12"></div>
 
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <ShieldCheck
-                    size={24}
-                    weight="bold"
-                    className="text-[var(--secondary)]"
-                  />
-                  <h1 className="text-2xl font-bold text-white">
-                    Dashboard Administrator
-                  </h1>
+                {/* Dashboard Title */}
+                <div className="mt-2 sm:mt-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ShieldCheck
+                      size={20}
+                      weight="bold"
+                      className="text-[var(--secondary)]"
+                    />
+                    <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-white">
+                      Dashboard Administrator
+                    </h1>
+                  </div>
+                  <p className="text-sm text-white/90">
+                    Kelola semua data UMKM dan pengguna
+                  </p>
                 </div>
-                <p className="text-white/90">
-                  Kelola semua data UMKM dan pengguna
-                </p>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4">
+            {/* Right Section - Actions */}
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Link
                 href="/"
-                className="px-6 py-3 bg-[var(--secondary)] text-[var(--dark)] rounded-lg font-bold hover:bg-[var(--orange)] hover:text-white transition-all flex items-center gap-2"
+                className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-[var(--secondary)] text-[var(--dark)] rounded-lg font-bold hover:bg-[var(--orange)] hover:text-white transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 <span>Kembali ke Beranda</span>
               </Link>
 
-              <div className="relative" ref={profileDropdownRef}>
+              <div className="relative w-full sm:w-auto" ref={profileDropdownRef}>
                 <button
                   onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                  className="flex items-center gap-3 bg-white/20 hover:bg-white/30 rounded-lg px-4 py-3 transition-all"
+                  className="w-full flex items-center gap-2 sm:gap-3 bg-white/20 hover:bg-white/30 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 transition-all"
                 >
-                  <div className="w-10 h-10 rounded-full bg-[var(--secondary)] text-[var(--dark)] flex items-center justify-center font-bold text-sm">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[var(--secondary)] text-[var(--dark)] flex items-center justify-center font-bold text-xs sm:text-sm flex-shrink-0">
                     {getUserInitials(user.name || user.username || "Admin")}
                   </div>
 
-                  <div className="text-left">
-                    <div className="text-sm font-bold text-white truncate max-w-[120px]">
+                  <div className="text-left flex-1 min-w-0">
+                    <div className="text-xs sm:text-sm font-bold text-white truncate">
                       {user.name || user.username || "Administrator"}
                     </div>
-                    <div className="text-xs text-white/70 truncate max-w-[120px]">
+                    <div className="text-xs text-white/70 truncate">
                       {user.email}
                     </div>
                   </div>
@@ -731,17 +741,17 @@ export default function AdminDashboard({
                   <CaretDown
                     size={16}
                     weight="bold"
-                    className={`text-white transition-transform ${
+                    className={`text-white transition-transform flex-shrink-0 ${
                       showProfileDropdown ? "rotate-180" : ""
                     }`}
                   />
                 </button>
 
                 {showProfileDropdown && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50">
+                  <div className="absolute right-0 mt-2 w-full sm:w-64 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50">
                     <div className="p-4 bg-[var(--primary)]/10 border-b border-gray-200">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-[var(--primary)] text-white flex items-center justify-center font-bold text-base">
+                        <div className="w-12 h-12 rounded-full bg-[var(--primary)] text-white flex items-center justify-center font-bold text-base flex-shrink-0">
                           {getUserInitials(
                             user.name || user.username || "Admin"
                           )}
@@ -763,12 +773,11 @@ export default function AdminDashboard({
                     <div className="p-2 space-y-1">
                       <button
                         onClick={() => {
-                          // Set the editing user to the current user and open the edit modal
                           setEditingUser(user);
-                          setIsEditingOwnProfile(true); // Set flag for own profile editing
+                          setIsEditingOwnProfile(true);
                           setShowEditUserModal(true);
-                          setActiveUserTab('basic'); // Start with basic info tab
-                          setShowProfileDropdown(false); // Close the dropdown
+                          setActiveUserTab('basic');
+                          setShowProfileDropdown(false);
                         }}
                         className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-gray-100 rounded-lg transition-colors group"
                       >
@@ -801,83 +810,83 @@ export default function AdminDashboard({
       </div>
 
       {/* Stats Cards */}
-      <div className="container mx-auto px-4 mt-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-[var(--border)]">
+      <div className="container mx-auto px-4 mt-4 sm:mt-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-[var(--border)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">
+                <p className="text-gray-500 text-xs sm:text-sm font-medium mb-1">
                   Total Pengguna
                 </p>
-                <h3 className="text-3xl font-bold text-[var(--dark)]">
+                <h3 className="text-2xl sm:text-3xl font-bold text-[var(--dark)]">
                   {totalUsers}
                 </h3>
               </div>
-              <div className="w-16 h-16 bg-[var(--primary)]/10 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[var(--primary)]/10 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Users
-                  size={32}
+                  size={28}
                   weight="bold"
-                  className="text-[var(--primary)]"
+                  className="text-[var(--primary)] sm:w-8 sm:h-8"
                 />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-[var(--border)]">
+          <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-[var(--border)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">
+                <p className="text-gray-500 text-xs sm:text-sm font-medium mb-1">
                   Total UMKM
                 </p>
-                <h3 className="text-3xl font-bold text-[var(--dark)]">
+                <h3 className="text-2xl sm:text-3xl font-bold text-[var(--dark)]">
                   {totalUmkm}
                 </h3>
               </div>
-              <div className="w-16 h-16 bg-[var(--secondary)]/10 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[var(--secondary)]/10 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Storefront
-                  size={32}
+                  size={28}
                   weight="bold"
-                  className="text-[var(--primary)]"
+                  className="text-[var(--primary)] sm:w-8 sm:h-8"
                 />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-[var(--border)]">
+          <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-[var(--border)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">
+                <p className="text-gray-500 text-xs sm:text-sm font-medium mb-1">
                   Online Shop
                 </p>
-                <h3 className="text-3xl font-bold text-[var(--dark)]">
+                <h3 className="text-2xl sm:text-3xl font-bold text-[var(--dark)]">
                   {totalOnlineShops}
                 </h3>
               </div>
-              <div className="w-16 h-16 bg-[var(--orange)]/10 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[var(--orange)]/10 rounded-xl flex items-center justify-center flex-shrink-0">
                 <ShoppingBag
-                  size={32}
+                  size={28}
                   weight="bold"
-                  className="text-[var(--orange)]"
+                  className="text-[var(--orange)] sm:w-8 sm:h-8"
                 />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-[var(--border)]">
+          <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-[var(--border)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-sm font-medium mb-1">
+                <p className="text-gray-500 text-xs sm:text-sm font-medium mb-1">
                   Media Sosial
                 </p>
-                <h3 className="text-3xl font-bold text-[var(--dark)]">
+                <h3 className="text-2xl sm:text-3xl font-bold text-[var(--dark)]">
                   {totalSocialMedia}
                 </h3>
               </div>
-              <div className="w-16 h-16 bg-[var(--cream)]/50 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[var(--cream)]/50 rounded-xl flex items-center justify-center flex-shrink-0">
                 <ShareNetwork
-                  size={32}
+                  size={28}
                   weight="bold"
-                  className="text-[var(--primary)]"
+                  className="text-[var(--primary)] sm:w-8 sm:h-8"
                 />
               </div>
             </div>
@@ -888,56 +897,59 @@ export default function AdminDashboard({
       {/* Main Content */}
       <div className="container mx-auto px-4">
         <div className="bg-white rounded-xl shadow-sm border border-[var(--border)] overflow-hidden mb-8">
-          <div className="border-b border-[var(--border)]">
-            <div className="flex">
+          {/* Tabs Navigation - Scrollable on mobile */}
+          <div className="border-b border-[var(--border)] overflow-x-auto">
+            <div className="flex min-w-max sm:min-w-0">
               <button
                 onClick={() => setActiveTab("overview")}
-                className={`px-6 py-4 font-semibold transition-colors flex items-center gap-2 ${
+                className={`px-4 sm:px-6 py-3 sm:py-4 font-semibold transition-colors flex items-center gap-2 text-sm sm:text-base whitespace-nowrap ${
                   activeTab === "overview"
                     ? "text-[var(--primary)] border-b-2 border-[var(--primary)]"
                     : "text-gray-600 hover:text-[var(--primary)]"
                 }`}
               >
-                <ChartLineUp size={20} weight="bold" />
+                <ChartLineUp size={18} weight="bold" className="sm:w-5 sm:h-5" />
                 <span>Ringkasan</span>
               </button>
               <button
                 onClick={() => setActiveTab("umkm")}
-                className={`px-6 py-4 font-semibold transition-colors flex items-center gap-2 ${
+                className={`px-4 sm:px-6 py-3 sm:py-4 font-semibold transition-colors flex items-center gap-2 text-sm sm:text-base whitespace-nowrap ${
                   activeTab === "umkm"
                     ? "text-[var(--primary)] border-b-2 border-[var(--primary)]"
                     : "text-gray-600 hover:text-[var(--primary)]"
                 }`}
               >
-                <Storefront size={20} weight="bold" />
-                <span>Semua UMKM ({totalUmkm})</span>
+                <Storefront size={18} weight="bold" className="sm:w-5 sm:h-5" />
+                <span className="hidden sm:inline">Semua UMKM ({totalUmkm})</span>
+                <span className="sm:hidden">UMKM ({totalUmkm})</span>
               </button>
               <button
                 onClick={() => setActiveTab("users")}
-                className={`px-6 py-4 font-semibold transition-colors flex items-center gap-2 ${
+                className={`px-4 sm:px-6 py-3 sm:py-4 font-semibold transition-colors flex items-center gap-2 text-sm sm:text-base whitespace-nowrap ${
                   activeTab === "users"
                     ? "text-[var(--primary)] border-b-2 border-[var(--primary)]"
                     : "text-gray-600 hover:text-[var(--primary)]"
                 }`}
               >
-                <Users size={20} weight="bold" />
+                <Users size={18} weight="bold" className="sm:w-5 sm:h-5" />
                 <span>Pengguna ({totalUsers})</span>
               </button>
               <button
                 onClick={() => setActiveTab("upload")}
-                className={`px-6 py-4 font-semibold transition-colors flex items-center gap-2 ${
+                className={`px-4 sm:px-6 py-3 sm:py-4 font-semibold transition-colors flex items-center gap-2 text-sm sm:text-base whitespace-nowrap ${
                   activeTab === "upload"
                     ? "text-[var(--primary)] border-b-2 border-[var(--primary)]"
                     : "text-gray-600 hover:text-[var(--primary)]"
                 }`}
               >
-                <UploadSimple size={20} weight="bold" />
-                <span>Upload JSON</span>
+                <UploadSimple size={18} weight="bold" className="sm:w-5 sm:h-5" />
+                <span className="hidden sm:inline">Upload JSON</span>
+                <span className="sm:hidden">Upload</span>
               </button>
             </div>
           </div>
 
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {/* Overview Tab */}
             {activeTab === "overview" && (
               <div className="space-y-8">
@@ -1050,11 +1062,11 @@ export default function AdminDashboard({
                     {paginatedUmkm.map((umkm) => (
                       <div
                         key={umkm.id}
-                        className="bg-white rounded-xl shadow-sm border border-[var(--border)] hover:shadow-md transition-all duration-300 p-4"
+                        className="bg-white rounded-xl shadow-sm border border-[var(--border)] hover:shadow-md transition-all duration-300 p-3 sm:p-4"
                       >
-                        <div className="flex gap-4">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                           {/* Logo */}
-                          <div className="flex-shrink-0 w-32 h-32 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                          <div className="flex-shrink-0 w-full sm:w-24 md:w-32 h-40 sm:h-24 md:h-32 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
                             {umkm.logo ? (
                               <img
                                 src={umkm.logo}
@@ -1062,8 +1074,8 @@ export default function AdminDashboard({
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <div className="text-center p-4">
-                                <ImageSquare size={48} weight="thin" className="text-gray-400 mx-auto mb-2" />
+                              <div className="text-center p-3 sm:p-4">
+                                <ImageSquare size={40} weight="thin" className="text-gray-400 mx-auto mb-2 sm:w-12 sm:h-12" />
                                 <p className="text-xs text-gray-400">No Logo</p>
                               </div>
                             )}
@@ -1071,89 +1083,89 @@ export default function AdminDashboard({
 
                           {/* Content */}
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between mb-2">
+                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 gap-2">
                               <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-3 mb-1">
-                                  <h4 className="text-xl font-bold text-[var(--dark)] truncate">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+                                  <h4 className="text-lg sm:text-xl font-bold text-[var(--dark)] truncate">
                                     {umkm.name}
                                   </h4>
-                                  <span className="px-3 py-1 bg-[var(--primary)] text-white text-xs font-bold rounded-full flex-shrink-0">
+                                  <span className="px-3 py-1 bg-[var(--primary)] text-white text-xs font-bold rounded-full flex-shrink-0 w-fit">
                                     {umkm.type}
                                   </span>
                                 </div>
-                                <p className="text-sm text-gray-600 mb-1">
+                                <p className="text-xs sm:text-sm text-gray-600 mb-1">
                                   Owner: <span className="font-medium">{umkm.user?.name || umkm.user?.username || "N/A"}</span>
-                                  {" • "}
-                                  <span className="text-gray-500">{umkm.user?.email}</span>
+                                  <span className="hidden sm:inline"> • </span>
+                                  <span className="block sm:inline text-gray-500">{umkm.user?.email}</span>
                                 </p>
                               </div>
                             </div>
 
                             {umkm.description && (
-                              <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                              <p className="text-xs sm:text-sm text-gray-600 mb-3 line-clamp-2">
                                 {umkm.description}
                               </p>
                             )}
 
-                            <div className="grid grid-cols-2 gap-3 mb-3">
-                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-3">
+                              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
                                 <MapPin
-                                  size={16}
+                                  size={14}
                                   weight="fill"
-                                  className="text-[var(--primary)] flex-shrink-0"
+                                  className="text-[var(--primary)] flex-shrink-0 sm:w-4 sm:h-4"
                                 />
                                 <span className="line-clamp-1">
                                   {umkm.location || "Lokasi tidak tersedia"}
                                 </span>
                               </div>
                               {umkm.contact && (
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
                                   <Phone
-                                    size={16}
+                                    size={14}
                                     weight="fill"
-                                    className="text-[var(--primary)] flex-shrink-0"
+                                    className="text-[var(--primary)] flex-shrink-0 sm:w-4 sm:h-4"
                                   />
                                   <span>{umkm.contact}</span>
                                 </div>
                               )}
                             </div>
 
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-6 text-sm">
-                                <div className="flex items-center gap-2">
-                                  <ShoppingBag size={16} weight="bold" className="text-[var(--primary)]" />
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                              <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm">
+                                <div className="flex items-center gap-1 sm:gap-2">
+                                  <ShoppingBag size={14} weight="bold" className="text-[var(--primary)] sm:w-4 sm:h-4" />
                                   <span className="font-medium">{umkm.online_shop?.length || 0} Shop</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <ShareNetwork size={16} weight="bold" className="text-[var(--primary)]" />
+                                <div className="flex items-center gap-1 sm:gap-2">
+                                  <ShareNetwork size={14} weight="bold" className="text-[var(--primary)] sm:w-4 sm:h-4" />
                                   <span className="font-medium">{umkm.media_sosial?.length || 0} Medsos</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <ImageSquare size={16} weight="bold" className="text-[var(--primary)]" />
+                                <div className="flex items-center gap-1 sm:gap-2">
+                                  <ImageSquare size={14} weight="bold" className="text-[var(--primary)] sm:w-4 sm:h-4" />
                                   <span className="font-medium">{umkm.umkm_galeri?.length || 0} Galeri</span>
                                 </div>
                               </div>
 
-                              <div className="flex gap-2">
+                              <div className="flex gap-2 flex-wrap sm:flex-nowrap">
                                 <Link
                                   href={`/umkm/${umkm.id}`}
-                                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center gap-2"
+                                  className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
                                 >
-                                  <Eye size={16} weight="bold" />
+                                  <Eye size={14} weight="bold" className="sm:w-4 sm:h-4" />
                                   <span>Lihat</span>
                                 </Link>
                                 <button
                                   onClick={() => handleEditUmkm(umkm)}
-                                  className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors flex items-center gap-2"
+                                  className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-500 text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
                                 >
-                                  <PencilSimple size={16} weight="bold" />
+                                  <PencilSimple size={14} weight="bold" className="sm:w-4 sm:h-4" />
                                   <span>Edit</span>
                                 </button>
                                 <button
                                   onClick={() => handleDeleteUmkm(umkm.id)}
-                                  className="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors flex items-center gap-2"
+                                  className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-red-500 text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
                                 >
-                                  <Trash size={16} weight="bold" />
+                                  <Trash size={14} weight="bold" className="sm:w-4 sm:h-4" />
                                   <span>Hapus</span>
                                 </button>
                               </div>
@@ -1166,11 +1178,11 @@ export default function AdminDashboard({
 
                   {/* Pagination Controls for UMKM */}
                   {totalUmkmPages > 1 && (
-                    <div className="flex items-center justify-center gap-4 mt-8">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
                       <button
                         onClick={() => setUmkmPage((prev) => Math.max(1, prev - 1))}
                         disabled={umkmPage === 1}
-                        className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 ${
+                        className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
                           umkmPage === 1
                             ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                             : "bg-[var(--primary)] text-white hover:opacity-90"
@@ -1180,12 +1192,12 @@ export default function AdminDashboard({
                         <span>Sebelumnya</span>
                       </button>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 overflow-x-auto max-w-full px-2">
                         {Array.from({ length: totalUmkmPages }, (_, i) => i + 1).map((page) => (
                           <button
                             key={page}
                             onClick={() => setUmkmPage(page)}
-                            className={`w-10 h-10 rounded-lg font-bold ${
+                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-bold text-sm sm:text-base flex-shrink-0 ${
                               umkmPage === page
                                 ? "bg-[var(--primary)] text-white"
                                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -1199,7 +1211,7 @@ export default function AdminDashboard({
                       <button
                         onClick={() => setUmkmPage((prev) => Math.min(totalUmkmPages, prev + 1))}
                         disabled={umkmPage === totalUmkmPages}
-                        className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 ${
+                        className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
                           umkmPage === totalUmkmPages
                             ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                             : "bg-[var(--primary)] text-white hover:opacity-90"
@@ -1239,156 +1251,164 @@ export default function AdminDashboard({
                     </p>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gray-50 border-b-2 border-[var(--border)]">
-                        <tr>
-                          <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">
-                            Pengguna
-                          </th>
-                          <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">
-                            Nama
-                          </th>
-                          <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">
-                            Email
-                          </th>
-                          <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">
-                            Role
-                          </th>
-                          <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">
-                            UMKM
-                          </th>
-                          <th className="px-6 py-4 text-center text-sm font-bold text-gray-700">
-                            Aksi
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-[var(--border)]">
-                        {paginatedUsers.map((userItem) => (
-                          <tr
-                            key={userItem.id}
-                            className="hover:bg-gray-50 transition-colors"
-                          >
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-[var(--primary)] text-white flex items-center justify-center font-bold text-sm">
-                                  {getUserInitials(
-                                    userItem.name || userItem.username || "U"
-                                  )}
-                                </div>
-                                <div>
-                                  <div className="font-semibold text-[var(--dark)]">
-                                    {userItem.username || "No username"}
-                                  </div>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 text-gray-600">
-                              {userItem.name || "-"}
-                            </td>
-                            <td className="px-6 py-4 text-gray-600">
-                              {userItem.email}
-                            </td>
-                            <td className="px-6 py-4">
-                              <span
-                                className={`px-3 py-1 rounded-full text-xs font-bold ${
-                                  userItem.role === "administrator"
-                                    ? "bg-purple-100 text-purple-700"
-                                    : "bg-blue-100 text-blue-700"
-                                }`}
-                              >
-                                {userItem.role === "administrator"
-                                  ? "Administrator"
-                                  : "Admin UMKM"}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4">
-                              <span className="font-semibold text-[var(--primary)]">
-                                {
-                                  allUmkm.filter(
-                                    (u) => u.user_id === userItem.id
-                                  ).length
-                                }{" "}
+                  <>
+                  <div className="overflow-x-auto -mx-4 sm:mx-0">
+                    <div className="inline-block min-w-full align-middle">
+                      <div className="overflow-hidden">
+                        <table className="min-w-full divide-y divide-[var(--border)]">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                Pengguna
+                              </th>
+                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                Nama
+                              </th>
+                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                Email
+                              </th>
+                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                Role
+                              </th>
+                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
                                 UMKM
-                              </span>
-                            </td>
-                            <td className="px-6 py-4">
-                              <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => handleEditUser(userItem)}
-                                  className="px-3 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
-                                >
-                                  <PencilSimple size={16} weight="bold" />
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteUser(userItem.id)}
-                                  disabled={
-                                    userItem.role === "administrator" &&
-                                    userItem.id === user.id
-                                  }
-                                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                                    userItem.role === "administrator" &&
-                                    userItem.id === user.id
-                                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                                      : "bg-red-500 text-white hover:bg-red-600"
-                                  }`}
-                                >
-                                  <Trash size={16} weight="bold" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-
-                    {/* Pagination Controls for Users */}
-                    {totalUsersPages > 1 && (
-                      <div className="flex items-center justify-center gap-4 mt-6">
-                        <button
-                          onClick={() => setUsersPage((prev) => Math.max(1, prev - 1))}
-                          disabled={usersPage === 1}
-                          className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 ${
-                            usersPage === 1
-                              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                              : "bg-[var(--primary)] text-white hover:opacity-90"
-                          }`}
-                        >
-                          <CaretLeft size={16} weight="bold" />
-                          <span>Sebelumnya</span>
-                        </button>
-
-                        <div className="flex items-center gap-2">
-                          {Array.from({ length: totalUsersPages }, (_, i) => i + 1).map((page) => (
-                            <button
-                              key={page}
-                              onClick={() => setUsersPage(page)}
-                              className={`w-10 h-10 rounded-lg font-bold ${
-                                usersPage === page
-                                  ? "bg-[var(--primary)] text-white"
-                                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                              }`}
-                            >
-                              {page}
-                            </button>
-                          ))}
-                        </div>
-
-                        <button
-                          onClick={() => setUsersPage((prev) => Math.min(totalUsersPages, prev + 1))}
-                          disabled={usersPage === totalUsersPages}
-                          className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 ${
-                            usersPage === totalUsersPages
-                              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                              : "bg-[var(--primary)] text-white hover:opacity-90"
-                          }`}
-                        >
-                          <span>Selanjutnya</span>
-                          <CaretRight size={16} weight="bold" />
-                        </button>
+                              </th>
+                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                Aksi
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-[var(--border)]">
+                            {paginatedUsers.map((userItem) => (
+                              <tr
+                                key={userItem.id}
+                                className="hover:bg-gray-50 transition-colors"
+                              >
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                  <div className="flex items-center gap-2 sm:gap-3">
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[var(--primary)] text-white flex items-center justify-center font-bold text-xs sm:text-sm flex-shrink-0">
+                                      {getUserInitials(
+                                        userItem.name || userItem.username || "U"
+                                      )}
+                                    </div>
+                                    <div className="min-w-0">
+                                      <div className="font-semibold text-xs sm:text-sm text-[var(--dark)] truncate">
+                                        {userItem.username || "No username"}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600 whitespace-nowrap">
+                                  {userItem.name || "-"}
+                                </td>
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600 whitespace-nowrap">
+                                  <div className="max-w-[150px] sm:max-w-none truncate">
+                                    {userItem.email}
+                                  </div>
+                                </td>
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                  <span
+                                    className={`px-2 sm:px-3 py-1 rounded-full text-xs font-bold ${
+                                      userItem.role === "administrator"
+                                        ? "bg-purple-100 text-purple-700"
+                                        : "bg-blue-100 text-blue-700"
+                                    }`}
+                                  >
+                                    {userItem.role === "administrator"
+                                      ? "Admin"
+                                      : "UMKM"}
+                                  </span>
+                                </td>
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                  <span className="font-semibold text-xs sm:text-sm text-[var(--primary)]">
+                                    {
+                                      allUmkm.filter(
+                                        (u) => u.user_id === userItem.id
+                                      ).length
+                                    }{" "}
+                                    UMKM
+                                  </span>
+                                </td>
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                  <div className="flex items-center justify-center gap-1 sm:gap-2">
+                                    <button
+                                      onClick={() => handleEditUser(userItem)}
+                                      className="p-2 sm:px-3 sm:py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
+                                    >
+                                      <PencilSimple size={14} weight="bold" className="sm:w-4 sm:h-4" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteUser(userItem.id)}
+                                      disabled={
+                                        userItem.role === "administrator" &&
+                                        userItem.id === user.id
+                                      }
+                                      className={`p-2 sm:px-3 sm:py-2 rounded-lg text-sm font-medium transition-colors ${
+                                        userItem.role === "administrator" &&
+                                        userItem.id === user.id
+                                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                          : "bg-red-500 text-white hover:bg-red-600"
+                                      }`}
+                                    >
+                                      <Trash size={14} weight="bold" className="sm:w-4 sm:h-4" />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
-                    )}
+                    </div>
                   </div>
+
+                  {/* Pagination Controls for Users */}
+                  {totalUsersPages > 1 && (
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6">
+                      <button
+                        onClick={() => setUsersPage((prev) => Math.max(1, prev - 1))}
+                        disabled={usersPage === 1}
+                        className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
+                          usersPage === 1
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-[var(--primary)] text-white hover:opacity-90"
+                        }`}
+                      >
+                        <CaretLeft size={16} weight="bold" />
+                        <span>Sebelumnya</span>
+                      </button>
+
+                      <div className="flex items-center gap-2 overflow-x-auto max-w-full px-2">
+                        {Array.from({ length: totalUsersPages }, (_, i) => i + 1).map((page) => (
+                          <button
+                            key={page}
+                            onClick={() => setUsersPage(page)}
+                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-bold text-sm sm:text-base flex-shrink-0 ${
+                              usersPage === page
+                                ? "bg-[var(--primary)] text-white"
+                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => setUsersPage((prev) => Math.min(totalUsersPages, prev + 1))}
+                        disabled={usersPage === totalUsersPages}
+                        className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
+                          usersPage === totalUsersPages
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-[var(--primary)] text-white hover:opacity-90"
+                        }`}
+                      >
+                        <span>Selanjutnya</span>
+                        <CaretRight size={16} weight="bold" />
+                      </button>
+                    </div>
+                  )}
+                  </>
                 )}
               </div>
             )}
@@ -1396,42 +1416,42 @@ export default function AdminDashboard({
             {/* Upload JSON Tab */}
             {activeTab === "upload" && (
               <div>
-                <div className="mb-8">
-                  <h3 className="text-2xl font-bold text-[var(--dark)] mb-2">
+                <div className="mb-6 sm:mb-8">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[var(--dark)] mb-2">
                     Upload Data via JSON
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-sm sm:text-base text-gray-600">
                     Upload data UMKM dan pengguna secara bulk menggunakan file
                     JSON
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                   {/* Upload UMKM */}
-                  <div className="bg-gray-50 rounded-xl p-6">
+                  <div className="bg-gray-50 rounded-xl p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 bg-[var(--primary)] rounded-xl flex items-center justify-center">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--primary)] rounded-xl flex items-center justify-center flex-shrink-0">
                         <Storefront
-                          size={24}
+                          size={20}
                           weight="bold"
-                          className="text-white"
+                          className="text-white sm:w-6 sm:h-6"
                         />
                       </div>
                       <div>
-                        <h4 className="text-xl font-bold text-[var(--dark)]">
+                        <h4 className="text-lg sm:text-xl font-bold text-[var(--dark)]">
                           Upload UMKM
                         </h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-gray-600">
                           Upload banyak UMKM sekaligus
                         </p>
                       </div>
                     </div>
 
-                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-sm font-medium text-blue-900 mb-2">
+                    <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <p className="text-xs sm:text-sm font-medium text-blue-900 mb-2">
                         Format JSON:
                       </p>
-                      <pre className="text-xs bg-white p-3 rounded border border-blue-200 overflow-x-auto">
+                      <pre className="text-xs bg-white p-2 sm:p-3 rounded border border-blue-200 overflow-x-auto max-h-48 sm:max-h-none">
                         {JSON.stringify(
                           {
                             umkms: [
@@ -1459,16 +1479,16 @@ export default function AdminDashboard({
                         )}
                       </pre>
                       <div className="text-xs text-blue-800 mt-2 space-y-1">
-                        <p>
+                        <p className="break-words">
                           <strong>type (UMKM):</strong> "Kuliner", "Fashion", "Kerajinan", "Jasa", atau "Pertanian"
                         </p>
-                        <p>
+                        <p className="break-words">
                           <strong>type (online_shop):</strong> "Tokopedia", "Shopee", "Lazada", "Blibli", atau "GoJek"
                         </p>
-                        <p>
+                        <p className="break-words">
                           <strong>type (media_sosial):</strong> "Instagram", "Facebook", "TikTok", atau "X"
                         </p>
-                        <p>
+                        <p className="break-words">
                           <strong>contact:</strong> Nomor WhatsApp UMKM (bisa sama dengan whatsapp user atau berbeda)
                         </p>
                       </div>
@@ -1477,9 +1497,9 @@ export default function AdminDashboard({
                     <div className="space-y-3">
                       <button
                         onClick={downloadUmkmTemplate}
-                        className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-[var(--secondary)] text-[var(--dark)] rounded-lg font-bold hover:opacity-90 transition-all border-2 border-[var(--primary)]"
+                        className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 bg-[var(--secondary)] text-[var(--dark)] rounded-lg text-sm sm:text-base font-bold hover:opacity-90 transition-all border-2 border-[var(--primary)]"
                       >
-                        <Download size={20} weight="bold" />
+                        <Download size={18} weight="bold" className="sm:w-5 sm:h-5 flex-shrink-0" />
                         <span>Unduh Template UMKM</span>
                       </button>
 
@@ -1497,9 +1517,9 @@ export default function AdminDashboard({
                         />
                         <label
                           htmlFor="umkm-upload"
-                          className="cursor-pointer flex items-center justify-center gap-3 px-6 py-4 bg-[var(--primary)] text-white rounded-lg font-bold hover:opacity-90 transition-all"
+                          className="cursor-pointer flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-[var(--primary)] text-white rounded-lg text-sm sm:text-base font-bold hover:opacity-90 transition-all"
                         >
-                          <FileJs size={24} weight="bold" />
+                          <FileJs size={20} weight="bold" className="sm:w-6 sm:h-6 flex-shrink-0" />
                           <span>Pilih File JSON UMKM</span>
                         </label>
                       </label>
@@ -1507,26 +1527,26 @@ export default function AdminDashboard({
                   </div>
 
                   {/* Upload Users */}
-                  <div className="bg-gray-50 rounded-xl p-6">
+                  <div className="bg-gray-50 rounded-xl p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 bg-[var(--orange)] rounded-xl flex items-center justify-center">
-                        <Users size={24} weight="bold" className="text-white" />
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--orange)] rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Users size={20} weight="bold" className="text-white sm:w-6 sm:h-6" />
                       </div>
                       <div>
-                        <h4 className="text-xl font-bold text-[var(--dark)]">
+                        <h4 className="text-lg sm:text-xl font-bold text-[var(--dark)]">
                           Upload Pengguna
                         </h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-gray-600">
                           Upload banyak pengguna sekaligus
                         </p>
                       </div>
                     </div>
 
-                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-sm font-medium text-blue-900 mb-2">
+                    <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <p className="text-xs sm:text-sm font-medium text-blue-900 mb-2">
                         Format JSON:
                       </p>
-                      <pre className="text-xs bg-white p-3 rounded border border-blue-200 overflow-x-auto">
+                      <pre className="text-xs bg-white p-2 sm:p-3 rounded border border-blue-200 overflow-x-auto max-h-48 sm:max-h-none">
                         {JSON.stringify(
                           {
                             users: [
@@ -1550,9 +1570,9 @@ export default function AdminDashboard({
                     <div className="space-y-3">
                       <button
                         onClick={downloadUsersTemplate}
-                        className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-[var(--secondary)] text-[var(--dark)] rounded-lg font-bold hover:opacity-90 transition-all border-2 border-[var(--orange)]"
+                        className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 bg-[var(--secondary)] text-[var(--dark)] rounded-lg text-sm sm:text-base font-bold hover:opacity-90 transition-all border-2 border-[var(--orange)]"
                       >
-                        <Download size={20} weight="bold" />
+                        <Download size={18} weight="bold" className="sm:w-5 sm:h-5 flex-shrink-0" />
                         <span>Unduh Template Pengguna</span>
                       </button>
 
@@ -1570,9 +1590,9 @@ export default function AdminDashboard({
                         />
                         <label
                           htmlFor="users-upload"
-                          className="cursor-pointer flex items-center justify-center gap-3 px-6 py-4 bg-[var(--orange)] text-white rounded-lg font-bold hover:opacity-90 transition-all"
+                          className="cursor-pointer flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-[var(--orange)] text-white rounded-lg text-sm sm:text-base font-bold hover:opacity-90 transition-all"
                         >
-                          <FileJs size={24} weight="bold" />
+                          <FileJs size={20} weight="bold" className="sm:w-6 sm:h-6 flex-shrink-0" />
                           <span>Pilih File JSON Pengguna</span>
                         </label>
                       </label>
@@ -1580,12 +1600,12 @@ export default function AdminDashboard({
                   </div>
                 </div>
 
-                <div className="mt-8 p-6 bg-yellow-50 border border-yellow-200 rounded-xl">
-                  <h4 className="font-bold text-yellow-900 mb-2 flex items-center gap-2">
-                    <ShieldCheck size={20} weight="bold" />
-                    Catatan Penting
+                <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-yellow-50 border border-yellow-200 rounded-xl">
+                  <h4 className="font-bold text-sm sm:text-base text-yellow-900 mb-2 flex items-center gap-2">
+                    <ShieldCheck size={18} weight="bold" className="sm:w-5 sm:h-5 flex-shrink-0" />
+                    <span>Catatan Penting</span>
                   </h4>
-                  <ul className="text-sm text-yellow-800 space-y-1 list-disc list-inside">
+                  <ul className="text-xs sm:text-sm text-yellow-800 space-y-1 list-disc list-inside">
                     <li>
                       Klik tombol <strong>"Unduh Template"</strong> untuk mendapatkan contoh format JSON yang benar
                     </li>

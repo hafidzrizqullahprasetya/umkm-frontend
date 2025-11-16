@@ -1,7 +1,7 @@
 "use client";
 
 import { credentialRegister, credetialLogin } from "@/lib/action";
-import { Lock, User, Eye, EyeSlash } from "phosphor-react";
+import { Lock, User, Eye, EyeSlash, X } from "phosphor-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,6 +19,7 @@ export default function FormAuth({
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
 
 
   async function handleSubmitRegister(event: FormEvent<HTMLFormElement>) {
@@ -252,12 +253,13 @@ export default function FormAuth({
             />
             Ingat saya
           </label>
-          <Link
-            href="/forgot-password"
-            className="text-sm text-primary font-medium hover:text-secondary transition-colors"
+          <button
+            type="button"
+            onClick={() => setShowResetPasswordModal(true)}
+            className="text-sm text-primary font-medium hover:text-secondary transition-colors bg-transparent border-none cursor-pointer"
           >
             Lupa password?
-          </Link>
+          </button>
         </div>
       )}
 
@@ -360,6 +362,52 @@ export default function FormAuth({
           </>
         )}
       </p>
+
+      {/* Reset Password Modal */}
+      {showResetPasswordModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowResetPasswordModal(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 animate-fadeIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-dark">Reset Password</h3>
+              <button
+                onClick={() => setShowResetPasswordModal(false)}
+                className="text-gray-400 hover:text-dark transition-colors p-1 rounded-full hover:bg-secondary"
+                aria-label="Close modal"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="text-center py-6">
+              <div className="mb-4 inline-flex items-center justify-center w-16 h-16 bg-secondary rounded-full">
+                <Lock className="text-primary" size={32} weight="bold" />
+              </div>
+              <p className="text-gray-700 text-base mb-2">
+                Mohon Maaf
+              </p>
+              <p className="text-gray-600 text-sm">
+                Fitur lupa password sedang dalam masa pengembangan.
+              </p>
+              <p className="text-gray-600 text-sm mt-1">
+                Silakan hubungi administrator untuk mereset password Anda.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowResetPasswordModal(false)}
+              className="w-full rounded-lg py-3 font-bold text-base text-white bg-primary hover:opacity-80 active:scale-[0.98] shadow-md hover:shadow-lg transition-all"
+            >
+              Mengerti
+            </button>
+          </div>
+        </div>
+      )}
     </form>
   );
 }

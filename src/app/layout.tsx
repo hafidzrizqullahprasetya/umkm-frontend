@@ -7,8 +7,8 @@ import LoadingProvider from "@/components/shared/LoadingProvider";
 import Providers from "@/lib/context/providers";
 
 export const metadata: Metadata = {
-  title: "UMKM Platform",
-  description: "Platform untuk menampilkan UMKM di Indonesia",
+  title: "Tampung",
+  description: "Tempat Aksi Mendukung UMKM Nagari/Gapura dari UMKM Indonesia",
 };
 
 export default function RootLayout({

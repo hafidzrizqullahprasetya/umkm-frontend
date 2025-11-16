@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
+import { toast } from 'react-toastify';
 import { Umkm } from '@/types/umkm';
 import {
   Storefront,
@@ -24,6 +25,7 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import UmkmFormModal from './UmkmFormModal';
+import ConfirmationModal from '@/components/shared/ConfirmationModal';
 
 interface DashboardPageProps {
   userUmkm: Umkm[];
@@ -43,6 +45,8 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showRestrictionModal, setShowRestrictionModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [umkmToDelete, setUmkmToDelete] = useState<string | null>(null);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const token = session?.accessToken
   console.log(userEmail)
@@ -55,10 +59,15 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
     return (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
   };
 
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   const handleLogout = async () => {
-    if (confirm('Apakah Anda yakin ingin keluar?')) {
-      await signOut({ callbackUrl: '/' });
-    }
+    setShowLogoutConfirm(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    await signOut({ callbackUrl: '/' });
+    setShowLogoutConfirm(false);
   };
 
   // Close dropdown when clicking outside
@@ -107,15 +116,23 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
   };
 
   const handleDeleteUmkm = async (umkmId: string) => {
-    if (!confirm('Apakah Anda yakin ingin menghapus UMKM ini?')) {
-      return;
-    }
+    setUmkmToDelete(umkmId);
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!umkmToDelete) return;
 
     try {
       const baseUrl = getBackendUrl();
+<<<<<<< Updated upstream
       // const token = (session as any)?.accessToken;
       // console.log(token)
       const response = await fetch(`${baseUrl}/api/umkm?id=${umkmId}`, {
+=======
+      const token = (session as any)?.token;
+      const response = await fetch(`${baseUrl}/api/umkm?id=${umkmToDelete}`, {
+>>>>>>> Stashed changes
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -127,13 +144,17 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
       }
 
       // Update local state
-      setUserUmkm(prev => prev.filter(umkm => umkm.id !== umkmId));
-      alert('UMKM berhasil dihapus!');
+      setUserUmkm(prev => prev.filter(umkm => umkm.id !== umkmToDelete));
+      setShowDeleteConfirm(false);
+      setUmkmToDelete(null);
     } catch (error) {
       console.error('Error deleting UMKM:', error);
-      alert('Gagal menghapus UMKM');
+      setShowDeleteConfirm(false);
+      setUmkmToDelete(null);
     }
   };
+
+  import { toast } from 'react-toastify';
 
   const handleSubmitForm = async (data: any) => {
     const method = modalMode === 'add' ? 'POST' : 'PUT';
@@ -174,10 +195,10 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
 
       router.refresh();
       setShowModal(false);
-      alert(method === 'POST' ? 'UMKM berhasil ditambahkan!' : 'UMKM berhasil diperbarui!');
+      toast.success(method === 'POST' ? 'UMKM berhasil ditambahkan!' : 'UMKM berhasil diperbarui!');
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert(method === 'POST' ? 'Gagal menambahkan UMKM' : 'Gagal memperbarui UMKM');
+      toast.error(method === 'POST' ? 'Gagal menambahkan UMKM' : 'Gagal memperbarui UMKM');
     }
   };
 
@@ -201,7 +222,7 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
       // For profile update, we need both old and new password if changing
       if (newPassword && newPassword.trim() !== "") {
         if (!oldPassword || oldPassword.trim() === "") {
-          alert("Password lama diperlukan untuk mengganti password");
+          toast.error("Password lama diperlukan untuk mengganti password");
           return;
         }
         updateData.old_password = oldPassword;
@@ -222,12 +243,12 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
         throw new Error(errorResult.message || "Failed to update profile");
       }
 
-      alert("Profil berhasil diperbarui!");
+      toast.success("Profil berhasil diperbarui!");
       setShowEditProfileModal(false);
       router.refresh();
     } catch (error: any) {
       console.error("Error updating profile:", error);
-      alert(`Gagal memperbarui profil: ${error.message}`);
+      toast.error(`Gagal memperbarui profil: ${error.message}`);
     }
   };
 
@@ -240,8 +261,13 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
             <div className="flex items-center gap-4">
               {/* Logo */}
               <div className="flex items-center gap-2">
-                <div className="text-2xl font-bold text-white">
-                  UMKM Indonesia
+                <div className="flex flex-col">
+                  <div className="text-3xl font-black text-white">
+                    Tampung
+                  </div>
+                  <div className="text-xs text-white">
+                    Tempat Aksi Mendukung UMKM Nagari/Gapura
+                  </div>
                 </div>
               </div>
 
@@ -763,6 +789,28 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
           </div>
         </div>
       )}
+
+      {/* Logout Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleConfirmLogout}
+        title="Konfirmasi Keluar"
+        message="Apakah Anda yakin ingin keluar dari akun Anda?"
+        confirmText="Ya, Keluar"
+        cancelText="Batal"
+      />
+
+      {/* Delete UMKM Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleConfirmDelete}
+        title="Konfirmasi Hapus UMKM"
+        message="Apakah Anda yakin ingin menghapus UMKM ini? Tindakan ini tidak dapat dibatalkan."
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+      />
     </div>
   );
 }
