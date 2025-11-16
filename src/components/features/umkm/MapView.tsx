@@ -115,7 +115,7 @@ export default function MapView({ allUmkm }: MapViewProps) {
                   <div className="space-y-1">
                     <div className="flex items-start gap-1.5 text-xs text-gray-600">
                       <MapPin size={14} weight="fill" className="text-[var(--primary)] mt-0.5 flex-shrink-0" />
-                      <span className="line-clamp-2">{umkm.location || umkm.address}</span>
+                      <span className="line-clamp-2">{umkm.location}</span>
                     </div>
                     {umkm.contact && (
                       <div className="flex items-center gap-1.5 text-xs text-gray-600">
@@ -259,7 +259,7 @@ export default function MapView({ allUmkm }: MapViewProps) {
                   {/* Location */}
                   <div className="flex items-start gap-2 text-sm text-gray-700 mb-2">
                     <MapPin size={16} weight="fill" className="text-[var(--primary)] mt-0.5 flex-shrink-0" />
-                    <span className="text-xs">{selectedUmkm.location || selectedUmkm.address}</span>
+                    <span className="text-xs">{selectedUmkm.location}</span>
                   </div>
 
                   {/* Contact */}

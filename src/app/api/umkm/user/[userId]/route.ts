@@ -2,11 +2,12 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   request: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const { userId } = await params;
     const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://be-mia-umkm.vercel.app';
-    const response = await fetch(`${baseUrl}/api/umkm/user/${params.userId}`, {
+    const response = await fetch(`${baseUrl}/api/umkm/user/${userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

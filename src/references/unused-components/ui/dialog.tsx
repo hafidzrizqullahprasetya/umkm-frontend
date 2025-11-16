@@ -62,6 +62,28 @@ const DialogDescription = React.forwardRef<
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
+const DialogHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={className}
+    {...props}
+  />
+);
+DialogHeader.displayName = "DialogHeader";
+
+const DialogFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={className}
+    {...props}
+  />
+);
+DialogFooter.displayName = "DialogFooter";
+
 export {
   Dialog,
   DialogPortal,
@@ -71,4 +93,6 @@ export {
   DialogClose,
   DialogTitle,
   DialogDescription,
+  DialogHeader,
+  DialogFooter,
 };

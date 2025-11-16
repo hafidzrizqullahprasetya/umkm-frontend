@@ -126,10 +126,10 @@ export default function FormAuth({
       }
 
       // Redirect based on user role
-      const redirectPath = result?.role === "administrator" ? "/admin" : "/home";
+      const redirectPath = result && "role" in result && result.role === "administrator" ? "/admin" : "/home";
 
       toast.success(
-        result?.role === "administrator"
+        result && "role" in result && result.role === "administrator"
           ? "Selamat datang, Administrator!"
           : "Selamat datang kembali! Kelola UMKM Anda sekarang.",
         {

@@ -1,32 +1,31 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useLoading } from '@/components/shared/LoadingProvider';
 
 export default function RouteLoadingHandler() {
-  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { showLoading } = useLoading();
+  const prevPathnameRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const handleStart = () => {
+    // Show loading when pathname changes
+    if (prevPathnameRef.current !== null && prevPathnameRef.current !== pathname) {
       showLoading(true);
-    };
+      
+      // Hide loading after a short delay
+      const timer = setTimeout(() => {
+        showLoading(false);
+      }, 500);
 
-    const handleComplete = () => {
-      showLoading(false);
-    };
-
-    router.events.on('routeChangeStart', handleStart);
-    router.events.on('routeChangeComplete', handleComplete);
-    router.events.on('routeChangeError', handleComplete);
-
-    return () => {
-      router.events.off('routeChangeStart', handleStart);
-      router.events.off('routeChangeComplete', handleComplete);
-      router.events.off('routeChangeError', handleComplete);
-    };
-  }, [router, showLoading]);
+      return () => clearTimeout(timer);
+    }
+    
+    // Update previous pathname
+    prevPathnameRef.current = pathname;
+  }, [pathname, searchParams, showLoading]);
 
   return null;
 }

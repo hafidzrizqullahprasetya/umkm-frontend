@@ -254,7 +254,7 @@ function Header({ user, umkmName, allUmkm = [], allCategories = [], breadcrumbOn
                                                         {filteredUmkm.map((umkm) => (
                                                             <button
                                                                 key={umkm.id}
-                                                                onClick={() => handleUmkmClick(umkm.id)}
+                                                                onClick={() => handleUmkmClick(umkm.id.toString())}
                                                                 className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                                                             >
                                                                 <div className="flex items-start gap-3">
@@ -431,7 +431,7 @@ function Header({ user, umkmName, allUmkm = [], allCategories = [], breadcrumbOn
                                                         {filteredUmkm.map((umkm) => (
                                                             <button
                                                                 key={umkm.id}
-                                                                onClick={() => handleUmkmClick(umkm.id)}
+                                                                onClick={() => handleUmkmClick(umkm.id.toString())}
                                                                 className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                                                             >
                                                                 <div className="flex items-start gap-3">

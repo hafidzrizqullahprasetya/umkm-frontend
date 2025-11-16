@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server';
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const umkmId = parseInt(params.id);
+    const { id } = await params;
+    const umkmId = parseInt(id);
     const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://be-mia-umkm.vercel.app';
     const response = await fetch(`${baseUrl}/api/umkm/delete/${umkmId}`, {
       method: 'DELETE',

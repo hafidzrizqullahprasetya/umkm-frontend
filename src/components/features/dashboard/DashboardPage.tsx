@@ -125,14 +125,8 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
 
     try {
       const baseUrl = getBackendUrl();
-<<<<<<< Updated upstream
-      // const token = (session as any)?.accessToken;
-      // console.log(token)
-      const response = await fetch(`${baseUrl}/api/umkm?id=${umkmId}`, {
-=======
       const token = (session as any)?.token;
       const response = await fetch(`${baseUrl}/api/umkm?id=${umkmToDelete}`, {
->>>>>>> Stashed changes
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -144,7 +138,7 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
       }
 
       // Update local state
-      setUserUmkm(prev => prev.filter(umkm => umkm.id !== umkmToDelete));
+      setUserUmkm(prev => prev.filter(umkm => umkm.id !== Number(umkmToDelete)));
       setShowDeleteConfirm(false);
       setUmkmToDelete(null);
     } catch (error) {
@@ -153,8 +147,6 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
       setUmkmToDelete(null);
     }
   };
-
-  import { toast } from 'react-toastify';
 
   const handleSubmitForm = async (data: any) => {
     const method = modalMode === 'add' ? 'POST' : 'PUT';
@@ -636,7 +628,7 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
                               <span>Edit</span>
                             </button>
                             <button
-                              onClick={() => handleDeleteUmkm(umkm.id)}
+                              onClick={() => handleDeleteUmkm(String(umkm.id))}
                               className="px-3 py-2 bg-red-500 text-white rounded-lg text-center text-sm font-medium hover:bg-red-600 transition-colors"
                             >
                               <Trash size={16} weight="bold" />

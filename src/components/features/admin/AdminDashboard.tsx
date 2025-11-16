@@ -386,7 +386,7 @@ export default function AdminDashboard({
 
     try {
       const baseUrl = getBackendUrl();
-      const umkmToDelete = allUmkm.find(umkm => umkm.id === umkmId);
+      const umkmToDelete = allUmkm.find(umkm => umkm.id === parseInt(umkmId));
       const owner = allUsers.find(u => u.id === umkmToDelete?.user_id);
       const userEmail = owner?.email;
 
@@ -404,7 +404,7 @@ export default function AdminDashboard({
         throw new Error(errorData.message || "Failed to delete UMKM");
       }
 
-      setAllUmkm((prev) => prev.filter((umkm) => umkm.id !== umkmId));
+      setAllUmkm((prev) => prev.filter((umkm) => umkm.id !== parseInt(umkmId)));
       showToast("UMKM berhasil dihapus!", 'success');
       setTimeout(() => {
         router.refresh();
@@ -1094,9 +1094,9 @@ export default function AdminDashboard({
                                   </span>
                                 </div>
                                 <p className="text-xs sm:text-sm text-gray-600 mb-1">
-                                  Owner: <span className="font-medium">{umkm.user?.name || umkm.user?.username || "N/A"}</span>
+                                  Owner: <span className="font-medium">{allUsers.find(u => u.id === umkm.user_id)?.name || allUsers.find(u => u.id === umkm.user_id)?.username || "N/A"}</span>
                                   <span className="hidden sm:inline"> • </span>
-                                  <span className="block sm:inline text-gray-500">{umkm.user?.email}</span>
+                                  <span className="block sm:inline text-gray-500">{allUsers.find(u => u.id === umkm.user_id)?.email}</span>
                                 </p>
                               </div>
                             </div>
@@ -1162,7 +1162,7 @@ export default function AdminDashboard({
                                   <span>Edit</span>
                                 </button>
                                 <button
-                                  onClick={() => handleDeleteUmkm(umkm.id)}
+                                  onClick={() => handleDeleteUmkm(umkm.id.toString())}
                                   className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-red-500 text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
                                 >
                                   <Trash size={14} weight="bold" className="sm:w-4 sm:h-4" />
