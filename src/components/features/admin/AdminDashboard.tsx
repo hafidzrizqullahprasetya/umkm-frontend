@@ -2329,7 +2329,7 @@ export default function AdminDashboard({
                   </div>
                 </div>
                 <button
-                  onClick={() => setUploadResult({ show: false, type: 'success', title: '', message: '', details: [] })}
+                  onClick={() => setUploadResult({ show: false, type: 'success', title: '', message: '', errors: [] })}
                   className="p-2 hover:bg-white/20 rounded-lg transition-colors"
                 >
                   <X size={24} weight="bold" />
