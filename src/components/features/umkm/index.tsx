@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Header from "@/components/shared/header/Header";
 import Footer from "@/components/shared/Footer";
 import { CaretLeft, CaretRight, Tag, FunnelSimple, SquaresFour, Rows, MapTrifold, SortAscending, CaretDown } from "phosphor-react";
@@ -28,6 +28,7 @@ export default function UmkmClientPageSimple({ allUmkm }: UmkmClientPageSimplePr
     });
   }, [allUmkm]);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<string>('tab1');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -36,17 +37,23 @@ export default function UmkmClientPageSimple({ allUmkm }: UmkmClientPageSimplePr
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Handle URL search parameters
+  // Handle URL search parameters - sync with header
   useEffect(() => {
     const search = searchParams.get('search');
     const category = searchParams.get('category');
 
     if (search) {
       setSearchQuery(search);
+    } else {
+      setSearchQuery('');
     }
 
+    // Sync category with header: empty array for "Semua", array with category otherwise
     if (category && category !== 'Semua') {
       setSelectedCategories([category]);
+    } else {
+      // Reset to "Semua" (empty array) when no category or category is "Semua"
+      setSelectedCategories([]);
     }
   }, [searchParams]);
 
@@ -74,7 +81,32 @@ export default function UmkmClientPageSimple({ allUmkm }: UmkmClientPageSimplePr
 
   const handleCategoryChange = (category: string) => {
     // Single selection: replace instead of toggle
-    setSelectedCategories([category]);
+    // Update URL to sync with header
+    const params = new URLSearchParams(searchParams.toString());
+    
+    if (category === 'Semua' || category === '') {
+      // Remove category from URL to show "Semua"
+      params.delete('category');
+    } else {
+      params.set('category', category);
+    }
+    
+    // Keep search query if exists
+    const search = searchParams.get('search');
+    if (search) {
+      params.set('search', search);
+    }
+    
+    // Update URL
+    const newUrl = params.toString() ? `/?${params.toString()}` : '/';
+    router.push(newUrl);
+    
+    // Update local state
+    if (category === 'Semua' || category === '') {
+      setSelectedCategories([]);
+    } else {
+      setSelectedCategories([category]);
+    }
   };
 
   // Filter and sort UMKM
@@ -152,7 +184,7 @@ export default function UmkmClientPageSimple({ allUmkm }: UmkmClientPageSimplePr
               <div className="flex flex-wrap gap-2">
                 {/* Semua Button */}
                 <button
-                  onClick={() => setSelectedCategories([])}
+                  onClick={() => handleCategoryChange('Semua')}
                   className={`group flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 border-2 ${
                     selectedCategories.length === 0
                       ? 'bg-[var(--primary)] border-[var(--primary)] text-white shadow-lg hover:shadow-xl'

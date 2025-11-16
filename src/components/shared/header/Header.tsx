@@ -3,7 +3,7 @@ import React from 'react'
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import LoadingLink from '@/components/shared/LoadingLink';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { User, MagnifyingGlass, List, Storefront, House, CaretRight, Tag, CaretDown, MapPin } from 'phosphor-react';
 import LoginPage from '@/components/features/auth/components/login';
 import { Umkm } from '@/types/umkm';
@@ -19,6 +19,7 @@ interface HeaderProps {
 function Header({ user, umkmName, allUmkm = [], allCategories = [], breadcrumbOnly = false }: HeaderProps) {
     const pathname = usePathname();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [isSticky, setIsSticky] = useState(false);
     const [showAuth, setShowAuth] = useState(false);
     const [isRegister, setIsRegister] = useState(false);
@@ -52,24 +53,25 @@ function Header({ user, umkmName, allUmkm = [], allCategories = [], breadcrumbOn
         };
     }, []);
 
-    // Sync with URL parameters
+    // Sync with URL parameters - sync with landing page filter
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const params = new URLSearchParams(window.location.search);
-            const categoryParam = params.get('category');
-            const searchParam = params.get('search');
+        const categoryParam = searchParams.get('category');
+        const searchParam = searchParams.get('search');
 
-            if (categoryParam) {
-                setSelectedCategory(categoryParam);
-            } else {
-                setSelectedCategory('Semua');
-            }
-
-            if (searchParam) {
-                setSearchQuery(searchParam);
-            }
+        // Sync category: if no category param or "Semua", set to "Semua"
+        if (categoryParam && categoryParam !== 'Semua') {
+            setSelectedCategory(categoryParam);
+        } else {
+            setSelectedCategory('Semua');
         }
-    }, [pathname]);
+
+        // Sync search query
+        if (searchParam) {
+            setSearchQuery(searchParam);
+        } else {
+            setSearchQuery('');
+        }
+    }, [searchParams, pathname]);
 
     // Close dropdowns when clicking outside
     useEffect(() => {
@@ -128,9 +130,14 @@ function Header({ user, umkmName, allUmkm = [], allCategories = [], breadcrumbOn
         setSelectedCategory(category);
         setShowCategoryDropdown(false);
         // Auto-trigger search when category changes
+        // Sync URL with landing page filter
         const params = new URLSearchParams();
         if (searchQuery.trim()) params.set('search', searchQuery);
-        if (category !== 'Semua') params.set('category', category);
+        // Only add category to URL if it's not "Semua"
+        if (category !== 'Semua') {
+            params.set('category', category);
+        }
+        // Remove category param if "Semua" is selected
         if (params.toString()) {
             router.push(`/?${params.toString()}`);
         } else {
