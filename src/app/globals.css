@@ -1,26 +1,74 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary: #2E6946;
+  --secondary: #D9E55B;
+  --orange: #F68B40;
+  --cream: #FDF7E0;
+  --dark: #222222;
+  --white: #ffffff;
+  --background: #F7F7F7;
+  --border: #E5E5E5;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Custom Toast Styling */
+.Toastify__toast--success {
+  background-color: var(--primary) !important;
+  color: var(--white) !important;
+  font-weight: 600;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.Toastify__toast--error {
+  background-color: #DC2626 !important;
+  color: var(--white) !important;
+  font-weight: 600;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.Toastify__toast--info {
+  background-color: #3B82F6 !important;
+  color: var(--white) !important;
+  font-weight: 600;
+}
+
+.Toastify__toast--warning {
+  background-color: var(--orange) !important;
+  color: var(--white) !important;
+  font-weight: 600;
+}
+
+.Toastify__progress-bar--success {
+  background-color: var(--secondary) !important;
+}
+
+.Toastify__progress-bar--error {
+  background-color: #FCA5A5 !important;
+}
+
+.Toastify__progress-bar--info {
+  background-color: #93C5FD !important;
+}
+
+.Toastify__progress-bar--warning {
+  background-color: #FCD34D !important;
+}
+
+.Toastify__close-button {
+  color: var(--white) !important;
+  opacity: 0.8;
+}
+
+.Toastify__close-button:hover {
+  opacity: 1;
+}
+
+/* Hide scrollbar for thumbnail sliders */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
