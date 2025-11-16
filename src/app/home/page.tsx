@@ -25,8 +25,9 @@ export default async function HomePage() {
   const userEmail = session.user.email || "";
 
   // Fetch user data to get whatsapp
-  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
   let userWhatsapp = "";
+  let userAddress = "";
 
   try {
     const userResponse = await fetch(`${baseUrl}/user?email=${userEmail}`, {
@@ -36,13 +37,14 @@ export default async function HomePage() {
     if (userResponse.ok) {
       const userData = await userResponse.json();
       userWhatsapp = userData.data?.whatsapp || "";
+      userAddress = userData.data?.address || "";
     }
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
 
   // Get user's UMKM data (only for admin_umkm users)
-  const token = (session as any)?.token;
+  const token = (session as any)?.accessToken;
   const userUmkm = userEmail && token ? await getUserUmkm(userEmail, token) : [];
 
   return (
@@ -51,6 +53,7 @@ export default async function HomePage() {
       userName={session.user.name || session.user.email || "User"}
       userEmail={userEmail}
       userWhatsapp={userWhatsapp}
+      userAddress={userAddress}
     />
   );
 }

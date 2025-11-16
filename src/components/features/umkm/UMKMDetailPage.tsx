@@ -203,7 +203,18 @@ const UMKMDetailPage = ({ umkm, allUmkm = [], allCategories = [], user }: UMKMDe
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--dark)] mt-3 sm:mt-4 mb-2">
                   {umkm.name}
                 </h1>
-                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 leading-relaxed">
+
+                {/* Location Info */}
+                {umkm.location && (
+                  <div className="flex items-start gap-2 mb-3 sm:mb-4">
+                    <MapPin size={18} className="text-[var(--primary)] mt-0.5 flex-shrink-0" />
+                    <p className="text-sm sm:text-base text-gray-700 font-medium">
+                      {umkm.location}
+                    </p>
+                  </div>
+                )}
+
+                <p className={`text-sm sm:text-base text-gray-600 leading-relaxed ${umkm.description && umkm.description.length > 100 ? 'mb-4 sm:mb-6' : 'mb-2 sm:mb-3'}`}>
                   {umkm.description || 'Deskripsi UMKM tidak tersedia.'}
                 </p>
               </div>

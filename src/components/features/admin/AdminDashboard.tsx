@@ -30,6 +30,11 @@ import {
   X,
   CaretLeft,
   CaretRight,
+  CheckCircle,
+  XCircle,
+  FileText,
+  ArrowClockwise,
+  MagnifyingGlass,
 } from "phosphor-react";
 import Link from "next/link";
 import UmkmFormModal from "../dashboard/UmkmFormModal"; // Import the shared modal
@@ -80,6 +85,10 @@ export default function AdminDashboard({
   const itemsPerPage = 6; // 6 items per page for UMKM list
   const usersPerPage = 10; // 10 users per page for table
 
+  // Search states
+  const [umkmSearch, setUmkmSearch] = useState('');
+  const [usersSearch, setUsersSearch] = useState('');
+
   // Unified Modal States
   const [showUmkmModal, setShowUmkmModal] = useState(false);
   const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
@@ -106,6 +115,40 @@ export default function AdminDashboard({
   // State for logout confirmation
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
+  // State for delete user confirmation
+  const [showDeleteUserConfirm, setShowDeleteUserConfirm] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<number | null>(null);
+
+  // State for delete UMKM confirmation
+  const [showDeleteUmkmConfirm, setShowDeleteUmkmConfirm] = useState(false);
+  const [umkmToDelete, setUmkmToDelete] = useState<string | null>(null);
+
+  // State for upload loading and result modal
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadResult, setUploadResult] = useState<{
+    show: boolean;
+    type: 'success' | 'error';
+    title: string;
+    message: string;
+    stats?: {
+      totalSuccess: number;
+      created: number;
+      updated: number;
+      failed: number;
+    };
+    errors?: Array<{ item: string; error: string }>;
+  }>({
+    show: false,
+    type: 'success',
+    title: '',
+    message: '',
+    stats: undefined,
+    errors: []
+  });
+
+  // State for general operation loading
+  const [operationLoading, setOperationLoading] = useState(false);
+
 
 
   const getUserInitials = (name: string) => {
@@ -126,16 +169,52 @@ export default function AdminDashboard({
     setShowLogoutConfirm(false);
   };
 
-  // Pagination calculations
-  const totalUmkmPages = Math.ceil(allUmkm.length / itemsPerPage);
-  const totalUsersPages = Math.ceil(allUsers.length / usersPerPage);
+  // Filter UMKM based on search and sort by newest first
+  const filteredUmkm = allUmkm
+    .filter(umkm => {
+      if (!umkmSearch.trim()) return true;
+      const searchLower = umkmSearch.toLowerCase();
+      const owner = allUsers.find(u => u.id === umkm.user_id);
+      return (
+        umkm.name.toLowerCase().includes(searchLower) ||
+        umkm.type.toLowerCase().includes(searchLower) ||
+        umkm.location?.toLowerCase().includes(searchLower) ||
+        owner?.name?.toLowerCase().includes(searchLower) ||
+        owner?.email?.toLowerCase().includes(searchLower)
+      );
+    })
+    .sort((a, b) => {
+      // Sort by ID descending (newest first)
+      return Number(b.id) - Number(a.id);
+    });
 
-  const paginatedUmkm = allUmkm.slice(
+  // Filter Users based on search and sort by newest first
+  const filteredUsers = allUsers
+    .filter(user => {
+      if (!usersSearch.trim()) return true;
+      const searchLower = usersSearch.toLowerCase();
+      return (
+        user.username?.toLowerCase().includes(searchLower) ||
+        user.name?.toLowerCase().includes(searchLower) ||
+        user.email?.toLowerCase().includes(searchLower) ||
+        user.role?.toLowerCase().includes(searchLower)
+      );
+    })
+    .sort((a, b) => {
+      // Sort by ID descending (newest first)
+      return Number(b.id) - Number(a.id);
+    });
+
+  // Pagination calculations
+  const totalUmkmPages = Math.ceil(filteredUmkm.length / itemsPerPage);
+  const totalUsersPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  const paginatedUmkm = filteredUmkm.slice(
     (umkmPage - 1) * itemsPerPage,
     umkmPage * itemsPerPage
   );
 
-  const paginatedUsers = allUsers.slice(
+  const paginatedUsers = filteredUsers.slice(
     (usersPage - 1) * usersPerPage,
     usersPage * usersPerPage
   );
@@ -164,16 +243,17 @@ export default function AdminDashboard({
   const handleSubmitUmkmForm = async (data: any) => {
     const token = getAccessToken();
     if (!token) {
-      alert("Authentication error. Please log in again.");
+      showToast("Authentication error. Please log in again.", 'error');
       return;
     }
 
+    setOperationLoading(true);
     try {
       const baseUrl = getBackendUrl();
       const method = modalMode === 'add' ? 'POST' : 'PUT';
-      
+
       let url = `${baseUrl}/api/umkm`;
-      
+
       // For PUT, find the user email associated with the UMKM
       if (method === 'PUT' && selectedUmkm) {
         const umkmOwner = allUsers.find(u => u.id === selectedUmkm.user_id);
@@ -202,15 +282,20 @@ export default function AdminDashboard({
         const errorData = await response.json();
         throw new Error(errorData.message || (method === 'POST' ? 'Failed to create UMKM' : 'Failed to update UMKM'));
       }
-      
+
+      setOperationLoading(false);
       showToast(method === 'POST' ? 'UMKM berhasil ditambahkan!' : 'UMKM berhasil diperbarui!', 'success');
       setShowUmkmModal(false);
+
+      // Invalidate cache and refresh
+      router.refresh();
       setTimeout(() => {
-        router.refresh(); // Refresh server-side props
-      }, 1000);
+        router.push('/admin');
+      }, 1500);
 
     } catch (error: any) {
       console.error('Error submitting UMKM form:', error);
+      setOperationLoading(false);
       showToast(`Gagal: ${error.message}`, 'error');
     }
   };
@@ -219,6 +304,7 @@ export default function AdminDashboard({
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
+    setOperationLoading(true);
     try {
       const baseUrl = getBackendUrl();
 
@@ -264,10 +350,18 @@ export default function AdminDashboard({
           throw new Error(errorResult.message || "Failed to update profile");
         }
 
+        setOperationLoading(false);
         showToast("Profil berhasil diperbarui!", 'success');
+        setShowEditUserModal(false);
+        setEditingUser(null);
+        setIsEditingOwnProfile(false);
+
+        // Invalidate cache and refresh
+        router.refresh();
         setTimeout(() => {
-          router.refresh();
-        }, 1000);
+          router.push('/admin');
+        }, 1500);
+        return; // Exit early to avoid the code below
       } else {
         // Handle user update for other users (admin functionality)
         const updateData: any = {
@@ -305,18 +399,21 @@ export default function AdminDashboard({
           throw new Error(errorResult.message || "Failed to update user");
         }
 
+        setOperationLoading(false);
         showToast("User berhasil diperbarui!", 'success');
-        setTimeout(() => {
-          router.refresh();
-        }, 1000);
-      }
+        setShowEditUserModal(false);
+        setEditingUser(null);
 
-      setShowEditUserModal(false);
-      setEditingUser(null);
-      setIsEditingOwnProfile(false); // Reset profile editing flag
+        // Invalidate cache and refresh
+        router.refresh();
+        setTimeout(() => {
+          router.push('/admin');
+        }, 1500);
+      }
 
     } catch (error: any) {
       console.error("Error updating user:", error);
+      setOperationLoading(false);
       showToast(`Gagal memperbarui user: ${error.message}`, 'error');
     }
   };
@@ -365,6 +462,15 @@ export default function AdminDashboard({
     };
   }, [showProfileDropdown]);
 
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setUmkmPage(1);
+  }, [umkmSearch]);
+
+  useEffect(() => {
+    setUsersPage(1);
+  }, [usersSearch]);
+
   // Calculate statistics
   const totalUsers = allUsers.length;
   const totalUmkm = allUmkm.length;
@@ -381,20 +487,27 @@ export default function AdminDashboard({
     return process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
   };
 
-  const handleDeleteUmkm = async (umkmId: string) => {
-    if (!confirm("Apakah Anda yakin ingin menghapus UMKM ini?")) {
-      return;
-    }
+  const handleDeleteUmkm = (umkmId: string) => {
+    setUmkmToDelete(umkmId);
+    setShowDeleteUmkmConfirm(true);
+  };
+
+  const handleConfirmDeleteUmkm = async () => {
+    if (!umkmToDelete) return;
+
     const token = getAccessToken();
     if (!token) {
       showToast("Authentication error. Please log in again.", 'error');
+      setShowDeleteUmkmConfirm(false);
+      setUmkmToDelete(null);
       return;
     }
 
+    setOperationLoading(true);
     try {
       const baseUrl = getBackendUrl();
-      const umkmToDelete = allUmkm.find(umkm => umkm.id === parseInt(umkmId));
-      const owner = allUsers.find(u => u.id === umkmToDelete?.user_id);
+      const umkmToDeleteData = allUmkm.find(umkm => umkm.id === parseInt(umkmToDelete));
+      const owner = allUsers.find(u => u.id === umkmToDeleteData?.user_id);
       const userEmail = owner?.email;
 
       if (!userEmail) {
@@ -411,26 +524,35 @@ export default function AdminDashboard({
         throw new Error(errorData.message || "Failed to delete UMKM");
       }
 
-      setAllUmkm((prev) => prev.filter((umkm) => umkm.id !== parseInt(umkmId)));
+      setOperationLoading(false);
+      setAllUmkm((prev) => prev.filter((umkm) => umkm.id !== parseInt(umkmToDelete)));
       showToast("UMKM berhasil dihapus!", 'success');
+      setShowDeleteUmkmConfirm(false);
+      setUmkmToDelete(null);
+
+      // Invalidate cache and refresh
+      router.refresh();
       setTimeout(() => {
-        router.refresh();
-      }, 1000);
+        router.push('/admin');
+      }, 1500);
     } catch (error: any) {
       console.error("Error deleting UMKM:", error);
+      setOperationLoading(false);
       showToast(`Gagal menghapus UMKM: ${error.message}`, 'error');
+      setShowDeleteUmkmConfirm(false);
+      setUmkmToDelete(null);
     }
   };
 
-  const handleDeleteUser = async (userId: number) => {
-    if (
-      !confirm(
-        "Apakah Anda yakin ingin menghapus user ini? Semua UMKM milik user ini juga akan terhapus."
-      )
-    ) {
-      return;
-    }
+  const handleDeleteUser = (userId: number) => {
+    setUserToDelete(userId);
+    setShowDeleteUserConfirm(true);
+  };
 
+  const handleConfirmDeleteUser = async () => {
+    if (!userToDelete) return;
+
+    setOperationLoading(true);
     try {
       const baseUrl = getBackendUrl();
       // Get access token
@@ -442,7 +564,7 @@ export default function AdminDashboard({
         headers["Authorization"] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${baseUrl}/user/${userId}`, {
+      const response = await fetch(`${baseUrl}/user/${userToDelete}`, {
         method: "DELETE",
         headers,
       });
@@ -452,18 +574,28 @@ export default function AdminDashboard({
         throw new Error(errorResult.message || "Failed to delete user");
       }
 
-      setAllUsers((prev) => prev.filter((u) => u.id !== userId));
+      setOperationLoading(false);
+      setAllUsers((prev) => prev.filter((u) => u.id !== userToDelete));
       showToast("User berhasil dihapus!", 'success');
+      setShowDeleteUserConfirm(false);
+      setUserToDelete(null);
+
+      // Invalidate cache and refresh
+      router.refresh();
       setTimeout(() => {
-        router.refresh();
-      }, 1000);
+        router.push('/admin');
+      }, 1500);
     } catch (error: any) {
       console.error("Error deleting user:", error);
+      setOperationLoading(false);
       showToast(`Gagal menghapus user: ${error.message}`, 'error');
+      setShowDeleteUserConfirm(false);
+      setUserToDelete(null);
     }
   };
 
   const handleBulkUploadUmkm = async (file: File) => {
+    setUploadLoading(true);
     try {
       const text = await file.text();
       const jsonData = JSON.parse(text);
@@ -473,13 +605,37 @@ export default function AdminDashboard({
       }
 
       const baseUrl = getBackendUrl();
+      const token = getAccessToken();
+
+      if (!token) {
+        setUploadLoading(false);
+        setUploadResult({
+          show: true,
+          type: 'error',
+          title: 'Error Autentikasi',
+          message: 'Sesi Anda telah berakhir. Silakan login kembali.',
+          stats: undefined,
+          errors: []
+        });
+        return;
+      }
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${baseUrl}/api/umkm/bulk`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(jsonData),
       });
 
       const result = await response.json();
+      setUploadLoading(false);
 
       if (!response.ok) {
         throw new Error(result.message || "Gagal upload UMKM");
@@ -487,41 +643,55 @@ export default function AdminDashboard({
 
       // Build detailed message
       const totalSuccess = (result.data.created?.length || 0) + (result.data.updated?.length || 0);
-      let message = `Upload selesai!\n\n`;
-      message += `✅ Total Berhasil: ${totalSuccess} UMKM\n`;
+      const totalFailed = result.data.failed?.length || 0;
 
-      if (result.data.created?.length > 0) {
-        message += `   📝 Dibuat baru: ${result.data.created.length}\n`;
-      }
-      if (result.data.updated?.length > 0) {
-        message += `   🔄 Diperbarui: ${result.data.updated.length}\n`;
-      }
-
-      message += `❌ Gagal: ${result.data.failed?.length || 0} UMKM`;
-
+      const errors: Array<{ item: string; error: string }> = [];
       if (result.data.failed && result.data.failed.length > 0) {
-        message += "\n\nDetail error:";
-        result.data.failed.forEach((fail: any, index: number) => {
-          message += `\n${index + 1}. ${fail.data.name || fail.data.email}: ${fail.error}`;
+        result.data.failed.forEach((fail: any) => {
+          errors.push({
+            item: fail.data.name || fail.data.email || 'Unknown',
+            error: fail.error
+          });
         });
       }
 
-      alert(message);
+      setUploadResult({
+        show: true,
+        type: totalFailed === 0 ? 'success' : 'error',
+        title: totalFailed === 0 ? 'Upload Berhasil!' : 'Upload Selesai dengan Error',
+        message: `${totalSuccess} UMKM berhasil diproses${totalFailed > 0 ? `, ${totalFailed} gagal` : ''}.`,
+        stats: {
+          totalSuccess,
+          created: result.data.created?.length || 0,
+          updated: result.data.updated?.length || 0,
+          failed: totalFailed
+        },
+        errors
+      });
 
       if (totalSuccess > 0) {
+        // Invalidate cache
         router.refresh();
+        setTimeout(() => {
+          router.push('/admin');
+        }, 3000);
       }
     } catch (error) {
       console.error("Error uploading UMKM:", error);
-      alert(
-        error instanceof Error
-          ? error.message
-          : "Gagal upload UMKM. Pastikan format JSON benar."
-      );
+      setUploadLoading(false);
+      setUploadResult({
+        show: true,
+        type: 'error',
+        title: 'Upload Gagal',
+        message: error instanceof Error ? error.message : "Gagal upload UMKM. Pastikan format JSON benar.",
+        stats: undefined,
+        errors: []
+      });
     }
   };
 
   const handleBulkUploadUsers = async (file: File) => {
+    setUploadLoading(true);
     try {
       const text = await file.text();
       const jsonData = JSON.parse(text);
@@ -531,51 +701,90 @@ export default function AdminDashboard({
       }
 
       const baseUrl = getBackendUrl();
+      const token = getAccessToken();
+
+      if (!token) {
+        setUploadLoading(false);
+        setUploadResult({
+          show: true,
+          type: 'error',
+          title: 'Error Autentikasi',
+          message: 'Sesi Anda telah berakhir. Silakan login kembali.',
+          stats: undefined,
+          errors: []
+        });
+        return;
+      }
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${baseUrl}/user/bulk`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(jsonData),
       });
 
       const result = await response.json();
+      setUploadLoading(false);
 
       if (!response.ok) {
-        throw new Error(result.message || "Gagal upload users");
+        const errorMessage = result.error || result.message || "Gagal upload users";
+        console.error("Upload users error:", errorMessage);
+        throw new Error(errorMessage);
       }
 
       // Build detailed message
       const totalSuccess = (result.data.created?.length || 0) + (result.data.updated?.length || 0);
-      let message = `Upload selesai!\n\n`;
-      message += `✅ Total Berhasil: ${totalSuccess} user\n`;
+      const totalFailed = result.data.failed?.length || 0;
 
-      if (result.data.created?.length > 0) {
-        message += `   📝 Dibuat baru: ${result.data.created.length}\n`;
-      }
-      if (result.data.updated?.length > 0) {
-        message += `   🔄 Diperbarui: ${result.data.updated.length}\n`;
-      }
-
-      message += `❌ Gagal: ${result.data.failed?.length || 0} user`;
-
+      const errors: Array<{ item: string; error: string }> = [];
       if (result.data.failed && result.data.failed.length > 0) {
-        message += "\n\nDetail error:";
-        result.data.failed.forEach((fail: any, index: number) => {
-          message += `\n${index + 1}. ${fail.data.email}: ${fail.error}`;
+        result.data.failed.forEach((fail: any) => {
+          errors.push({
+            item: fail.data.email || 'Unknown',
+            error: fail.error
+          });
         });
       }
 
-      alert(message);
+      setUploadResult({
+        show: true,
+        type: totalFailed === 0 ? 'success' : 'error',
+        title: totalFailed === 0 ? 'Upload Berhasil!' : 'Upload Selesai dengan Error',
+        message: `${totalSuccess} user berhasil diproses${totalFailed > 0 ? `, ${totalFailed} gagal` : ''}.`,
+        stats: {
+          totalSuccess,
+          created: result.data.created?.length || 0,
+          updated: result.data.updated?.length || 0,
+          failed: totalFailed
+        },
+        errors
+      });
 
       if (totalSuccess > 0) {
+        // Invalidate cache
         router.refresh();
+        setTimeout(() => {
+          router.push('/admin');
+        }, 3000);
       }
     } catch (error) {
       console.error("Error uploading users:", error);
-      alert(
-        error instanceof Error
-          ? error.message
-          : "Gagal upload users. Pastikan format JSON benar."
-      );
+      setUploadLoading(false);
+      setUploadResult({
+        show: true,
+        type: 'error',
+        title: 'Upload Gagal',
+        message: error instanceof Error ? error.message : "Gagal upload users. Pastikan format JSON benar.",
+        stats: undefined,
+        errors: []
+      });
     }
   };
 
@@ -1043,10 +1252,32 @@ export default function AdminDashboard({
             {/* UMKM Tab */}
             {activeTab === "umkm" && (
               <div>
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                   <h3 className="text-2xl font-bold text-[var(--dark)]">
-                    Semua UMKM
+                    Semua UMKM ({filteredUmkm.length})
                   </h3>
+
+                  {/* Search Bar */}
+                  <div className="relative w-full sm:w-auto sm:min-w-[300px]">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <MagnifyingGlass size={20} weight="bold" className="text-gray-400" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Cari nama, tipe, lokasi, owner..."
+                      value={umkmSearch}
+                      onChange={(e) => setUmkmSearch(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[var(--primary)] transition-colors text-sm"
+                    />
+                    {umkmSearch && (
+                      <button
+                        onClick={() => setUmkmSearch('')}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      >
+                        <X size={18} weight="bold" className="text-gray-400 hover:text-gray-600" />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {allUmkm.length === 0 ? (
@@ -1062,6 +1293,26 @@ export default function AdminDashboard({
                     <p className="text-gray-500">
                       Tidak ada UMKM yang terdaftar di sistem
                     </p>
+                  </div>
+                ) : filteredUmkm.length === 0 ? (
+                  <div className="text-center py-16 bg-gray-50 rounded-xl">
+                    <MagnifyingGlass
+                      size={64}
+                      weight="bold"
+                      className="text-gray-300 mx-auto mb-4"
+                    />
+                    <h4 className="text-xl font-semibold text-gray-600 mb-2">
+                      Tidak Ada Hasil
+                    </h4>
+                    <p className="text-gray-500 mb-4">
+                      Tidak ditemukan UMKM dengan kata kunci "{umkmSearch}"
+                    </p>
+                    <button
+                      onClick={() => setUmkmSearch('')}
+                      className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg font-medium hover:bg-[var(--dark)] transition-colors"
+                    >
+                      Reset Pencarian
+                    </button>
                   </div>
                 ) : (
                   <>
@@ -1237,10 +1488,32 @@ export default function AdminDashboard({
             {/* Users Tab */}
             {activeTab === "users" && (
               <div>
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                   <h3 className="text-2xl font-bold text-[var(--dark)]">
-                    Daftar Pengguna
+                    Daftar Pengguna ({filteredUsers.length})
                   </h3>
+
+                  {/* Search Bar */}
+                  <div className="relative w-full sm:w-auto sm:min-w-[300px]">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <MagnifyingGlass size={20} weight="bold" className="text-gray-400" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Cari username, nama, email, role..."
+                      value={usersSearch}
+                      onChange={(e) => setUsersSearch(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[var(--primary)] transition-colors text-sm"
+                    />
+                    {usersSearch && (
+                      <button
+                        onClick={() => setUsersSearch('')}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      >
+                        <X size={18} weight="bold" className="text-gray-400 hover:text-gray-600" />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {allUsers.length === 0 ? (
@@ -1256,6 +1529,26 @@ export default function AdminDashboard({
                     <p className="text-gray-500">
                       Tidak ada pengguna terdaftar di sistem
                     </p>
+                  </div>
+                ) : filteredUsers.length === 0 ? (
+                  <div className="text-center py-16 bg-gray-50 rounded-xl">
+                    <MagnifyingGlass
+                      size={64}
+                      weight="bold"
+                      className="text-gray-300 mx-auto mb-4"
+                    />
+                    <h4 className="text-xl font-semibold text-gray-600 mb-2">
+                      Tidak Ada Hasil
+                    </h4>
+                    <p className="text-gray-500 mb-4">
+                      Tidak ditemukan pengguna dengan kata kunci "{usersSearch}"
+                    </p>
+                    <button
+                      onClick={() => setUsersSearch('')}
+                      className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg font-medium hover:bg-[var(--dark)] transition-colors"
+                    >
+                      Reset Pencarian
+                    </button>
                   </div>
                 ) : (
                   <>
@@ -1932,6 +2225,243 @@ export default function AdminDashboard({
         confirmText="Ya, Keluar"
         cancelText="Batal"
       />
+
+      {/* Delete User Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteUserConfirm}
+        onClose={() => {
+          setShowDeleteUserConfirm(false);
+          setUserToDelete(null);
+        }}
+        onConfirm={handleConfirmDeleteUser}
+        title="Konfirmasi Hapus User"
+        message="Apakah Anda yakin ingin menghapus user ini? Semua UMKM milik user ini juga akan terhapus."
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+      />
+
+      {/* Delete UMKM Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteUmkmConfirm}
+        onClose={() => {
+          setShowDeleteUmkmConfirm(false);
+          setUmkmToDelete(null);
+        }}
+        onConfirm={handleConfirmDeleteUmkm}
+        title="Konfirmasi Hapus UMKM"
+        message="Apakah Anda yakin ingin menghapus UMKM ini?"
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+      />
+
+      {/* Upload Loading Modal */}
+      {uploadLoading && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+            <div className="mb-6">
+              <div className="w-20 h-20 mx-auto mb-4 relative">
+                <div className="absolute inset-0 border-4 border-[var(--cream)] rounded-full"></div>
+                <div className="absolute inset-0 border-4 border-[var(--primary)] rounded-full border-t-transparent animate-spin"></div>
+              </div>
+              <h3 className="text-2xl font-bold text-[var(--dark)] mb-2">
+                Mengupload Data...
+              </h3>
+              <p className="text-gray-600">
+                Mohon tunggu, sedang memproses file JSON Anda
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Operation Loading Modal */}
+      {operationLoading && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+            <div className="mb-6">
+              <div className="w-20 h-20 mx-auto mb-4 relative">
+                <div className="absolute inset-0 border-4 border-[var(--cream)] rounded-full"></div>
+                <div className="absolute inset-0 border-4 border-[var(--primary)] rounded-full border-t-transparent animate-spin"></div>
+              </div>
+              <h3 className="text-2xl font-bold text-[var(--dark)] mb-2">
+                Menyimpan Data...
+              </h3>
+              <p className="text-gray-600">
+                Mohon tunggu, sedang memproses permintaan Anda
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upload Result Modal */}
+      {uploadResult.show && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden animate-in fade-in zoom-in duration-300">
+            {/* Header */}
+            <div className={`p-6 text-white ${uploadResult.type === 'success' ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gradient-to-r from-red-500 to-red-600'}`}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                    {uploadResult.type === 'success' ? (
+                      <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                    )}
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold">{uploadResult.title}</h2>
+                    <p className="text-white/90 mt-1">{uploadResult.message}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setUploadResult({ show: false, type: 'success', title: '', message: '', details: [] })}
+                  className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                >
+                  <X size={24} weight="bold" />
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 max-h-[60vh] overflow-y-auto">
+              {uploadResult.stats && (
+                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 mb-4">
+                  <h4 className="font-bold text-lg text-[var(--dark)] mb-4 flex items-center gap-2">
+                    <FileText size={22} weight="bold" className="text-[var(--primary)]" />
+                    Statistik Upload
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Total Success */}
+                    <div className="bg-white rounded-lg p-4 border-2 border-green-200">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                          <CheckCircle size={28} weight="bold" className="text-green-600" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-600 font-medium">Total Berhasil</p>
+                          <p className="text-2xl font-bold text-green-700">{uploadResult.stats.totalSuccess}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Total Failed */}
+                    <div className="bg-white rounded-lg p-4 border-2 border-red-200">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                          <XCircle size={28} weight="bold" className="text-red-600" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-600 font-medium">Gagal</p>
+                          <p className="text-2xl font-bold text-red-700">{uploadResult.stats.failed}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Created */}
+                    {uploadResult.stats.created > 0 && (
+                      <div className="bg-white rounded-lg p-4 border border-blue-200">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <Plus size={22} weight="bold" className="text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-600">Dibuat Baru</p>
+                            <p className="text-xl font-bold text-blue-700">{uploadResult.stats.created}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Updated */}
+                    {uploadResult.stats.updated > 0 && (
+                      <div className="bg-white rounded-lg p-4 border border-orange-200">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                            <ArrowClockwise size={22} weight="bold" className="text-orange-600" />
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-600">Diperbarui</p>
+                            <p className="text-xl font-bold text-orange-700">{uploadResult.stats.updated}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Error Details */}
+              {uploadResult.errors && uploadResult.errors.length > 0 && (
+                <div className="bg-red-50 rounded-xl p-4 border border-red-200">
+                  <h4 className="font-bold text-base text-red-900 mb-3 flex items-center gap-2">
+                    <XCircle size={20} weight="bold" className="text-red-600" />
+                    Detail Error ({uploadResult.errors.length})
+                  </h4>
+                  <div className="space-y-2 max-h-60 overflow-y-auto">
+                    {uploadResult.errors.map((err, index) => (
+                      <div key={index} className="bg-white rounded-lg p-3 border border-red-200">
+                        <p className="text-sm font-semibold text-gray-800 mb-1">{index + 1}. {err.item}</p>
+                        <p className="text-xs text-red-600">{err.error}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {uploadResult.type === 'success' && uploadResult.stats && uploadResult.stats.totalSuccess > 0 && (
+                <div className="mt-4 p-4 bg-blue-50 border-2 border-blue-300 rounded-xl flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <ArrowClockwise size={22} weight="bold" className="text-white animate-spin" style={{ animationDuration: '2s' }} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-blue-900 font-bold mb-1">
+                      Refresh Otomatis
+                    </p>
+                    <p className="text-xs text-blue-700">
+                      Halaman akan otomatis refresh dalam 3 detik untuk menampilkan data terbaru
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="border-t border-gray-200 p-6 bg-gray-50 flex justify-end gap-3">
+              <button
+                onClick={() => setUploadResult({ show: false, type: 'success', title: '', message: '', stats: undefined, errors: [] })}
+                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition-colors"
+              >
+                Tutup
+              </button>
+              {uploadResult.type === 'success' && uploadResult.stats && uploadResult.stats.totalSuccess > 0 && (
+                <button
+                  onClick={() => window.location.reload()}
+                  className="px-6 py-3 bg-[var(--primary)] text-white rounded-lg font-bold hover:bg-[var(--dark)] transition-colors flex items-center gap-2"
+                >
+                  <ArrowClockwise size={20} weight="bold" />
+                  Refresh Sekarang
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

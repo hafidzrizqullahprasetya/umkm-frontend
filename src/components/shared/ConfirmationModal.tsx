@@ -45,6 +45,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           <Button
             variant="destructive"
             onClick={handleConfirm}
+            className="bg-[#DC2626] hover:bg-[#B91C1C] text-white"
           >
             {confirmText}
           </Button>

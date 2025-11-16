@@ -32,14 +32,14 @@ export default async function AdminPage() {
   let user: any = {
     email: session.user.email,
     role: "administrator",
-    token: (session as any).token // Include token from session
+    token: (session as any).accessToken // Include token from session
   };
 
   if (userResponse.ok) {
     const userData = await userResponse.json();
     user = {
       ...userData.data,
-      token: (session as any).token // Make sure token is included
+      token: (session as any).accessToken // Make sure token is included
     };
   }
 
@@ -53,7 +53,7 @@ export default async function AdminPage() {
   // Fetch all users with authentication token
   let allUsers = [];
   try {
-    const token = (session as any).token;
+    const token = (session as any).accessToken;
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };

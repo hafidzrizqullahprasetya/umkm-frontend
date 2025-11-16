@@ -12,6 +12,7 @@ module.exports = {
         cream: 'var(--cream)',
         dark: 'var(--dark)',
         white: 'var(--white)',
+        destructive: '#DC2626',
       },
     },
   },

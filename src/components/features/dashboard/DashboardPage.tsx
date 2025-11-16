@@ -32,9 +32,10 @@ interface DashboardPageProps {
   userName: string;
   userEmail: string;
   userWhatsapp?: string;
+  userAddress?: string;
 }
 
-export default function DashboardPage({ userUmkm: initialUserUmkm, userName, userEmail, userWhatsapp }: DashboardPageProps) {
+export default function DashboardPage({ userUmkm: initialUserUmkm, userName, userEmail, userWhatsapp, userAddress }: DashboardPageProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState<'overview' | 'umkm'>('overview');
@@ -48,8 +49,8 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [umkmToDelete, setUmkmToDelete] = useState<string | null>(null);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
-  const token = session?.accessToken
-  console.log(userEmail)
+  const token = (session as any)?.accessToken;
+
   // Get user initials from name
   const getUserInitials = (name: string) => {
     const nameParts = name.trim().split(' ');
@@ -125,7 +126,6 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
 
     try {
       const baseUrl = getBackendUrl();
-      const token = (session as any)?.token;
       const response = await fetch(`${baseUrl}/api/umkm?id=${umkmToDelete}`, {
         method: 'DELETE',
         headers: {
@@ -141,8 +141,16 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
       setUserUmkm(prev => prev.filter(umkm => umkm.id !== Number(umkmToDelete)));
       setShowDeleteConfirm(false);
       setUmkmToDelete(null);
+      toast.success('UMKM berhasil dihapus!');
+
+      // Invalidate cache and refresh
+      router.refresh();
+      setTimeout(() => {
+        router.push('/home');
+      }, 1500);
     } catch (error) {
       console.error('Error deleting UMKM:', error);
+      toast.error('Gagal menghapus UMKM');
       setShowDeleteConfirm(false);
       setUmkmToDelete(null);
     }
@@ -153,10 +161,9 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
 
     try {
       const baseUrl = getBackendUrl();
-      // const token = (session as any)?.token;
 
-      let url = `${baseUrl}/api/umkm?email=${userEmail}`;
-      if (method === 'PUT') {
+      let url = `${baseUrl}/api/umkm`;
+      if (userEmail) {
         url += `?email=${encodeURIComponent(userEmail)}`;
       }
 
@@ -168,11 +175,8 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
         },
         body: JSON.stringify(data),
       });
-      console.log(token)
-      console.log(JSON.stringify(data))
-      console.log(url)
+
       const result = await response.json();
-      console.log(result)
       if (!response.ok) {
         throw new Error(method === 'POST' ? 'Failed to create UMKM' : 'Failed to update UMKM');
       }
@@ -185,9 +189,14 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
         setUserUmkm(prev => prev.map(umkm => umkm.id === updatedUmkm.id ? updatedUmkm : umkm));
       }
 
-      router.refresh();
       setShowModal(false);
       toast.success(method === 'POST' ? 'UMKM berhasil ditambahkan!' : 'UMKM berhasil diperbarui!');
+
+      // Invalidate cache and refresh
+      router.refresh();
+      setTimeout(() => {
+        router.push('/home');
+      }, 1500);
     } catch (error) {
       console.error('Error submitting form:', error);
       toast.error(method === 'POST' ? 'Gagal menambahkan UMKM' : 'Gagal memperbarui UMKM');
@@ -201,7 +210,6 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
 
     try {
       const baseUrl = getBackendUrl();
-      const token = (session as any)?.token;
 
       const updateData: any = {
         name: formData.get("name"),
@@ -237,7 +245,12 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
 
       toast.success("Profil berhasil diperbarui!");
       setShowEditProfileModal(false);
+
+      // Invalidate cache and refresh
       router.refresh();
+      setTimeout(() => {
+        router.push('/home');
+      }, 1500);
     } catch (error: any) {
       console.error("Error updating profile:", error);
       toast.error(`Gagal memperbarui profil: ${error.message}`);
@@ -731,6 +744,7 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
                 <textarea
                   name="address"
                   rows={3}
+                  defaultValue={userAddress}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent resize-none"
                 />
               </div>
