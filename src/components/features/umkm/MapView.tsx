@@ -75,13 +75,13 @@ export default function MapView({ allUmkm }: MapViewProps) {
               onClick={() => handleListItemClick(umkm)}
               onMouseEnter={() => setHoveredUmkm(umkm.id)}
               onMouseLeave={() => setHoveredUmkm(null)}
-              className={`p-4 cursor-pointer transition-all hover:bg-[var(--primary)]/5 ${
-                selectedUmkm?.id === umkm.id ? 'bg-[var(--primary)]/10 border-l-4 border-[var(--primary)]' : ''
-              } ${hoveredUmkm === umkm.id ? 'bg-gray-50' : ''}`}
+              className={`p-3 cursor-pointer transition-all border-b border-gray-50 hover:bg-gray-50 ${
+                selectedUmkm?.id === umkm.id ? 'bg-[var(--primary)]/5 border-l-4 border-l-[var(--primary)]' : 'border-l-4 border-l-transparent'
+              }`}
             >
               <div className="flex gap-3">
                 {/* Image */}
-                <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                <div className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 relative">
                   {(umkm.logo || umkm.images?.[0]) ? (
                     <img
                       src={umkm.logo || umkm.images?.[0]}
@@ -91,38 +91,33 @@ export default function MapView({ allUmkm }: MapViewProps) {
                         e.currentTarget.style.display = 'none';
                         const placeholder = e.currentTarget.parentElement;
                         if (placeholder) {
-                          placeholder.innerHTML = '<svg width="40" height="40" fill="#9CA3AF"><use href="#icon-placeholder" /></svg>';
+                          placeholder.innerHTML = '<div class="w-full h-full flex items-center justify-center text-gray-300"><svg width="24" height="24" fill="currentColor"><use href="#icon-storefront" /></svg></div>';
                         }
                       }}
                     />
                   ) : (
-                    <Storefront size={40} weight="thin" className="text-gray-400" />
+                    <div className="w-full h-full flex items-center justify-center text-gray-300">
+                      <Storefront size={24} weight="thin" />
+                    </div>
                   )}
                 </div>
 
                 {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-[var(--dark)] text-sm mb-1 line-clamp-1">
-                    {umkm.name}
-                  </h4>
-
-                  <div className="flex items-center gap-1 mb-2">
-                    <span className="px-2 py-0.5 bg-[var(--primary)]/10 text-[var(--primary)] text-xs font-medium rounded">
+                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <h4 className={`font-bold text-sm line-clamp-1 ${selectedUmkm?.id === umkm.id ? 'text-[var(--primary)]' : 'text-[var(--dark)]'}`}>
+                      {umkm.name}
+                    </h4>
+                    <span className="px-1.5 py-0.5 bg-primary text-white text-[10px] font-bold rounded uppercase tracking-wider flex-shrink-0">
                       {umkm.type}
                     </span>
                   </div>
 
                   <div className="space-y-1">
-                    <div className="flex items-start gap-1.5 text-xs text-gray-600">
+                    <div className="flex items-start gap-1.5 text-xs text-gray-500">
                       <MapPin size={14} weight="fill" className="text-[var(--primary)] mt-0.5 flex-shrink-0" />
-                      <span className="line-clamp-2">{umkm.location}</span>
+                      <span className="line-clamp-1">{umkm.location}</span>
                     </div>
-                    {umkm.contact && (
-                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                        <Phone size={14} weight="fill" className="text-[var(--primary)] flex-shrink-0" />
-                        <span>{umkm.contact}</span>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -244,7 +239,7 @@ export default function MapView({ allUmkm }: MapViewProps) {
 
                   {/* Category */}
                   <div className="mb-2">
-                    <span className="px-2 py-1 bg-[var(--primary)]/10 text-[var(--primary)] text-xs font-semibold rounded">
+                    <span className="px-2 py-1 bg-primary text-white text-xs font-semibold rounded">
                       {selectedUmkm.type}
                     </span>
                   </div>

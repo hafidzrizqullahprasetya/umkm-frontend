@@ -1,6 +1,4 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/references/unused-components/ui/dialog';
-import { Button } from '@/references/unused-components/ui/button';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -26,32 +24,38 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     onClose();
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="text-lg font-semibold text-[var(--dark)]">{title}</DialogTitle>
-        </DialogHeader>
-        <DialogDescription className="text-gray-600 mt-2">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div
+        className="bg-white rounded-lg shadow-lg w-full max-w-md p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold text-[var(--dark)]">{title}</h3>
+        </div>
+
+        <p className="text-gray-600 mb-6">
           {message}
-        </DialogDescription>
-        <DialogFooter className="flex sm:justify-end gap-2 mt-4">
-          <Button
-            variant="outline"
+        </p>
+
+        <div className="flex justify-end gap-2">
+          <button
             onClick={onClose}
+            className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors font-medium text-sm"
           >
             {cancelText}
-          </Button>
-          <Button
-            variant="destructive"
+          </button>
+          <button
             onClick={handleConfirm}
-            className="bg-[#DC2626] hover:bg-[#B91C1C] text-white"
+            className="px-4 py-2 rounded-md bg-[#DC2626] hover:bg-[#B91C1C] text-white transition-colors font-medium text-sm"
           >
             {confirmText}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

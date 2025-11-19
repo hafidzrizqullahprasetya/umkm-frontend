@@ -53,9 +53,9 @@ export default function AdminDashboard({
 }: AdminDashboardProps) {
   const router = useRouter();
   const { data: session } = useSession();
-  const [activeTab, setActiveTab] = useState<"overview" | "umkm" | "users" | "upload">(
-    "overview"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "umkm" | "users" | "upload"
+  >("overview");
 
   // Helper function to get access token from various sources
   const getAccessToken = () => {
@@ -63,14 +63,14 @@ export default function AdminDashboard({
     if (user && (user as any).token) {
       return (user as any).token;
     }
-    
+
     if ((session as any)?.accessToken) {
       return (session as any).accessToken;
     }
 
     // Fallback to localStorage or sessionStorage
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("token") || sessionStorage.getItem("token");
     }
     return null;
   };
@@ -86,24 +86,30 @@ export default function AdminDashboard({
   const usersPerPage = 10; // 10 users per page for table
 
   // Search states
-  const [umkmSearch, setUmkmSearch] = useState('');
-  const [usersSearch, setUsersSearch] = useState('');
+  const [umkmSearch, setUmkmSearch] = useState("");
+  const [usersSearch, setUsersSearch] = useState("");
 
   // Unified Modal States
   const [showUmkmModal, setShowUmkmModal] = useState(false);
-  const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
+  const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedUmkm, setSelectedUmkm] = useState<Umkm | null>(null);
 
   // Edit User Modal
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
-  const [activeUserTab, setActiveUserTab] = useState<'basic' | 'security'>('basic');
+  const [activeUserTab, setActiveUserTab] = useState<"basic" | "security">(
+    "basic",
+  );
 
   // Toast state
-  const [toast, setToast] = useState<{show: boolean; message: string; type: 'success' | 'error'}>({
+  const [toast, setToast] = useState<{
+    show: boolean;
+    message: string;
+    type: "success" | "error";
+  }>({
     show: false,
-    message: '',
-    type: 'success'
+    message: "",
+    type: "success",
   });
 
   // Profile editing state
@@ -111,7 +117,7 @@ export default function AdminDashboard({
 
   // State for restriction modal
   const [showRestrictionModal, setShowRestrictionModal] = useState(false);
-  
+
   // State for logout confirmation
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -127,7 +133,7 @@ export default function AdminDashboard({
   const [uploadLoading, setUploadLoading] = useState(false);
   const [uploadResult, setUploadResult] = useState<{
     show: boolean;
-    type: 'success' | 'error';
+    type: "success" | "error";
     title: string;
     message: string;
     stats?: {
@@ -139,17 +145,15 @@ export default function AdminDashboard({
     errors?: Array<{ item: string; error: string }>;
   }>({
     show: false,
-    type: 'success',
-    title: '',
-    message: '',
+    type: "success",
+    title: "",
+    message: "",
     stats: undefined,
-    errors: []
+    errors: [],
   });
 
   // State for general operation loading
   const [operationLoading, setOperationLoading] = useState(false);
-
-
 
   const getUserInitials = (name: string) => {
     if (!name) return "AD";
@@ -171,10 +175,10 @@ export default function AdminDashboard({
 
   // Filter UMKM based on search and sort by newest first
   const filteredUmkm = allUmkm
-    .filter(umkm => {
+    .filter((umkm) => {
       if (!umkmSearch.trim()) return true;
       const searchLower = umkmSearch.toLowerCase();
-      const owner = allUsers.find(u => u.id === umkm.user_id);
+      const owner = allUsers.find((u) => u.id === umkm.user_id);
       return (
         umkm.name.toLowerCase().includes(searchLower) ||
         umkm.type.toLowerCase().includes(searchLower) ||
@@ -190,7 +194,7 @@ export default function AdminDashboard({
 
   // Filter Users based on search and sort by newest first
   const filteredUsers = allUsers
-    .filter(user => {
+    .filter((user) => {
       if (!usersSearch.trim()) return true;
       const searchLower = usersSearch.toLowerCase();
       return (
@@ -211,12 +215,12 @@ export default function AdminDashboard({
 
   const paginatedUmkm = filteredUmkm.slice(
     (umkmPage - 1) * itemsPerPage,
-    umkmPage * itemsPerPage
+    umkmPage * itemsPerPage,
   );
 
   const paginatedUsers = filteredUsers.slice(
     (usersPage - 1) * usersPerPage,
-    usersPage * usersPerPage
+    usersPage * usersPerPage,
   );
 
   // Edit handlers
@@ -226,13 +230,13 @@ export default function AdminDashboard({
   };
 
   const handleAddUmkm = () => {
-    setModalMode('add');
+    setModalMode("add");
     setSelectedUmkm(null);
     setShowUmkmModal(true);
   };
 
   const handleEditUmkm = (umkm: Umkm) => {
-    setModalMode('edit');
+    setModalMode("edit");
     setSelectedUmkm(umkm);
     setShowUmkmModal(true);
   };
@@ -243,60 +247,71 @@ export default function AdminDashboard({
   const handleSubmitUmkmForm = async (data: any) => {
     const token = getAccessToken();
     if (!token) {
-      showToast("Authentication error. Please log in again.", 'error');
+      showToast("Authentication error. Please log in again.", "error");
       return;
     }
 
     setOperationLoading(true);
     try {
       const baseUrl = getBackendUrl();
-      const method = modalMode === 'add' ? 'POST' : 'PUT';
+      const method = modalMode === "add" ? "POST" : "PUT";
 
       let url = `${baseUrl}/api/umkm`;
 
       // For PUT, find the user email associated with the UMKM
-      if (method === 'PUT' && selectedUmkm) {
-        const umkmOwner = allUsers.find(u => u.id === selectedUmkm.user_id);
+      if (method === "PUT" && selectedUmkm) {
+        const umkmOwner = allUsers.find((u) => u.id === selectedUmkm.user_id);
         const email = umkmOwner?.email;
-        if (!email) throw new Error("Could not find owner's email for this UMKM.");
+        if (!email)
+          throw new Error("Could not find owner's email for this UMKM.");
         url += `?email=${encodeURIComponent(email)}`;
-      } else if (method === 'POST') {
+      } else if (method === "POST") {
         // For POST, the email of the owner must be provided.
         // The form modal should ideally have a user selector for admins.
         // For now, we'll check if data.email is passed, otherwise default to the admin's own email.
         const ownerEmail = data.email || user.email;
-        if (!ownerEmail) throw new Error("Owner email is required to create a new UMKM.");
+        if (!ownerEmail)
+          throw new Error("Owner email is required to create a new UMKM.");
         url += `?email=${encodeURIComponent(ownerEmail)}`;
       }
 
       const response = await fetch(url, {
         method: method,
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || (method === 'POST' ? 'Failed to create UMKM' : 'Failed to update UMKM'));
+        throw new Error(
+          errorData.message ||
+            (method === "POST"
+              ? "Failed to create UMKM"
+              : "Failed to update UMKM"),
+        );
       }
 
       setOperationLoading(false);
-      showToast(method === 'POST' ? 'UMKM berhasil ditambahkan!' : 'UMKM berhasil diperbarui!', 'success');
+      showToast(
+        method === "POST"
+          ? "UMKM berhasil ditambahkan!"
+          : "UMKM berhasil diperbarui!",
+        "success",
+      );
       setShowUmkmModal(false);
 
       // Invalidate cache and refresh
       router.refresh();
       setTimeout(() => {
-        router.push('/admin');
+        router.push("/admin");
       }, 1500);
-
     } catch (error: any) {
-      console.error('Error submitting UMKM form:', error);
+      console.error("Error submitting UMKM form:", error);
       setOperationLoading(false);
-      showToast(`Gagal: ${error.message}`, 'error');
+      showToast(`Gagal: ${error.message}`, "error");
     }
   };
 
@@ -321,7 +336,9 @@ export default function AdminDashboard({
         // For profile update, we need both old and new password if changing
         if (newPassword && newPassword.trim() !== "") {
           if (!oldPassword || oldPassword.trim() === "") {
-            throw new Error("Password lama diperlukan untuk mengganti password");
+            throw new Error(
+              "Password lama diperlukan untuk mengganti password",
+            );
           }
           updateData.old_password = oldPassword;
           updateData.new_password = newPassword;
@@ -351,7 +368,7 @@ export default function AdminDashboard({
         }
 
         setOperationLoading(false);
-        showToast("Profil berhasil diperbarui!", 'success');
+        showToast("Profil berhasil diperbarui!", "success");
         setShowEditUserModal(false);
         setEditingUser(null);
         setIsEditingOwnProfile(false);
@@ -359,7 +376,7 @@ export default function AdminDashboard({
         // Invalidate cache and refresh
         router.refresh();
         setTimeout(() => {
-          router.push('/admin');
+          router.push("/admin");
         }, 1500);
         return; // Exit early to avoid the code below
       } else {
@@ -400,34 +417,33 @@ export default function AdminDashboard({
         }
 
         setOperationLoading(false);
-        showToast("User berhasil diperbarui!", 'success');
+        showToast("User berhasil diperbarui!", "success");
         setShowEditUserModal(false);
         setEditingUser(null);
 
         // Invalidate cache and refresh
         router.refresh();
         setTimeout(() => {
-          router.push('/admin');
+          router.push("/admin");
         }, 1500);
       }
-
     } catch (error: any) {
       console.error("Error updating user:", error);
       setOperationLoading(false);
-      showToast(`Gagal memperbarui user: ${error.message}`, 'error');
+      showToast(`Gagal memperbarui user: ${error.message}`, "error");
     }
   };
 
   // Function to check if user already has one UMKM (for admin_umkm restriction)
   const hasUserUmkm = (userId: number) => {
-    const userUmkm = allUmkm.filter(umkm => umkm.user_id === userId);
+    const userUmkm = allUmkm.filter((umkm) => umkm.user_id === userId);
     return userUmkm.length > 0;
   };
 
   // Function to handle adding UMKM with restriction check (for use in user dashboard)
   const handleAddUmkmWithRestriction = (user: any, userUmkm: Umkm[]) => {
     // Check if user is admin_umkm and already has a UMKM
-    if (user.role === 'admin_umkm' && userUmkm.length > 0) {
+    if (user.role === "admin_umkm" && userUmkm.length > 0) {
       setShowRestrictionModal(true);
       return false;
     }
@@ -436,10 +452,13 @@ export default function AdminDashboard({
   };
 
   // Toast helper function
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const showToast = (
+    message: string,
+    type: "success" | "error" = "success",
+  ) => {
     setToast({ show: true, message, type });
     setTimeout(() => {
-      setToast({ show: false, message: '', type: 'success' });
+      setToast({ show: false, message: "", type: "success" });
     }, 3000);
   };
 
@@ -476,11 +495,11 @@ export default function AdminDashboard({
   const totalUmkm = allUmkm.length;
   const totalOnlineShops = allUmkm.reduce(
     (sum, umkm) => sum + (umkm.online_shop?.length || 0),
-    0
+    0,
   );
   const totalSocialMedia = allUmkm.reduce(
     (sum, umkm) => sum + (umkm.media_sosial?.length || 0),
-    0
+    0,
   );
 
   const getBackendUrl = () => {
@@ -497,7 +516,7 @@ export default function AdminDashboard({
 
     const token = getAccessToken();
     if (!token) {
-      showToast("Authentication error. Please log in again.", 'error');
+      showToast("Authentication error. Please log in again.", "error");
       setShowDeleteUmkmConfirm(false);
       setUmkmToDelete(null);
       return;
@@ -506,18 +525,23 @@ export default function AdminDashboard({
     setOperationLoading(true);
     try {
       const baseUrl = getBackendUrl();
-      const umkmToDeleteData = allUmkm.find(umkm => umkm.id === parseInt(umkmToDelete));
-      const owner = allUsers.find(u => u.id === umkmToDeleteData?.user_id);
+      const umkmToDeleteData = allUmkm.find(
+        (umkm) => umkm.id === parseInt(umkmToDelete),
+      );
+      const owner = allUsers.find((u) => u.id === umkmToDeleteData?.user_id);
       const userEmail = owner?.email;
 
       if (!userEmail) {
         throw new Error("User email not found for UMKM deletion");
       }
 
-      const response = await fetch(`${baseUrl}/api/umkm?email=${encodeURIComponent(userEmail)}`, {
-        method: "DELETE",
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `${baseUrl}/api/umkm?email=${encodeURIComponent(userEmail)}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -525,20 +549,22 @@ export default function AdminDashboard({
       }
 
       setOperationLoading(false);
-      setAllUmkm((prev) => prev.filter((umkm) => umkm.id !== parseInt(umkmToDelete)));
-      showToast("UMKM berhasil dihapus!", 'success');
+      setAllUmkm((prev) =>
+        prev.filter((umkm) => umkm.id !== parseInt(umkmToDelete)),
+      );
+      showToast("UMKM berhasil dihapus!", "success");
       setShowDeleteUmkmConfirm(false);
       setUmkmToDelete(null);
 
       // Invalidate cache and refresh
       router.refresh();
       setTimeout(() => {
-        router.push('/admin');
+        router.push("/admin");
       }, 1500);
     } catch (error: any) {
       console.error("Error deleting UMKM:", error);
       setOperationLoading(false);
-      showToast(`Gagal menghapus UMKM: ${error.message}`, 'error');
+      showToast(`Gagal menghapus UMKM: ${error.message}`, "error");
       setShowDeleteUmkmConfirm(false);
       setUmkmToDelete(null);
     }
@@ -576,19 +602,19 @@ export default function AdminDashboard({
 
       setOperationLoading(false);
       setAllUsers((prev) => prev.filter((u) => u.id !== userToDelete));
-      showToast("User berhasil dihapus!", 'success');
+      showToast("User berhasil dihapus!", "success");
       setShowDeleteUserConfirm(false);
       setUserToDelete(null);
 
       // Invalidate cache and refresh
       router.refresh();
       setTimeout(() => {
-        router.push('/admin');
+        router.push("/admin");
       }, 1500);
     } catch (error: any) {
       console.error("Error deleting user:", error);
       setOperationLoading(false);
-      showToast(`Gagal menghapus user: ${error.message}`, 'error');
+      showToast(`Gagal menghapus user: ${error.message}`, "error");
       setShowDeleteUserConfirm(false);
       setUserToDelete(null);
     }
@@ -611,11 +637,11 @@ export default function AdminDashboard({
         setUploadLoading(false);
         setUploadResult({
           show: true,
-          type: 'error',
-          title: 'Error Autentikasi',
-          message: 'Sesi Anda telah berakhir. Silakan login kembali.',
+          type: "error",
+          title: "Error Autentikasi",
+          message: "Sesi Anda telah berakhir. Silakan login kembali.",
           stats: undefined,
-          errors: []
+          errors: [],
         });
         return;
       }
@@ -642,38 +668,42 @@ export default function AdminDashboard({
       }
 
       // Build detailed message
-      const totalSuccess = (result.data.created?.length || 0) + (result.data.updated?.length || 0);
+      const totalSuccess =
+        (result.data.created?.length || 0) + (result.data.updated?.length || 0);
       const totalFailed = result.data.failed?.length || 0;
 
       const errors: Array<{ item: string; error: string }> = [];
       if (result.data.failed && result.data.failed.length > 0) {
         result.data.failed.forEach((fail: any) => {
           errors.push({
-            item: fail.data.name || fail.data.email || 'Unknown',
-            error: fail.error
+            item: fail.data.name || fail.data.email || "Unknown",
+            error: fail.error,
           });
         });
       }
 
       setUploadResult({
         show: true,
-        type: totalFailed === 0 ? 'success' : 'error',
-        title: totalFailed === 0 ? 'Upload Berhasil!' : 'Upload Selesai dengan Error',
-        message: `${totalSuccess} UMKM berhasil diproses${totalFailed > 0 ? `, ${totalFailed} gagal` : ''}.`,
+        type: totalFailed === 0 ? "success" : "error",
+        title:
+          totalFailed === 0
+            ? "Upload Berhasil!"
+            : "Upload Selesai dengan Error",
+        message: `${totalSuccess} UMKM berhasil diproses${totalFailed > 0 ? `, ${totalFailed} gagal` : ""}.`,
         stats: {
           totalSuccess,
           created: result.data.created?.length || 0,
           updated: result.data.updated?.length || 0,
-          failed: totalFailed
+          failed: totalFailed,
         },
-        errors
+        errors,
       });
 
       if (totalSuccess > 0) {
         // Invalidate cache
         router.refresh();
         setTimeout(() => {
-          router.push('/admin');
+          router.push("/admin");
         }, 3000);
       }
     } catch (error) {
@@ -681,11 +711,14 @@ export default function AdminDashboard({
       setUploadLoading(false);
       setUploadResult({
         show: true,
-        type: 'error',
-        title: 'Upload Gagal',
-        message: error instanceof Error ? error.message : "Gagal upload UMKM. Pastikan format JSON benar.",
+        type: "error",
+        title: "Upload Gagal",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Gagal upload UMKM. Pastikan format JSON benar.",
         stats: undefined,
-        errors: []
+        errors: [],
       });
     }
   };
@@ -707,11 +740,11 @@ export default function AdminDashboard({
         setUploadLoading(false);
         setUploadResult({
           show: true,
-          type: 'error',
-          title: 'Error Autentikasi',
-          message: 'Sesi Anda telah berakhir. Silakan login kembali.',
+          type: "error",
+          title: "Error Autentikasi",
+          message: "Sesi Anda telah berakhir. Silakan login kembali.",
           stats: undefined,
-          errors: []
+          errors: [],
         });
         return;
       }
@@ -734,44 +767,49 @@ export default function AdminDashboard({
       setUploadLoading(false);
 
       if (!response.ok) {
-        const errorMessage = result.error || result.message || "Gagal upload users";
+        const errorMessage =
+          result.error || result.message || "Gagal upload users";
         console.error("Upload users error:", errorMessage);
         throw new Error(errorMessage);
       }
 
       // Build detailed message
-      const totalSuccess = (result.data.created?.length || 0) + (result.data.updated?.length || 0);
+      const totalSuccess =
+        (result.data.created?.length || 0) + (result.data.updated?.length || 0);
       const totalFailed = result.data.failed?.length || 0;
 
       const errors: Array<{ item: string; error: string }> = [];
       if (result.data.failed && result.data.failed.length > 0) {
         result.data.failed.forEach((fail: any) => {
           errors.push({
-            item: fail.data.email || 'Unknown',
-            error: fail.error
+            item: fail.data.email || "Unknown",
+            error: fail.error,
           });
         });
       }
 
       setUploadResult({
         show: true,
-        type: totalFailed === 0 ? 'success' : 'error',
-        title: totalFailed === 0 ? 'Upload Berhasil!' : 'Upload Selesai dengan Error',
-        message: `${totalSuccess} user berhasil diproses${totalFailed > 0 ? `, ${totalFailed} gagal` : ''}.`,
+        type: totalFailed === 0 ? "success" : "error",
+        title:
+          totalFailed === 0
+            ? "Upload Berhasil!"
+            : "Upload Selesai dengan Error",
+        message: `${totalSuccess} user berhasil diproses${totalFailed > 0 ? `, ${totalFailed} gagal` : ""}.`,
         stats: {
           totalSuccess,
           created: result.data.created?.length || 0,
           updated: result.data.updated?.length || 0,
-          failed: totalFailed
+          failed: totalFailed,
         },
-        errors
+        errors,
       });
 
       if (totalSuccess > 0) {
         // Invalidate cache
         router.refresh();
         setTimeout(() => {
-          router.push('/admin');
+          router.push("/admin");
         }, 3000);
       }
     } catch (error) {
@@ -779,11 +817,14 @@ export default function AdminDashboard({
       setUploadLoading(false);
       setUploadResult({
         show: true,
-        type: 'error',
-        title: 'Upload Gagal',
-        message: error instanceof Error ? error.message : "Gagal upload users. Pastikan format JSON benar.",
+        type: "error",
+        title: "Upload Gagal",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Gagal upload users. Pastikan format JSON benar.",
         stats: undefined,
-        errors: []
+        errors: [],
       });
     }
   };
@@ -795,42 +836,45 @@ export default function AdminDashboard({
           email: "user1@email.com",
           name: "Warung Makan Bu Siti",
           type: "Kuliner",
-          description: "Warung makan tradisional dengan menu masakan rumahan yang lezat dan harga terjangkau",
+          description:
+            "Warung makan tradisional dengan menu masakan rumahan yang lezat dan harga terjangkau",
           location: "Jl. Raya Bogor No. 123, Jakarta Timur",
           contact: "081234567890",
           logo: "",
           gmaps: "https://maps.google.com/?q=-6.2088,106.8456",
           online_shop: [
             { type: "Tokopedia", url: "https://tokopedia.com/warungbusiti" },
-            { type: "Shopee", url: "https://shopee.co.id/warungbusiti" }
+            { type: "Shopee", url: "https://shopee.co.id/warungbusiti" },
           ],
           media_sosial: [
             { type: "Instagram", url: "https://instagram.com/warungbusiti" },
-            { type: "Facebook", url: "https://facebook.com/warungbusiti" }
+            { type: "Facebook", url: "https://facebook.com/warungbusiti" },
           ],
-          umkm_galeri: []
+          umkm_galeri: [],
         },
         {
           email: "user2@email.com",
           name: "Batik Karya Nusantara",
           type: "Fashion",
-          description: "Produsen batik tulis dan cap dengan motif tradisional dan modern berkualitas tinggi",
+          description:
+            "Produsen batik tulis dan cap dengan motif tradisional dan modern berkualitas tinggi",
           location: "Jl. Malioboro No. 45, Yogyakarta",
           contact: "082345678901",
           logo: "",
           gmaps: "https://maps.google.com/?q=-7.7956,110.3695",
           online_shop: [
             { type: "Tokopedia", url: "https://tokopedia.com/batikkarya" },
-            { type: "Lazada", url: "https://lazada.co.id/batikkarya" }
+            { type: "Lazada", url: "https://lazada.co.id/batikkarya" },
           ],
           media_sosial: [
             { type: "Instagram", url: "https://instagram.com/batikkarya" },
-            { type: "TikTok", url: "https://tiktok.com/@batikkarya" }
+            { type: "TikTok", url: "https://tiktok.com/@batikkarya" },
           ],
-          umkm_galeri: []
-        }
+          umkm_galeri: [],
+        },
       ],
-      catatan: "Field 'contact' bisa diisi dengan nomor WhatsApp UMKM. Jika ingin menggunakan nomor WhatsApp yang sama dengan user, isi dengan nomor yang sama di data user. Field 'logo' dan 'umkm_galeri' bisa dikosongkan, gambar dapat ditambahkan nanti via Edit UMKM."
+      catatan:
+        "Field 'contact' bisa diisi dengan nomor WhatsApp UMKM. Jika ingin menggunakan nomor WhatsApp yang sama dengan user, isi dengan nomor yang sama di data user. Field 'logo' dan 'umkm_galeri' bisa dikosongkan, gambar dapat ditambahkan nanti via Edit UMKM.",
     };
 
     const blob = new Blob([JSON.stringify(template, null, 2)], {
@@ -846,8 +890,6 @@ export default function AdminDashboard({
     URL.revokeObjectURL(url);
   };
 
-
-
   const downloadUsersTemplate = () => {
     const template = {
       users: [
@@ -858,7 +900,7 @@ export default function AdminDashboard({
           name: "Siti Nurhaliza",
           address: "Jl. Raya Bogor No. 123, Jakarta Timur",
           whatsapp: "081234567890",
-          role: "admin_umkm"
+          role: "admin_umkm",
         },
         {
           username: "user2",
@@ -867,10 +909,11 @@ export default function AdminDashboard({
           name: "Budi Santoso",
           address: "Jl. Malioboro No. 45, Yogyakarta",
           whatsapp: "082345678901",
-          role: "admin_umkm"
-        }
+          role: "admin_umkm",
+        },
       ],
-      catatan: "Field 'whatsapp' adalah nomor WhatsApp user yang dapat digunakan sebagai kontak UMKM. Saat user menambah UMKM, mereka bisa memilih untuk menggunakan nomor WhatsApp ini atau input nomor berbeda."
+      catatan:
+        "Field 'whatsapp' adalah nomor WhatsApp user yang dapat digunakan sebagai kontak UMKM. Saat user menambah UMKM, mereka bisa memilih untuk menggunakan nomor WhatsApp ini atau input nomor berbeda.",
     };
 
     const blob = new Blob([JSON.stringify(template, null, 2)], {
@@ -895,27 +938,12 @@ export default function AdminDashboard({
             {/* Left Section - Logo and Title */}
             <div className="w-full lg:w-auto">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-                {/* Logo */}
-                <div className="flex flex-col">
-                  <div className="text-2xl sm:text-3xl font-black text-white">
-                    Tampung
-                  </div>
-                  <div className="text-xs text-white/90">
-                    Tempat Aksi Mendukung UMKM Nagari/Gapura
-                  </div>
-                </div>
-
                 {/* Divider - Hidden on mobile */}
                 <div className="hidden sm:block border-l border-white/30 h-12"></div>
 
                 {/* Dashboard Title */}
                 <div className="mt-2 sm:mt-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <ShieldCheck
-                      size={20}
-                      weight="bold"
-                      className="text-[var(--secondary)]"
-                    />
                     <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-white">
                       Dashboard Administrator
                     </h1>
@@ -936,7 +964,10 @@ export default function AdminDashboard({
                 <span>Kembali ke Beranda</span>
               </Link>
 
-              <div className="relative w-full sm:w-auto" ref={profileDropdownRef}>
+              <div
+                className="relative w-full sm:w-auto"
+                ref={profileDropdownRef}
+              >
                 <button
                   onClick={() => setShowProfileDropdown(!showProfileDropdown)}
                   className="w-full flex items-center gap-2 sm:gap-3 bg-white/20 hover:bg-white/30 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 transition-all"
@@ -969,7 +1000,7 @@ export default function AdminDashboard({
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-full bg-[var(--primary)] text-white flex items-center justify-center font-bold text-base flex-shrink-0">
                           {getUserInitials(
-                            user.name || user.username || "Admin"
+                            user.name || user.username || "Admin",
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -992,7 +1023,7 @@ export default function AdminDashboard({
                           setEditingUser(user);
                           setIsEditingOwnProfile(true);
                           setShowEditUserModal(true);
-                          setActiveUserTab('basic');
+                          setActiveUserTab("basic");
                           setShowProfileDropdown(false);
                         }}
                         className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-gray-100 rounded-lg transition-colors group"
@@ -1124,7 +1155,11 @@ export default function AdminDashboard({
                     : "text-gray-600 hover:text-[var(--primary)]"
                 }`}
               >
-                <ChartLineUp size={18} weight="bold" className="sm:w-5 sm:h-5" />
+                <ChartLineUp
+                  size={18}
+                  weight="bold"
+                  className="sm:w-5 sm:h-5"
+                />
                 <span>Ringkasan</span>
               </button>
               <button
@@ -1136,7 +1171,9 @@ export default function AdminDashboard({
                 }`}
               >
                 <Storefront size={18} weight="bold" className="sm:w-5 sm:h-5" />
-                <span className="hidden sm:inline">Semua UMKM ({totalUmkm})</span>
+                <span className="hidden sm:inline">
+                  Semua UMKM ({totalUmkm})
+                </span>
                 <span className="sm:hidden">UMKM ({totalUmkm})</span>
               </button>
               <button
@@ -1158,7 +1195,11 @@ export default function AdminDashboard({
                     : "text-gray-600 hover:text-[var(--primary)]"
                 }`}
               >
-                <UploadSimple size={18} weight="bold" className="sm:w-5 sm:h-5" />
+                <UploadSimple
+                  size={18}
+                  weight="bold"
+                  className="sm:w-5 sm:h-5"
+                />
                 <span className="hidden sm:inline">Upload JSON</span>
                 <span className="sm:hidden">Upload</span>
               </button>
@@ -1183,7 +1224,7 @@ export default function AdminDashboard({
                         {Array.from(new Set(allUmkm.map((u) => u.type))).map(
                           (category) => {
                             const count = allUmkm.filter(
-                              (u) => u.type === category
+                              (u) => u.type === category,
                             ).length;
                             const percentage =
                               totalUmkm > 0 ? (count / totalUmkm) * 100 : 0;
@@ -1205,7 +1246,7 @@ export default function AdminDashboard({
                                 </div>
                               </div>
                             );
-                          }
+                          },
                         )}
                       </div>
                     </div>
@@ -1217,7 +1258,7 @@ export default function AdminDashboard({
                       <div className="space-y-6">
                         {["admin_umkm", "administrator"].map((role) => {
                           const count = allUsers.filter(
-                            (u) => u.role === role
+                            (u) => u.role === role,
                           ).length;
                           const percentage =
                             totalUsers > 0 ? (count / totalUsers) * 100 : 0;
@@ -1260,7 +1301,11 @@ export default function AdminDashboard({
                   {/* Search Bar */}
                   <div className="relative w-full sm:w-auto sm:min-w-[300px]">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <MagnifyingGlass size={20} weight="bold" className="text-gray-400" />
+                      <MagnifyingGlass
+                        size={20}
+                        weight="bold"
+                        className="text-gray-400"
+                      />
                     </div>
                     <input
                       type="text"
@@ -1271,10 +1316,14 @@ export default function AdminDashboard({
                     />
                     {umkmSearch && (
                       <button
-                        onClick={() => setUmkmSearch('')}
+                        onClick={() => setUmkmSearch("")}
                         className="absolute inset-y-0 right-0 pr-3 flex items-center"
                       >
-                        <X size={18} weight="bold" className="text-gray-400 hover:text-gray-600" />
+                        <X
+                          size={18}
+                          weight="bold"
+                          className="text-gray-400 hover:text-gray-600"
+                        />
                       </button>
                     )}
                   </div>
@@ -1308,7 +1357,7 @@ export default function AdminDashboard({
                       Tidak ditemukan UMKM dengan kata kunci "{umkmSearch}"
                     </p>
                     <button
-                      onClick={() => setUmkmSearch('')}
+                      onClick={() => setUmkmSearch("")}
                       className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg font-medium hover:bg-[var(--dark)] transition-colors"
                     >
                       Reset Pencarian
@@ -1316,170 +1365,235 @@ export default function AdminDashboard({
                   </div>
                 ) : (
                   <>
-                  <div className="space-y-4">
-                    {paginatedUmkm.map((umkm) => (
-                      <div
-                        key={umkm.id}
-                        className="bg-white rounded-xl shadow-sm border border-[var(--border)] hover:shadow-md transition-all duration-300 p-3 sm:p-4"
-                      >
-                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                          {/* Logo */}
-                          <div className="flex-shrink-0 w-full sm:w-24 md:w-32 h-40 sm:h-24 md:h-32 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-                            {umkm.logo ? (
-                              <img
-                                src={umkm.logo}
-                                alt={umkm.name}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="text-center p-3 sm:p-4">
-                                <ImageSquare size={40} weight="thin" className="text-gray-400 mx-auto mb-2 sm:w-12 sm:h-12" />
-                                <p className="text-xs text-gray-400">No Logo</p>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Content */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 gap-2">
-                              <div className="flex-1 min-w-0">
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
-                                  <h4 className="text-lg sm:text-xl font-bold text-[var(--dark)] truncate">
-                                    {umkm.name}
-                                  </h4>
-                                  <span className="px-3 py-1 bg-[var(--primary)] text-white text-xs font-bold rounded-full flex-shrink-0 w-fit">
-                                    {umkm.type}
-                                  </span>
-                                </div>
-                                <p className="text-xs sm:text-sm text-gray-600 mb-1">
-                                  Owner: <span className="font-medium">{allUsers.find(u => u.id === umkm.user_id)?.name || allUsers.find(u => u.id === umkm.user_id)?.username || "N/A"}</span>
-                                  <span className="hidden sm:inline"> • </span>
-                                  <span className="block sm:inline text-gray-500">{allUsers.find(u => u.id === umkm.user_id)?.email}</span>
-                                </p>
-                              </div>
-                            </div>
-
-                            {umkm.description && (
-                              <p className="text-xs sm:text-sm text-gray-600 mb-3 line-clamp-2">
-                                {umkm.description}
-                              </p>
-                            )}
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-3">
-                              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
-                                <MapPin
-                                  size={14}
-                                  weight="fill"
-                                  className="text-[var(--primary)] flex-shrink-0 sm:w-4 sm:h-4"
+                    <div className="space-y-4">
+                      {paginatedUmkm.map((umkm) => (
+                        <div
+                          key={umkm.id}
+                          className="bg-white rounded-xl shadow-sm border border-[var(--border)] hover:shadow-md transition-all duration-300 p-3 sm:p-4"
+                        >
+                          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                            {/* Logo */}
+                            <div className="flex-shrink-0 w-full sm:w-24 md:w-32 h-40 sm:h-24 md:h-32 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                              {umkm.logo ? (
+                                <img
+                                  src={umkm.logo}
+                                  alt={umkm.name}
+                                  className="w-full h-full object-cover"
                                 />
-                                <span className="line-clamp-1">
-                                  {umkm.location || "Lokasi tidak tersedia"}
-                                </span>
-                              </div>
-                              {umkm.contact && (
-                                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
-                                  <Phone
-                                    size={14}
-                                    weight="fill"
-                                    className="text-[var(--primary)] flex-shrink-0 sm:w-4 sm:h-4"
+                              ) : (
+                                <div className="text-center p-3 sm:p-4">
+                                  <ImageSquare
+                                    size={40}
+                                    weight="thin"
+                                    className="text-gray-400 mx-auto mb-2 sm:w-12 sm:h-12"
                                   />
-                                  <span>{umkm.contact}</span>
+                                  <p className="text-xs text-gray-400">
+                                    No Logo
+                                  </p>
                                 </div>
                               )}
                             </div>
 
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                              <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm">
-                                <div className="flex items-center gap-1 sm:gap-2">
-                                  <ShoppingBag size={14} weight="bold" className="text-[var(--primary)] sm:w-4 sm:h-4" />
-                                  <span className="font-medium">{umkm.online_shop?.length || 0} Shop</span>
-                                </div>
-                                <div className="flex items-center gap-1 sm:gap-2">
-                                  <ShareNetwork size={14} weight="bold" className="text-[var(--primary)] sm:w-4 sm:h-4" />
-                                  <span className="font-medium">{umkm.media_sosial?.length || 0} Medsos</span>
-                                </div>
-                                <div className="flex items-center gap-1 sm:gap-2">
-                                  <ImageSquare size={14} weight="bold" className="text-[var(--primary)] sm:w-4 sm:h-4" />
-                                  <span className="font-medium">{umkm.umkm_galeri?.length || 0} Galeri</span>
+                            {/* Content */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+                                    <h4 className="text-lg sm:text-xl font-bold text-[var(--dark)] truncate">
+                                      {umkm.name}
+                                    </h4>
+                                    <span className="px-3 py-1 bg-[var(--primary)] text-white text-xs font-bold rounded-full flex-shrink-0 w-fit">
+                                      {umkm.type}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs sm:text-sm text-gray-600 mb-1">
+                                    Owner:{" "}
+                                    <span className="font-medium">
+                                      {allUsers.find(
+                                        (u) => u.id === umkm.user_id,
+                                      )?.name ||
+                                        allUsers.find(
+                                          (u) => u.id === umkm.user_id,
+                                        )?.username ||
+                                        "N/A"}
+                                    </span>
+                                    <span className="hidden sm:inline">
+                                      {" "}
+                                      •{" "}
+                                    </span>
+                                    <span className="block sm:inline text-gray-500">
+                                      {
+                                        allUsers.find(
+                                          (u) => u.id === umkm.user_id,
+                                        )?.email
+                                      }
+                                    </span>
+                                  </p>
                                 </div>
                               </div>
 
-                              <div className="flex gap-2 flex-wrap sm:flex-nowrap">
-                                <Link
-                                  href={`/umkm/${umkm.id}`}
-                                  className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
-                                >
-                                  <Eye size={14} weight="bold" className="sm:w-4 sm:h-4" />
-                                  <span>Lihat</span>
-                                </Link>
-                                <button
-                                  onClick={() => handleEditUmkm(umkm)}
-                                  className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-500 text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
-                                >
-                                  <PencilSimple size={14} weight="bold" className="sm:w-4 sm:h-4" />
-                                  <span>Edit</span>
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteUmkm(umkm.id.toString())}
-                                  className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-red-500 text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
-                                >
-                                  <Trash size={14} weight="bold" className="sm:w-4 sm:h-4" />
-                                  <span>Hapus</span>
-                                </button>
+                              {umkm.description && (
+                                <p className="text-xs sm:text-sm text-gray-600 mb-3 line-clamp-2">
+                                  {umkm.description}
+                                </p>
+                              )}
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-3">
+                                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                                  <MapPin
+                                    size={14}
+                                    weight="fill"
+                                    className="text-[var(--primary)] flex-shrink-0 sm:w-4 sm:h-4"
+                                  />
+                                  <span className="line-clamp-1">
+                                    {umkm.location || "Lokasi tidak tersedia"}
+                                  </span>
+                                </div>
+                                {umkm.contact && (
+                                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                                    <Phone
+                                      size={14}
+                                      weight="fill"
+                                      className="text-[var(--primary)] flex-shrink-0 sm:w-4 sm:h-4"
+                                    />
+                                    <span>{umkm.contact}</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm">
+                                  <div className="flex items-center gap-1 sm:gap-2">
+                                    <ShoppingBag
+                                      size={14}
+                                      weight="bold"
+                                      className="text-[var(--primary)] sm:w-4 sm:h-4"
+                                    />
+                                    <span className="font-medium">
+                                      {umkm.online_shop?.length || 0} Shop
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-1 sm:gap-2">
+                                    <ShareNetwork
+                                      size={14}
+                                      weight="bold"
+                                      className="text-[var(--primary)] sm:w-4 sm:h-4"
+                                    />
+                                    <span className="font-medium">
+                                      {umkm.media_sosial?.length || 0} Medsos
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-1 sm:gap-2">
+                                    <ImageSquare
+                                      size={14}
+                                      weight="bold"
+                                      className="text-[var(--primary)] sm:w-4 sm:h-4"
+                                    />
+                                    <span className="font-medium">
+                                      {umkm.umkm_galeri?.length || 0} Galeri
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+                                  <Link
+                                    href={`/umkm/${umkm.id}`}
+                                    className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                                  >
+                                    <Eye
+                                      size={14}
+                                      weight="bold"
+                                      className="sm:w-4 sm:h-4"
+                                    />
+                                    <span>Lihat</span>
+                                  </Link>
+                                  <button
+                                    onClick={() => handleEditUmkm(umkm)}
+                                    className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-500 text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
+                                  >
+                                    <PencilSimple
+                                      size={14}
+                                      weight="bold"
+                                      className="sm:w-4 sm:h-4"
+                                    />
+                                    <span>Edit</span>
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteUmkm(umkm.id.toString())
+                                    }
+                                    className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-red-500 text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
+                                  >
+                                    <Trash
+                                      size={14}
+                                      weight="bold"
+                                      className="sm:w-4 sm:h-4"
+                                    />
+                                    <span>Hapus</span>
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Pagination Controls for UMKM */}
-                  {totalUmkmPages > 1 && (
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
-                      <button
-                        onClick={() => setUmkmPage((prev) => Math.max(1, prev - 1))}
-                        disabled={umkmPage === 1}
-                        className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
-                          umkmPage === 1
-                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                            : "bg-[var(--primary)] text-white hover:opacity-90"
-                        }`}
-                      >
-                        <CaretLeft size={16} weight="bold" />
-                        <span>Sebelumnya</span>
-                      </button>
-
-                      <div className="flex items-center gap-2 overflow-x-auto max-w-full px-2">
-                        {Array.from({ length: totalUmkmPages }, (_, i) => i + 1).map((page) => (
-                          <button
-                            key={page}
-                            onClick={() => setUmkmPage(page)}
-                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-bold text-sm sm:text-base flex-shrink-0 ${
-                              umkmPage === page
-                                ? "bg-[var(--primary)] text-white"
-                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        ))}
-                      </div>
-
-                      <button
-                        onClick={() => setUmkmPage((prev) => Math.min(totalUmkmPages, prev + 1))}
-                        disabled={umkmPage === totalUmkmPages}
-                        className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
-                          umkmPage === totalUmkmPages
-                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                            : "bg-[var(--primary)] text-white hover:opacity-90"
-                        }`}
-                      >
-                        <span>Selanjutnya</span>
-                        <CaretRight size={16} weight="bold" />
-                      </button>
+                      ))}
                     </div>
-                  )}
+
+                    {/* Pagination Controls for UMKM */}
+                    {totalUmkmPages > 1 && (
+                      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
+                        <button
+                          onClick={() =>
+                            setUmkmPage((prev) => Math.max(1, prev - 1))
+                          }
+                          disabled={umkmPage === 1}
+                          className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
+                            umkmPage === 1
+                              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                              : "bg-[var(--primary)] text-white hover:opacity-90"
+                          }`}
+                        >
+                          <CaretLeft size={16} weight="bold" />
+                          <span>Sebelumnya</span>
+                        </button>
+
+                        <div className="flex items-center gap-2 overflow-x-auto max-w-full px-2">
+                          {Array.from(
+                            { length: totalUmkmPages },
+                            (_, i) => i + 1,
+                          ).map((page) => (
+                            <button
+                              key={page}
+                              onClick={() => setUmkmPage(page)}
+                              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-bold text-sm sm:text-base flex-shrink-0 ${
+                                umkmPage === page
+                                  ? "bg-[var(--primary)] text-white"
+                                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                              }`}
+                            >
+                              {page}
+                            </button>
+                          ))}
+                        </div>
+
+                        <button
+                          onClick={() =>
+                            setUmkmPage((prev) =>
+                              Math.min(totalUmkmPages, prev + 1),
+                            )
+                          }
+                          disabled={umkmPage === totalUmkmPages}
+                          className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
+                            umkmPage === totalUmkmPages
+                              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                              : "bg-[var(--primary)] text-white hover:opacity-90"
+                          }`}
+                        >
+                          <span>Selanjutnya</span>
+                          <CaretRight size={16} weight="bold" />
+                        </button>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -1496,7 +1610,11 @@ export default function AdminDashboard({
                   {/* Search Bar */}
                   <div className="relative w-full sm:w-auto sm:min-w-[300px]">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <MagnifyingGlass size={20} weight="bold" className="text-gray-400" />
+                      <MagnifyingGlass
+                        size={20}
+                        weight="bold"
+                        className="text-gray-400"
+                      />
                     </div>
                     <input
                       type="text"
@@ -1507,10 +1625,14 @@ export default function AdminDashboard({
                     />
                     {usersSearch && (
                       <button
-                        onClick={() => setUsersSearch('')}
+                        onClick={() => setUsersSearch("")}
                         className="absolute inset-y-0 right-0 pr-3 flex items-center"
                       >
-                        <X size={18} weight="bold" className="text-gray-400 hover:text-gray-600" />
+                        <X
+                          size={18}
+                          weight="bold"
+                          className="text-gray-400 hover:text-gray-600"
+                        />
                       </button>
                     )}
                   </div>
@@ -1544,7 +1666,7 @@ export default function AdminDashboard({
                       Tidak ditemukan pengguna dengan kata kunci "{usersSearch}"
                     </p>
                     <button
-                      onClick={() => setUsersSearch('')}
+                      onClick={() => setUsersSearch("")}
                       className="px-4 py-2 bg-[var(--primary)] text-white rounded-lg font-medium hover:bg-[var(--dark)] transition-colors"
                     >
                       Reset Pencarian
@@ -1552,162 +1674,183 @@ export default function AdminDashboard({
                   </div>
                 ) : (
                   <>
-                  <div className="overflow-x-auto -mx-4 sm:mx-0">
-                    <div className="inline-block min-w-full align-middle">
-                      <div className="overflow-hidden">
-                        <table className="min-w-full divide-y divide-[var(--border)]">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
-                                Pengguna
-                              </th>
-                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
-                                Nama
-                              </th>
-                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
-                                Email
-                              </th>
-                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
-                                Role
-                              </th>
-                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
-                                UMKM
-                              </th>
-                              <th className="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
-                                Aksi
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="bg-white divide-y divide-[var(--border)]">
-                            {paginatedUsers.map((userItem) => (
-                              <tr
-                                key={userItem.id}
-                                className="hover:bg-gray-50 transition-colors"
-                              >
-                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                                  <div className="flex items-center gap-2 sm:gap-3">
-                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[var(--primary)] text-white flex items-center justify-center font-bold text-xs sm:text-sm flex-shrink-0">
-                                      {getUserInitials(
-                                        userItem.name || userItem.username || "U"
-                                      )}
-                                    </div>
-                                    <div className="min-w-0">
-                                      <div className="font-semibold text-xs sm:text-sm text-[var(--dark)] truncate">
-                                        {userItem.username || "No username"}
+                    <div className="overflow-x-auto -mx-4 sm:mx-0">
+                      <div className="inline-block min-w-full align-middle">
+                        <div className="overflow-hidden">
+                          <table className="min-w-full divide-y divide-[var(--border)]">
+                            <thead className="bg-gray-50">
+                              <tr>
+                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                  Pengguna
+                                </th>
+                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                  Nama
+                                </th>
+                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                  Email
+                                </th>
+                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                  Role
+                                </th>
+                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                  UMKM
+                                </th>
+                                <th className="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-bold text-gray-700 whitespace-nowrap">
+                                  Aksi
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-[var(--border)]">
+                              {paginatedUsers.map((userItem) => (
+                                <tr
+                                  key={userItem.id}
+                                  className="hover:bg-gray-50 transition-colors"
+                                >
+                                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                    <div className="flex items-center gap-2 sm:gap-3">
+                                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[var(--primary)] text-white flex items-center justify-center font-bold text-xs sm:text-sm flex-shrink-0">
+                                        {getUserInitials(
+                                          userItem.name ||
+                                            userItem.username ||
+                                            "U",
+                                        )}
+                                      </div>
+                                      <div className="min-w-0">
+                                        <div className="font-semibold text-xs sm:text-sm text-[var(--dark)] truncate">
+                                          {userItem.username || "No username"}
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                </td>
-                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600 whitespace-nowrap">
-                                  {userItem.name || "-"}
-                                </td>
-                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600 whitespace-nowrap">
-                                  <div className="max-w-[150px] sm:max-w-none truncate">
-                                    {userItem.email}
-                                  </div>
-                                </td>
-                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                                  <span
-                                    className={`px-2 sm:px-3 py-1 rounded-full text-xs font-bold ${
-                                      userItem.role === "administrator"
-                                        ? "bg-purple-100 text-purple-700"
-                                        : "bg-blue-100 text-blue-700"
-                                    }`}
-                                  >
-                                    {userItem.role === "administrator"
-                                      ? "Admin"
-                                      : "UMKM"}
-                                  </span>
-                                </td>
-                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                                  <span className="font-semibold text-xs sm:text-sm text-[var(--primary)]">
-                                    {
-                                      allUmkm.filter(
-                                        (u) => u.user_id === userItem.id
-                                      ).length
-                                    }{" "}
-                                    UMKM
-                                  </span>
-                                </td>
-                                <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                                  <div className="flex items-center justify-center gap-1 sm:gap-2">
-                                    <button
-                                      onClick={() => handleEditUser(userItem)}
-                                      className="p-2 sm:px-3 sm:py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
-                                    >
-                                      <PencilSimple size={14} weight="bold" className="sm:w-4 sm:h-4" />
-                                    </button>
-                                    <button
-                                      onClick={() => handleDeleteUser(userItem.id)}
-                                      disabled={
-                                        userItem.role === "administrator" &&
-                                        userItem.id === user.id
-                                      }
-                                      className={`p-2 sm:px-3 sm:py-2 rounded-lg text-sm font-medium transition-colors ${
-                                        userItem.role === "administrator" &&
-                                        userItem.id === user.id
-                                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                                          : "bg-red-500 text-white hover:bg-red-600"
+                                  </td>
+                                  <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600 whitespace-nowrap">
+                                    {userItem.name || "-"}
+                                  </td>
+                                  <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-600 whitespace-nowrap">
+                                    <div className="max-w-[150px] sm:max-w-none truncate">
+                                      {userItem.email}
+                                    </div>
+                                  </td>
+                                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                    <span
+                                      className={`px-2 sm:px-3 py-1 rounded-full text-xs font-bold ${
+                                        userItem.role === "administrator"
+                                          ? "bg-purple-100 text-purple-700"
+                                          : "bg-blue-100 text-blue-700"
                                       }`}
                                     >
-                                      <Trash size={14} weight="bold" className="sm:w-4 sm:h-4" />
-                                    </button>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                                      {userItem.role === "administrator"
+                                        ? "Admin"
+                                        : "UMKM"}
+                                    </span>
+                                  </td>
+                                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                    <span className="font-semibold text-xs sm:text-sm text-[var(--primary)]">
+                                      {
+                                        allUmkm.filter(
+                                          (u) => u.user_id === userItem.id,
+                                        ).length
+                                      }{" "}
+                                      UMKM
+                                    </span>
+                                  </td>
+                                  <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                                    <div className="flex items-center justify-center gap-1 sm:gap-2">
+                                      <button
+                                        onClick={() => handleEditUser(userItem)}
+                                        className="p-2 sm:px-3 sm:py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
+                                      >
+                                        <PencilSimple
+                                          size={14}
+                                          weight="bold"
+                                          className="sm:w-4 sm:h-4"
+                                        />
+                                      </button>
+                                      <button
+                                        onClick={() =>
+                                          handleDeleteUser(userItem.id)
+                                        }
+                                        disabled={
+                                          userItem.role === "administrator" &&
+                                          userItem.id === user.id
+                                        }
+                                        className={`p-2 sm:px-3 sm:py-2 rounded-lg text-sm font-medium transition-colors ${
+                                          userItem.role === "administrator" &&
+                                          userItem.id === user.id
+                                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                            : "bg-red-500 text-white hover:bg-red-600"
+                                        }`}
+                                      >
+                                        <Trash
+                                          size={14}
+                                          weight="bold"
+                                          className="sm:w-4 sm:h-4"
+                                        />
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Pagination Controls for Users */}
-                  {totalUsersPages > 1 && (
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6">
-                      <button
-                        onClick={() => setUsersPage((prev) => Math.max(1, prev - 1))}
-                        disabled={usersPage === 1}
-                        className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
-                          usersPage === 1
-                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                            : "bg-[var(--primary)] text-white hover:opacity-90"
-                        }`}
-                      >
-                        <CaretLeft size={16} weight="bold" />
-                        <span>Sebelumnya</span>
-                      </button>
+                    {/* Pagination Controls for Users */}
+                    {totalUsersPages > 1 && (
+                      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6">
+                        <button
+                          onClick={() =>
+                            setUsersPage((prev) => Math.max(1, prev - 1))
+                          }
+                          disabled={usersPage === 1}
+                          className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
+                            usersPage === 1
+                              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                              : "bg-[var(--primary)] text-white hover:opacity-90"
+                          }`}
+                        >
+                          <CaretLeft size={16} weight="bold" />
+                          <span>Sebelumnya</span>
+                        </button>
 
-                      <div className="flex items-center gap-2 overflow-x-auto max-w-full px-2">
-                        {Array.from({ length: totalUsersPages }, (_, i) => i + 1).map((page) => (
-                          <button
-                            key={page}
-                            onClick={() => setUsersPage(page)}
-                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-bold text-sm sm:text-base flex-shrink-0 ${
-                              usersPage === page
-                                ? "bg-[var(--primary)] text-white"
-                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        ))}
+                        <div className="flex items-center gap-2 overflow-x-auto max-w-full px-2">
+                          {Array.from(
+                            { length: totalUsersPages },
+                            (_, i) => i + 1,
+                          ).map((page) => (
+                            <button
+                              key={page}
+                              onClick={() => setUsersPage(page)}
+                              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg font-bold text-sm sm:text-base flex-shrink-0 ${
+                                usersPage === page
+                                  ? "bg-[var(--primary)] text-white"
+                                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                              }`}
+                            >
+                              {page}
+                            </button>
+                          ))}
+                        </div>
+
+                        <button
+                          onClick={() =>
+                            setUsersPage((prev) =>
+                              Math.min(totalUsersPages, prev + 1),
+                            )
+                          }
+                          disabled={usersPage === totalUsersPages}
+                          className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
+                            usersPage === totalUsersPages
+                              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                              : "bg-[var(--primary)] text-white hover:opacity-90"
+                          }`}
+                        >
+                          <span>Selanjutnya</span>
+                          <CaretRight size={16} weight="bold" />
+                        </button>
                       </div>
-
-                      <button
-                        onClick={() => setUsersPage((prev) => Math.min(totalUsersPages, prev + 1))}
-                        disabled={usersPage === totalUsersPages}
-                        className={`w-full sm:w-auto px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 text-sm sm:text-base ${
-                          usersPage === totalUsersPages
-                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                            : "bg-[var(--primary)] text-white hover:opacity-90"
-                        }`}
-                      >
-                        <span>Selanjutnya</span>
-                        <CaretRight size={16} weight="bold" />
-                      </button>
-                    </div>
-                  )}
+                    )}
                   </>
                 )}
               </div>
@@ -1775,21 +1918,25 @@ export default function AdminDashboard({
                             ],
                           },
                           null,
-                          2
+                          2,
                         )}
                       </pre>
                       <div className="text-xs text-blue-800 mt-2 space-y-1">
                         <p className="break-words">
-                          <strong>type (UMKM):</strong> "Kuliner", "Fashion", "Kerajinan", "Jasa", atau "Pertanian"
+                          <strong>type (UMKM):</strong> "Kuliner", "Fashion",
+                          "Kerajinan", "Jasa", atau "Pertanian"
                         </p>
                         <p className="break-words">
-                          <strong>type (online_shop):</strong> "Tokopedia", "Shopee", "Lazada", "Blibli", atau "GoJek"
+                          <strong>type (online_shop):</strong> "Tokopedia",
+                          "Shopee", "Lazada", "Blibli", atau "GoJek"
                         </p>
                         <p className="break-words">
-                          <strong>type (media_sosial):</strong> "Instagram", "Facebook", "TikTok", atau "X"
+                          <strong>type (media_sosial):</strong> "Instagram",
+                          "Facebook", "TikTok", atau "X"
                         </p>
                         <p className="break-words">
-                          <strong>contact:</strong> Nomor WhatsApp UMKM (bisa sama dengan whatsapp user atau berbeda)
+                          <strong>contact:</strong> Nomor WhatsApp UMKM (bisa
+                          sama dengan whatsapp user atau berbeda)
                         </p>
                       </div>
                     </div>
@@ -1799,7 +1946,11 @@ export default function AdminDashboard({
                         onClick={downloadUmkmTemplate}
                         className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 bg-[var(--secondary)] text-[var(--dark)] rounded-lg text-sm sm:text-base font-bold hover:opacity-90 transition-all border-2 border-[var(--primary)]"
                       >
-                        <Download size={18} weight="bold" className="sm:w-5 sm:h-5 flex-shrink-0" />
+                        <Download
+                          size={18}
+                          weight="bold"
+                          className="sm:w-5 sm:h-5 flex-shrink-0"
+                        />
                         <span>Unduh Template UMKM</span>
                       </button>
 
@@ -1819,7 +1970,11 @@ export default function AdminDashboard({
                           htmlFor="umkm-upload"
                           className="cursor-pointer flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-[var(--primary)] text-white rounded-lg text-sm sm:text-base font-bold hover:opacity-90 transition-all"
                         >
-                          <FileJs size={20} weight="bold" className="sm:w-6 sm:h-6 flex-shrink-0" />
+                          <FileJs
+                            size={20}
+                            weight="bold"
+                            className="sm:w-6 sm:h-6 flex-shrink-0"
+                          />
                           <span>Pilih File JSON UMKM</span>
                         </label>
                       </label>
@@ -1830,7 +1985,11 @@ export default function AdminDashboard({
                   <div className="bg-gray-50 rounded-xl p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--orange)] rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Users size={20} weight="bold" className="text-white sm:w-6 sm:h-6" />
+                        <Users
+                          size={20}
+                          weight="bold"
+                          className="text-white sm:w-6 sm:h-6"
+                        />
                       </div>
                       <div>
                         <h4 className="text-lg sm:text-xl font-bold text-[var(--dark)]">
@@ -1862,7 +2021,7 @@ export default function AdminDashboard({
                             ],
                           },
                           null,
-                          2
+                          2,
                         )}
                       </pre>
                     </div>
@@ -1872,7 +2031,11 @@ export default function AdminDashboard({
                         onClick={downloadUsersTemplate}
                         className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3 bg-[var(--secondary)] text-[var(--dark)] rounded-lg text-sm sm:text-base font-bold hover:opacity-90 transition-all border-2 border-[var(--orange)]"
                       >
-                        <Download size={18} weight="bold" className="sm:w-5 sm:h-5 flex-shrink-0" />
+                        <Download
+                          size={18}
+                          weight="bold"
+                          className="sm:w-5 sm:h-5 flex-shrink-0"
+                        />
                         <span>Unduh Template Pengguna</span>
                       </button>
 
@@ -1892,7 +2055,11 @@ export default function AdminDashboard({
                           htmlFor="users-upload"
                           className="cursor-pointer flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 bg-[var(--orange)] text-white rounded-lg text-sm sm:text-base font-bold hover:opacity-90 transition-all"
                         >
-                          <FileJs size={20} weight="bold" className="sm:w-6 sm:h-6 flex-shrink-0" />
+                          <FileJs
+                            size={20}
+                            weight="bold"
+                            className="sm:w-6 sm:h-6 flex-shrink-0"
+                          />
                           <span>Pilih File JSON Pengguna</span>
                         </label>
                       </label>
@@ -1902,33 +2069,47 @@ export default function AdminDashboard({
 
                 <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-yellow-50 border border-yellow-200 rounded-xl">
                   <h4 className="font-bold text-sm sm:text-base text-yellow-900 mb-2 flex items-center gap-2">
-                    <ShieldCheck size={18} weight="bold" className="sm:w-5 sm:h-5 flex-shrink-0" />
+                    <ShieldCheck
+                      size={18}
+                      weight="bold"
+                      className="sm:w-5 sm:h-5 flex-shrink-0"
+                    />
                     <span>Catatan Penting</span>
                   </h4>
                   <ul className="text-xs sm:text-sm text-yellow-800 space-y-1 list-disc list-inside">
                     <li>
-                      Klik tombol <strong>"Unduh Template"</strong> untuk mendapatkan contoh format JSON yang benar
+                      Klik tombol <strong>"Unduh Template"</strong> untuk
+                      mendapatkan contoh format JSON yang benar
                     </li>
                     <li>
-                      Template sudah berisi 2 contoh data UMKM dan 2 contoh pengguna dengan field <strong>whatsapp</strong>
+                      Template sudah berisi 2 contoh data UMKM dan 2 contoh
+                      pengguna dengan field <strong>whatsapp</strong>
                     </li>
                     <li>
-                      Untuk UMKM, email harus sesuai dengan email pengguna yang sudah terdaftar
+                      Untuk UMKM, email harus sesuai dengan email pengguna yang
+                      sudah terdaftar
                     </li>
                     <li>
-                      Field <strong>contact</strong> di UMKM adalah nomor WhatsApp. Bisa sama dengan whatsapp user atau nomor berbeda untuk bisnis
+                      Field <strong>contact</strong> di UMKM adalah nomor
+                      WhatsApp. Bisa sama dengan whatsapp user atau nomor
+                      berbeda untuk bisnis
                     </li>
                     <li>
-                      Field <strong>whatsapp</strong> di user akan muncul sebagai opsi saat user menambah UMKM melalui form
+                      Field <strong>whatsapp</strong> di user akan muncul
+                      sebagai opsi saat user menambah UMKM melalui form
                     </li>
                     <li>
-                      Field <strong>logo</strong> dan <strong>umkm_galeri</strong> bisa dikosongkan, gambar dapat ditambahkan nanti melalui Edit UMKM
+                      Field <strong>logo</strong> dan{" "}
+                      <strong>umkm_galeri</strong> bisa dikosongkan, gambar
+                      dapat ditambahkan nanti melalui Edit UMKM
                     </li>
                     <li>
-                      Untuk pengguna, email tidak boleh duplikat dengan yang sudah ada
+                      Untuk pengguna, email tidak boleh duplikat dengan yang
+                      sudah ada
                     </li>
                     <li>
-                      Upload akan memberikan laporan jumlah data yang berhasil dan gagal
+                      Upload akan memberikan laporan jumlah data yang berhasil
+                      dan gagal
                     </li>
                   </ul>
                 </div>
@@ -1960,21 +2141,21 @@ export default function AdminDashboard({
             <div className="border-b border-[var(--border)] bg-[var(--background)]">
               <div className="flex">
                 <button
-                  onClick={() => setActiveUserTab('basic')}
+                  onClick={() => setActiveUserTab("basic")}
                   className={`px-6 py-3 font-semibold text-sm transition-colors ${
-                    activeUserTab === 'basic'
-                      ? 'text-[var(--primary)] border-b-2 border-[var(--primary)] bg-white'
-                      : 'text-gray-600 hover:text-[var(--primary)]'
+                    activeUserTab === "basic"
+                      ? "text-[var(--primary)] border-b-2 border-[var(--primary)] bg-white"
+                      : "text-gray-600 hover:text-[var(--primary)]"
                   }`}
                 >
                   Informasi Dasar
                 </button>
                 <button
-                  onClick={() => setActiveUserTab('security')}
+                  onClick={() => setActiveUserTab("security")}
                   className={`px-6 py-3 font-semibold text-sm transition-colors ${
-                    activeUserTab === 'security'
-                      ? 'text-[var(--primary)] border-b-2 border-[var(--primary)] bg-white'
-                      : 'text-gray-600 hover:text-[var(--primary)]'
+                    activeUserTab === "security"
+                      ? "text-[var(--primary)] border-b-2 border-[var(--primary)] bg-white"
+                      : "text-gray-600 hover:text-[var(--primary)]"
                   }`}
                 >
                   Keamanan
@@ -1982,9 +2163,12 @@ export default function AdminDashboard({
               </div>
             </div>
 
-            <form onSubmit={handleUpdateUser} className="flex-1 overflow-y-auto p-6">
+            <form
+              onSubmit={handleUpdateUser}
+              className="flex-1 overflow-y-auto p-6"
+            >
               {/* Basic Info Tab */}
-              {activeUserTab === 'basic' && (
+              {activeUserTab === "basic" && (
                 <div className="space-y-4">
                   {!isEditingOwnProfile && (
                     <div>
@@ -2093,7 +2277,7 @@ export default function AdminDashboard({
               )}
 
               {/* Security Tab */}
-              {activeUserTab === 'security' && (
+              {activeUserTab === "security" && (
                 <div className="space-y-4">
                   {isEditingOwnProfile && (
                     <div>
@@ -2114,16 +2298,23 @@ export default function AdminDashboard({
                   )}
                   <div>
                     <label className="block text-sm font-semibold text-[var(--dark)] mb-2">
-                      {isEditingOwnProfile ? 'Password Baru' : 'Password Baru'}
+                      {isEditingOwnProfile ? "Password Baru" : "Password Baru"}
                     </label>
                     <input
                       type="password"
                       name="password"
-                      placeholder={isEditingOwnProfile ? "Masukkan password baru" : "Kosongkan jika tidak ingin mengubah password"}
+                      placeholder={
+                        isEditingOwnProfile
+                          ? "Masukkan password baru"
+                          : "Kosongkan jika tidak ingin mengubah password"
+                      }
                       className="w-full px-4 py-3 border-2 border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--primary)] transition-colors"
                     />
                     <p className="mt-1 text-xs text-gray-500">
-                      Minimal 6 karakter. {isEditingOwnProfile ? 'Kosongkan jika tidak ingin mengubah.' : 'Kosongkan jika tidak ingin mengubah.'}
+                      Minimal 6 karakter.{" "}
+                      {isEditingOwnProfile
+                        ? "Kosongkan jika tidak ingin mengubah."
+                        : "Kosongkan jika tidak ingin mengubah."}
                     </p>
                   </div>
                 </div>
@@ -2166,19 +2357,37 @@ export default function AdminDashboard({
       {toast.show && (
         <div
           className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg text-white font-medium min-w-[300px] transform transition-transform duration-300 ${
-            toast.type === 'success'
-              ? 'bg-green-500'
-              : 'bg-red-500'
+            toast.type === "success" ? "bg-green-500" : "bg-red-500"
           }`}
         >
           <div className="flex items-center gap-2">
-            {toast.type === 'success' ? (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            {toast.type === "success" ? (
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             ) : (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             )}
             <span>{toast.message}</span>
@@ -2199,7 +2408,8 @@ export default function AdminDashboard({
                 Mohon maaf untuk saat ini hanya bisa menambahkan 1 UMKM.
               </p>
               <p className="text-gray-600 text-sm">
-                Setiap pengguna hanya dapat memiliki satu UMKM. Silakan edit UMKM yang sudah ada jika ingin membuat perubahan.
+                Setiap pengguna hanya dapat memiliki satu UMKM. Silakan edit
+                UMKM yang sudah ada jika ingin membuat perubahan.
               </p>
             </div>
 
@@ -2271,9 +2481,18 @@ export default function AdminDashboard({
               </p>
             </div>
             <div className="flex items-center justify-center gap-2">
-              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+              <div
+                className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce"
+                style={{ animationDelay: "0ms" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce"
+                style={{ animationDelay: "150ms" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce"
+                style={{ animationDelay: "300ms" }}
+              ></div>
             </div>
           </div>
         </div>
@@ -2296,9 +2515,18 @@ export default function AdminDashboard({
               </p>
             </div>
             <div className="flex items-center justify-center gap-2">
-              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+              <div
+                className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce"
+                style={{ animationDelay: "0ms" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce"
+                style={{ animationDelay: "150ms" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce"
+                style={{ animationDelay: "300ms" }}
+              ></div>
             </div>
           </div>
         </div>
@@ -2309,17 +2537,39 @@ export default function AdminDashboard({
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden animate-in fade-in zoom-in duration-300">
             {/* Header */}
-            <div className={`p-6 text-white ${uploadResult.type === 'success' ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gradient-to-r from-red-500 to-red-600'}`}>
+            <div
+              className={`p-6 text-white ${uploadResult.type === "success" ? "bg-gradient-to-r from-green-500 to-green-600" : "bg-gradient-to-r from-red-500 to-red-600"}`}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                    {uploadResult.type === 'success' ? (
-                      <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    {uploadResult.type === "success" ? (
+                      <svg
+                        className="w-10 h-10"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                     ) : (
-                      <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      <svg
+                        className="w-10 h-10"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        />
                       </svg>
                     )}
                   </div>
@@ -2329,7 +2579,15 @@ export default function AdminDashboard({
                   </div>
                 </div>
                 <button
-                  onClick={() => setUploadResult({ show: false, type: 'success', title: '', message: '', errors: [] })}
+                  onClick={() =>
+                    setUploadResult({
+                      show: false,
+                      type: "success",
+                      title: "",
+                      message: "",
+                      errors: [],
+                    })
+                  }
                   className="p-2 hover:bg-white/20 rounded-lg transition-colors"
                 >
                   <X size={24} weight="bold" />
@@ -2342,7 +2600,11 @@ export default function AdminDashboard({
               {uploadResult.stats && (
                 <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 mb-4">
                   <h4 className="font-bold text-lg text-[var(--dark)] mb-4 flex items-center gap-2">
-                    <FileText size={22} weight="bold" className="text-[var(--primary)]" />
+                    <FileText
+                      size={22}
+                      weight="bold"
+                      className="text-[var(--primary)]"
+                    />
                     Statistik Upload
                   </h4>
 
@@ -2351,11 +2613,19 @@ export default function AdminDashboard({
                     <div className="bg-white rounded-lg p-4 border-2 border-green-200">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                          <CheckCircle size={28} weight="bold" className="text-green-600" />
+                          <CheckCircle
+                            size={28}
+                            weight="bold"
+                            className="text-green-600"
+                          />
                         </div>
                         <div>
-                          <p className="text-xs text-gray-600 font-medium">Total Berhasil</p>
-                          <p className="text-2xl font-bold text-green-700">{uploadResult.stats.totalSuccess}</p>
+                          <p className="text-xs text-gray-600 font-medium">
+                            Total Berhasil
+                          </p>
+                          <p className="text-2xl font-bold text-green-700">
+                            {uploadResult.stats.totalSuccess}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -2364,11 +2634,19 @@ export default function AdminDashboard({
                     <div className="bg-white rounded-lg p-4 border-2 border-red-200">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                          <XCircle size={28} weight="bold" className="text-red-600" />
+                          <XCircle
+                            size={28}
+                            weight="bold"
+                            className="text-red-600"
+                          />
                         </div>
                         <div>
-                          <p className="text-xs text-gray-600 font-medium">Gagal</p>
-                          <p className="text-2xl font-bold text-red-700">{uploadResult.stats.failed}</p>
+                          <p className="text-xs text-gray-600 font-medium">
+                            Gagal
+                          </p>
+                          <p className="text-2xl font-bold text-red-700">
+                            {uploadResult.stats.failed}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -2378,11 +2656,17 @@ export default function AdminDashboard({
                       <div className="bg-white rounded-lg p-4 border border-blue-200">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <Plus size={22} weight="bold" className="text-blue-600" />
+                            <Plus
+                              size={22}
+                              weight="bold"
+                              className="text-blue-600"
+                            />
                           </div>
                           <div>
                             <p className="text-xs text-gray-600">Dibuat Baru</p>
-                            <p className="text-xl font-bold text-blue-700">{uploadResult.stats.created}</p>
+                            <p className="text-xl font-bold text-blue-700">
+                              {uploadResult.stats.created}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -2393,11 +2677,17 @@ export default function AdminDashboard({
                       <div className="bg-white rounded-lg p-4 border border-orange-200">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                            <ArrowClockwise size={22} weight="bold" className="text-orange-600" />
+                            <ArrowClockwise
+                              size={22}
+                              weight="bold"
+                              className="text-orange-600"
+                            />
                           </div>
                           <div>
                             <p className="text-xs text-gray-600">Diperbarui</p>
-                            <p className="text-xl font-bold text-orange-700">{uploadResult.stats.updated}</p>
+                            <p className="text-xl font-bold text-orange-700">
+                              {uploadResult.stats.updated}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -2415,8 +2705,13 @@ export default function AdminDashboard({
                   </h4>
                   <div className="space-y-2 max-h-60 overflow-y-auto">
                     {uploadResult.errors.map((err, index) => (
-                      <div key={index} className="bg-white rounded-lg p-3 border border-red-200">
-                        <p className="text-sm font-semibold text-gray-800 mb-1">{index + 1}. {err.item}</p>
+                      <div
+                        key={index}
+                        className="bg-white rounded-lg p-3 border border-red-200"
+                      >
+                        <p className="text-sm font-semibold text-gray-800 mb-1">
+                          {index + 1}. {err.item}
+                        </p>
                         <p className="text-xs text-red-600">{err.error}</p>
                       </div>
                     ))}
@@ -2424,40 +2719,59 @@ export default function AdminDashboard({
                 </div>
               )}
 
-              {uploadResult.type === 'success' && uploadResult.stats && uploadResult.stats.totalSuccess > 0 && (
-                <div className="mt-4 p-4 bg-blue-50 border-2 border-blue-300 rounded-xl flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <ArrowClockwise size={22} weight="bold" className="text-white animate-spin" style={{ animationDuration: '2s' }} />
+              {uploadResult.type === "success" &&
+                uploadResult.stats &&
+                uploadResult.stats.totalSuccess > 0 && (
+                  <div className="mt-4 p-4 bg-blue-50 border-2 border-blue-300 rounded-xl flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <ArrowClockwise
+                        size={22}
+                        weight="bold"
+                        className="text-white animate-spin"
+                        style={{ animationDuration: "2s" }}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-blue-900 font-bold mb-1">
+                        Refresh Otomatis
+                      </p>
+                      <p className="text-xs text-blue-700">
+                        Halaman akan otomatis refresh dalam 3 detik untuk
+                        menampilkan data terbaru
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-blue-900 font-bold mb-1">
-                      Refresh Otomatis
-                    </p>
-                    <p className="text-xs text-blue-700">
-                      Halaman akan otomatis refresh dalam 3 detik untuk menampilkan data terbaru
-                    </p>
-                  </div>
-                </div>
-              )}
+                )}
             </div>
 
             {/* Footer */}
             <div className="border-t border-gray-200 p-6 bg-gray-50 flex justify-end gap-3">
               <button
-                onClick={() => setUploadResult({ show: false, type: 'success', title: '', message: '', stats: undefined, errors: [] })}
+                onClick={() =>
+                  setUploadResult({
+                    show: false,
+                    type: "success",
+                    title: "",
+                    message: "",
+                    stats: undefined,
+                    errors: [],
+                  })
+                }
                 className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition-colors"
               >
                 Tutup
               </button>
-              {uploadResult.type === 'success' && uploadResult.stats && uploadResult.stats.totalSuccess > 0 && (
-                <button
-                  onClick={() => window.location.reload()}
-                  className="px-6 py-3 bg-[var(--primary)] text-white rounded-lg font-bold hover:bg-[var(--dark)] transition-colors flex items-center gap-2"
-                >
-                  <ArrowClockwise size={20} weight="bold" />
-                  Refresh Sekarang
-                </button>
-              )}
+              {uploadResult.type === "success" &&
+                uploadResult.stats &&
+                uploadResult.stats.totalSuccess > 0 && (
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="px-6 py-3 bg-[var(--primary)] text-white rounded-lg font-bold hover:bg-[var(--dark)] transition-colors flex items-center gap-2"
+                  >
+                    <ArrowClockwise size={20} weight="bold" />
+                    Refresh Sekarang
+                  </button>
+                )}
             </div>
           </div>
         </div>

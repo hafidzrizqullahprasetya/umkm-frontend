@@ -1,223 +1,161 @@
-import React from 'react'
-import Link from 'next/link';
-import LoadingLink from '@/components/shared/LoadingLink';
-import { FacebookLogo, TwitterLogo, LinkedinLogo, YoutubeLogo, InstagramLogo, ArrowRight, MapPin, Phone, EnvelopeSimple } from "phosphor-react"
+"use client";
 
-const Footer = () => {
-    return (
-        <footer className="bg-gray-800 text-white">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-                {/* Main Footer Content */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+import Link from "next/link";
+import {
+  MapPin,
+  Phone,
+  Envelope,
+  InstagramLogo,
+  FacebookLogo,
+  TwitterLogo,
+  YoutubeLogo,
+  CaretRight,
+} from "phosphor-react";
 
-                    {/* Company Info Section */}
-                    <div className="footer-section space-y-4 sm:space-y-6">
-                        <div className="flex flex-col space-y-3 sm:space-y-4">
-                            <h3 className="text-xl sm:text-2xl font-bold">Tampung</h3>
-                            <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-                                Tempat Aksi Mendukung UMKM Nagari/Gapura. Temukan dan dukung UMKM lokal terbaik di Indonesia.
-                            </p>
-                        </div>
-
-                        {/* Social Media Icons */}
-                        <div className="pt-2">
-                            <h4 className="text-sm font-semibold mb-3 sm:mb-4">Ikuti Kami</h4>
-                            <div className="flex gap-3 sm:gap-4">
-                                <a
-                                    href="#"
-                                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-gray-700 hover:bg-blue-600 rounded-full transition-all duration-300 ease-in-out transform hover:scale-110"
-                                    aria-label="Facebook"
-                                >
-                                    <FacebookLogo size={18} weight="bold" className="sm:w-5 sm:h-5" />
-                                </a>
-                                <a
-                                    href="#"
-                                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-gray-700 hover:bg-sky-500 rounded-full transition-all duration-300 ease-in-out transform hover:scale-110"
-                                    aria-label="Twitter"
-                                >
-                                    <TwitterLogo size={18} weight="bold" className="sm:w-5 sm:h-5" />
-                                </a>
-                                <a
-                                    href="#"
-                                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-gray-700 hover:bg-pink-600 rounded-full transition-all duration-300 ease-in-out transform hover:scale-110"
-                                    aria-label="Instagram"
-                                >
-                                    <InstagramLogo size={18} weight="bold" className="sm:w-5 sm:h-5" />
-                                </a>
-                                <a
-                                    href="#"
-                                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-gray-700 hover:bg-blue-700 rounded-full transition-all duration-300 ease-in-out transform hover:scale-110"
-                                    aria-label="LinkedIn"
-                                >
-                                    <LinkedinLogo size={18} weight="bold" className="sm:w-5 sm:h-5" />
-                                </a>
-                                <a
-                                    href="#"
-                                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-gray-700 hover:bg-red-600 rounded-full transition-all duration-300 ease-in-out transform hover:scale-110"
-                                    aria-label="YouTube"
-                                >
-                                    <YoutubeLogo size={18} weight="bold" className="sm:w-5 sm:h-5" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Information Links */}
-                    <div className="footer-section">
-                        <h4 className="text-base sm:text-lg font-bold mb-4 sm:mb-6">Informasi</h4>
-                        <ul className="space-y-2 sm:space-y-3">
-                            <li>
-                                <LoadingLink
-                                    href="/about"
-                                    className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 inline-block"
-                                >
-                                    Tentang Kami
-                                </LoadingLink>
-                            </li>
-                            <li>
-                                <LoadingLink
-                                    href="/faq"
-                                    className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 inline-block"
-                                >
-                                    FAQ
-                                </LoadingLink>
-                            </li>
-                            <li>
-                                <LoadingLink
-                                    href="/terms-condition"
-                                    className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 inline-block"
-                                >
-                                    Syarat & Ketentuan
-                                </LoadingLink>
-                            </li>
-                            <li>
-                                <LoadingLink
-                                    href="/privacy-policy"
-                                    className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 inline-block"
-                                >
-                                    Kebijakan Privasi
-                                </LoadingLink>
-                            </li>
-                            <li>
-                                <LoadingLink
-                                    href="/contact"
-                                    className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 inline-block"
-                                >
-                                    Kontak
-                                </LoadingLink>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Category Links */}
-                    <div className="footer-section">
-                        <h4 className="text-base sm:text-lg font-bold mb-4 sm:mb-6">Kategori UMKM</h4>
-                        <ul className="space-y-2 sm:space-y-3">
-                            <li>
-                                <LoadingLink
-                                    href="/umkm?category=kuliner"
-                                    className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 inline-block"
-                                >
-                                    Kuliner
-                                </LoadingLink>
-                            </li>
-                            <li>
-                                <LoadingLink
-                                    href="/umkm?category=fashion"
-                                    className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 inline-block"
-                                >
-                                    Fashion
-                                </LoadingLink>
-                            </li>
-                            <li>
-                                <LoadingLink
-                                    href="/umkm?category=kerajinan"
-                                    className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 inline-block"
-                                >
-                                    Kerajinan
-                                </LoadingLink>
-                            </li>
-                            <li>
-                                <LoadingLink
-                                    href="/umkm?category=retail"
-                                    className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 inline-block"
-                                >
-                                    Retail
-                                </LoadingLink>
-                            </li>
-                            <li>
-                                <LoadingLink
-                                    href="/umkm?category=teknologi"
-                                    className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 inline-block"
-                                >
-                                    Teknologi
-                                </LoadingLink>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Contact Information */}
-                    <div className="footer-section">
-                        <h4 className="text-base sm:text-lg font-bold mb-4 sm:mb-6">Hubungi Kami</h4>
-                        <div className="space-y-4 sm:space-y-5">
-                            {/* Address */}
-                            <div className="flex items-start gap-3">
-                                <div className="flex-shrink-0 mt-1">
-                                    <MapPin size={20} weight="bold" className="text-gray-400 w-5 h-5 sm:w-6 sm:h-6" />
-                                </div>
-                                <div>
-                                    <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-                                        Jl. UMKM No. 1, Jakarta<br />
-                                        Indonesia
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Phone */}
-                            <div className="flex items-start gap-3">
-                                <div className="flex-shrink-0 mt-1">
-                                    <Phone size={20} weight="bold" className="text-gray-400 w-5 h-5 sm:w-6 sm:h-6" />
-                                </div>
-                                <div>
-                                    <p className="text-gray-400 text-sm sm:text-base mb-1">Buka 24 Jam</p>
-                                    <a
-                                        href="tel:+622112345678"
-                                        className="text-white hover:text-blue-400 text-sm sm:text-base transition-colors duration-200"
-                                    >
-                                        +62 21 1234 5678
-                                    </a>
-                                </div>
-                            </div>
-
-                            {/* Email */}
-                            <div className="flex items-start gap-3">
-                                <div className="flex-shrink-0 mt-1">
-                                    <EnvelopeSimple size={20} weight="bold" className="text-gray-400 w-5 h-5 sm:w-6 sm:h-6" />
-                                </div>
-                                <div>
-                                    <a
-                                        href="mailto:info@tampung.com"
-                                        className="text-gray-400 hover:text-white text-sm sm:text-base transition-colors duration-200 break-all"
-                                    >
-                                        info@tampung.com
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Copyright Section */}
-                <div className="border-t border-gray-700 mt-8 sm:mt-12 lg:mt-16 pt-6 sm:pt-8">
-                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
-                        <p className="text-gray-400 text-sm sm:text-base text-center sm:text-left">
-                            © 2025 Tampung. All rights reserved.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    );
+interface FooterProps {
+  allCategories?: string[];
 }
 
-export default Footer
+const Footer = ({ allCategories = [] }: FooterProps) => {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer className="bg-[var(--primary)] text-white border-t border-white/10 pt-8 pb-4">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-6">
+          {/* Brand Section */}
+          <div className="space-y-3">
+            <div className="flex flex-col">
+              <div className="text-xl font-black text-white mb-0.5">
+                Tampung
+              </div>
+              <div className="text-[10px] text-white/80 leading-tight">
+                Tempat Aksi Mendukung UMKM Nagari/Gapura
+              </div>
+            </div>
+            <p className="text-white/70 text-xs leading-relaxed">
+              Platform digital yang menghubungkan UMKM lokal dengan pelanggan
+              potensial. Temukan produk unik dan dukung ekonomi lokal bersama
+              kami.
+            </p>
+            <div className="flex items-center gap-2 pt-1">
+              <a
+                href="#"
+                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[var(--secondary)] hover:text-[var(--dark)] transition-all"
+                aria-label="Instagram"
+              >
+                <InstagramLogo size={16} weight="fill" />
+              </a>
+              <a
+                href="#"
+                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[var(--secondary)] hover:text-[var(--dark)] transition-all"
+                aria-label="Facebook"
+              >
+                <FacebookLogo size={16} weight="fill" />
+              </a>
+              <a
+                href="#"
+                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[var(--secondary)] hover:text-[var(--dark)] transition-all"
+                aria-label="Twitter"
+              >
+                <TwitterLogo size={16} weight="fill" />
+              </a>
+              <a
+                href="#"
+                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[var(--secondary)] hover:text-[var(--dark)] transition-all"
+                aria-label="Youtube"
+              >
+                <YoutubeLogo size={16} weight="fill" />
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Links - Kategori UMKM */}
+          <div className="lg:col-span-2">
+            <h3 className="text-white font-bold text-sm mb-3">Kategori UMKM</h3>
+            {allCategories && allCategories.length > 0 ? (
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+                {allCategories.slice(0, 8).map((category, index) => (
+                  <li key={index}>
+                    <Link
+                      href={`/umkm?category=${encodeURIComponent(category)}`}
+                      className="text-white/70 hover:text-[var(--secondary)] text-xs flex items-center gap-1.5 group transition-colors"
+                    >
+                      <CaretRight
+                        size={12}
+                        className="text-white/40 group-hover:text-[var(--secondary)] transition-colors flex-shrink-0"
+                      />
+                      <span className="truncate">{category}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-white/50 text-xs italic">
+                Kategori tidak tersedia
+              </p>
+            )}
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h3 className="text-white font-bold text-sm mb-3">Hubungi Kami</h3>
+            <ul className="space-y-2">
+              <li className="flex items-start gap-2">
+                <MapPin
+                  size={16}
+                  className="text-[var(--secondary)] flex-shrink-0 mt-0.5"
+                  weight="fill"
+                />
+                <span className="text-white/70 text-xs leading-tight">
+                  Jl. Jendral Sudirman No. 123, Palembang, Sumatera Selatan
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone
+                  size={16}
+                  className="text-[var(--secondary)] flex-shrink-0"
+                  weight="fill"
+                />
+                <span className="text-white/70 text-xs">+62 812 3456 7890</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Envelope
+                  size={16}
+                  className="text-[var(--secondary)] flex-shrink-0"
+                  weight="fill"
+                />
+                <span className="text-white/70 text-xs">
+                  info@tampung.id
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Copyright */}
+        <div className="border-t border-white/10 pt-4 flex flex-col md:flex-row justify-between items-center gap-3">
+          <p className="text-white/60 text-xs text-center md:text-left">
+            &copy; {currentYear} Tampung - UMKM Connect. All rights reserved.
+          </p>
+          <div className="flex items-center gap-4">
+            <Link
+              href="#"
+              className="text-white/60 hover:text-[var(--secondary)] text-xs transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="#"
+              className="text-white/60 hover:text-[var(--secondary)] text-xs transition-colors"
+            >
+              Terms of Service
+            </Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

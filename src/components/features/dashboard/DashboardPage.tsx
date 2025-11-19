@@ -264,17 +264,6 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              {/* Logo */}
-              <div className="flex items-center gap-2">
-                <div className="flex flex-col">
-                  <div className="text-3xl font-black text-white">
-                    Tampung
-                  </div>
-                  <div className="text-xs text-white">
-                    Tempat Aksi Mendukung UMKM Nagari/Gapura
-                  </div>
-                </div>
-              </div>
 
               <div className="border-l border-white/30 h-12"></div>
 
@@ -506,7 +495,7 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
                             <div className="flex items-center justify-between">
                               <span className="text-base text-gray-600">Online Shop per UMKM</span>
                               <span className="text-xl font-bold text-[var(--primary)]">
-                                {totalUmkm > 0 ? (totalOnlineShops / totalUmkm).toFixed(1) : 0}
+                                {totalUmkm > 0 ? +(totalOnlineShops / totalUmkm).toFixed(1) : 0}
                               </span>
                             </div>
                           </div>
@@ -515,7 +504,7 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
                             <div className="flex items-center justify-between">
                               <span className="text-base text-gray-600">Media Sosial per UMKM</span>
                               <span className="text-xl font-bold text-[var(--primary)]">
-                                {totalUmkm > 0 ? (totalSocialMedia / totalUmkm).toFixed(1) : 0}
+                                {totalUmkm > 0 ? +(totalSocialMedia / totalUmkm).toFixed(1) : 0}
                               </span>
                             </div>
                           </div>
@@ -524,7 +513,7 @@ export default function DashboardPage({ userUmkm: initialUserUmkm, userName, use
                             <div className="flex items-center justify-between">
                               <span className="text-base text-gray-600">Foto Galeri per UMKM</span>
                               <span className="text-xl font-bold text-[var(--primary)]">
-                                {totalUmkm > 0 ? (totalGalleryImages / totalUmkm).toFixed(1) : 0}
+                                {totalUmkm > 0 ? +(totalGalleryImages / totalUmkm).toFixed(1) : 0}
                               </span>
                             </div>
                           </div>
