@@ -1,32 +1,45 @@
-# 🏪 Tampung - Platform UMKM Indonesia
-
 <div align="center">
+
+# Tampung
+
+<p align="center">
+  <strong>Tempat Aksi Mendukung UMKM Nagari/Gapura</strong>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Next.js-15.5.6-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/React-19.1.0-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React" />
   <img src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Google_Maps-4285F4?style=for-the-badge&logo=google-maps&logoColor=white" alt="Google Maps" />
+</p>
+
+<p align="center">
+  Platform direktori UMKM yang memudahkan masyarakat menemukan dan mendukung<br/>usaha mikro, kecil, dan menengah lokal di Indonesia.<br/>Dilengkapi dengan peta interaktif, pencarian cerdas, dan dashboard manajemen UMKM.
+</p>
+
+<p align="center">
+  <a href="#-fitur-utama">Fitur</a> •
+  <a href="#-screenshot">Screenshot</a> •
+  <a href="#-instalasi">Instalasi</a> •
+  <a href="#-cara-penggunaan">Penggunaan</a> •
+  <a href="#-demo">Demo</a>
+</p>
+
 </div>
-
-<p align="center">
-  <strong>Tempat Aksi Mendukung UMKM Nagari/Gapura dari UMKM Indonesia</strong>
-</p>
-
-<p align="center">
-  Platform direktori UMKM yang memudahkan masyarakat menemukan dan mendukung usaha mikro, kecil, dan menengah lokal di Indonesia. Dilengkapi dengan peta interaktif, pencarian cerdas, dan dashboard manajemen UMKM.
-</p>
 
 ---
 
 ## 📋 Daftar Isi
 
 - [✨ Fitur Utama](#-fitur-utama)
-- [🖼️ Screenshot](#️-screenshot)
+- [🖼️ Screenshot](#-screenshot)
 - [🚀 Demo](#-demo)
-- [🏗️ Teknologi](#️-teknologi)
+- [🏗️ Teknologi](#-teknologi)
 - [📦 Instalasi](#-instalasi)
-- [⚙️ Konfigurasi](#️-konfigurasi)
+- [⚙️ Konfigurasi](#-konfigurasi)
 - [🎯 Cara Penggunaan](#-cara-penggunaan)
-- [🗂️ Struktur Project](#️-struktur-project)
+- [🗂️ Struktur Project](#-struktur-project)
 - [🔌 API Endpoints](#-api-endpoints)
 - [🎨 Customization](#-customization)
 - [🤝 Kontribusi](#-kontribusi)
@@ -58,17 +71,72 @@
 
 ## 🖼️ Screenshot
 
-### Homepage - Grid View
-Tampilan direktori UMKM dalam bentuk grid dengan filter kategori dan pencarian.
-
-### Homepage - Map View
-Visualisasi semua UMKM dalam peta interaktif dengan marker lokasi.
-
-### Detail UMKM
-Halaman detail lengkap dengan informasi kontak, lokasi, galeri produk, dan navigasi.
-
-### Dashboard UMKM
-Panel kontrol untuk pemilik UMKM mengelola profil dan produk mereka.
+<table>
+  <tr>
+    <td width="50%">
+      <h3 align="center">🏠 Grid View</h3>
+      <p align="center">
+        <img src="./ss/Grid.png" alt="Grid View" width="100%" />
+      </p>
+      <p align="center">Tampilan grid dengan filter kategori dan pencarian cerdas</p>
+    </td>
+    <td width="50%">
+      <h3 align="center">📋 List View</h3>
+      <p align="center">
+        <img src="./ss/List.png" alt="List View" width="100%" />
+      </p>
+      <p align="center">Tampilan list dengan informasi detail lengkap</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <h3 align="center">🗺️ Map View</h3>
+      <p align="center">
+        <img src="./ss/Peta.png" alt="Map View" width="100%" />
+      </p>
+      <p align="center">Peta interaktif dengan marker lokasi UMKM</p>
+    </td>
+    <td width="50%">
+      <h3 align="center">📍 Detail UMKM</h3>
+      <p align="center">
+        <img src="./ss/Detail 1.png" alt="Detail UMKM 1" width="100%" />
+      </p>
+      <p align="center">Halaman detail dengan hero image & navigasi</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <h3 align="center">🖼️ Galeri Produk</h3>
+      <p align="center">
+        <img src="./ss/Detail 2.png" alt="Detail UMKM 2" width="100%" />
+      </p>
+      <p align="center">Carousel galeri produk interaktif</p>
+    </td>
+    <td width="50%">
+      <h3 align="center">👤 Dashboard UMKM</h3>
+      <p align="center">
+        <img src="./ss/Dashboard Admin UMKM.png" alt="Dashboard Admin UMKM" width="100%" />
+      </p>
+      <p align="center">Panel kontrol untuk pemilik UMKM</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <h3 align="center">✏️ Edit Profil</h3>
+      <p align="center">
+        <img src="./ss/Edit UMKM.png" alt="Edit UMKM" width="100%" />
+      </p>
+      <p align="center">Halaman edit informasi & upload foto</p>
+    </td>
+    <td width="50%">
+      <h3 align="center">🔐 Dashboard Admin</h3>
+      <p align="center">
+        <img src="./ss/Dashboard Administrator.png" alt="Dashboard Administrator" width="100%" />
+      </p>
+      <p align="center">Dashboard administrator untuk kelola platform</p>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -77,6 +145,14 @@ Panel kontrol untuk pemilik UMKM mengelola profil dan produk mereka.
 🌐 **Live Demo**: [Tampung UMKM Platform](https://umkm-frontend.vercel.app)
 
 > **Note**: Demo menggunakan data sample. Untuk production, pastikan menghubungkan dengan database yang sesuai.
+
+### ✨ Fitur Demo:
+- ✅ Pencarian real-time UMKM
+- ✅ Filter kategori & lokasi
+- ✅ Peta interaktif dengan Google Maps
+- ✅ View mode: Grid, List, dan Map
+- ✅ Onboarding tour untuk pengguna baru
+- ✅ Dashboard UMKM (perlu login)
 
 ---
 
@@ -601,9 +677,31 @@ const itemsPerPage = activeTab === 'tab1' ? 6 : 4;
 
 ---
 
+## 🙏 Acknowledgments
+
+Terima kasih kepada:
+
+- 🎨 [Phosphor Icons](https://phosphoricons.com/) - Beautiful icon set
+- 🗺️ [Google Maps Platform](https://mapsplatform.google.com/) - Maps integration
+- ⚡ [Vercel](https://vercel.com) - Hosting platform
+- 💎 [Radix UI](https://www.radix-ui.com/) - Accessible components
+- 🎪 [Embla Carousel](https://www.embla-carousel.com/) - Smooth carousel
+- 🔔 [React Toastify](https://fkhadra.github.io/react-toastify/) - Toast notifications
+- 🌈 [Tailwind CSS](https://tailwindcss.com/) - Utility CSS framework
+- 💙 Semua kontributor dan komunitas open source
+
+---
+
 <div align="center">
-  <p>Made with ❤️ for Indonesian UMKM</p>
-  <p>
-    <a href="#-tampung---platform-umkm-indonesia">Back to Top ↑</a>
-  </p>
+
+### 💖 Made with Love for Indonesian UMKM
+
+<p>
+  <a href="#-tampung">⬆️ Back to Top</a>
+</p>
+
+<p>
+  <sub>© 2024 Tampung. All rights reserved.</sub>
+</p>
+
 </div>
