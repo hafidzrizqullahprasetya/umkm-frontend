@@ -1,4 +1,3 @@
-"use client";
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -27,121 +26,113 @@ const UmkmListCard: React.FC<UmkmListCardProps> = ({ umkm }) => {
   const distanceInfo = getDistanceInfo(umkm.gmaps, umkm.location);
 
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col md:flex-row group hover:shadow-lg transition-all duration-300">
+    <div className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
       {/* Image Area */}
-      <Link href={`/umkm/${umkm.id}`} className="relative md:w-80 flex-shrink-0 overflow-hidden">
+      <Link href={`/umkm/${umkm.id}`} className="relative md:w-64 flex-shrink-0 overflow-hidden bg-gray-50">
         {/* Category Badge - Top Left */}
-        <div className="absolute top-2 left-2 bg-[var(--primary)] text-white px-3 py-1 rounded-md text-xs font-bold z-10 shadow-md">
-          {umkm.type}
+        <div className="absolute top-2 left-2 z-10">
+          <span className="bg-[var(--primary)] text-white px-2 py-0.5 rounded text-[10px] font-bold shadow-sm uppercase tracking-wider">
+            {umkm.type}
+          </span>
         </div>
 
-        <div className="relative w-full h-56 bg-gray-100 overflow-hidden">
+        <div className="relative w-full h-48 md:h-full min-h-[180px]">
           {displayImage ? (
             <Image
               src={displayImage}
               alt={umkm.name}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 768px) 100vw, 320px"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 768px) 100vw, 256px"
               quality={75}
             />
           ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <ImageSquare size={80} weight="thin" className="text-gray-400 mb-2" />
-              <p className="text-sm text-gray-400">Tidak ada gambar</p>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-300">
+              <ImageSquare size={48} weight="thin" className="mb-2" />
+              <span className="text-xs">No Image</span>
             </div>
           )}
         </div>
       </Link>
 
       {/* Content Area */}
-      <div className="flex-1 p-6 flex flex-col md:flex-row gap-4">
+      <div className="flex-1 p-4 flex flex-col md:flex-row gap-4">
         {/* Main Info */}
-        <div className="flex-1 flex flex-col">
-          <Link href={`/umkm/${umkm.id}`}>
-            <h4 className="text-xl font-semibold mb-2 text-[var(--dark)] group-hover:text-[var(--primary)] transition-colors line-clamp-1">
-              {umkm.name}
-            </h4>
-          </Link>
-
-          <div className="flex items-center gap-2 mb-3">
-            <MapPin size={18} weight="fill" className="text-[var(--primary)] flex-shrink-0" />
-            <span className="text-sm text-gray-600 line-clamp-1">{umkm.location || 'Lokasi tidak tersedia'}</span>
+        <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <Link href={`/umkm/${umkm.id}`} className="block">
+              <h4 className="text-lg font-bold text-[var(--dark)] group-hover:text-[var(--primary)] transition-colors line-clamp-1" title={umkm.name}>
+                {umkm.name}
+              </h4>
+            </Link>
+            
+            {/* Distance Badges for Mobile (visible only on small screens) */}
+            {distanceInfo && (
+              <div className="flex md:hidden gap-1.5">
+                <div className="flex items-center gap-1 px-1.5 py-0.5 bg-[var(--primary)]/10 text-[var(--primary)] rounded text-[10px] font-bold">
+                  <NavigationArrow size={10} weight="fill" />
+                  <span>{distanceInfo.distance}</span>
+                </div>
+                <div className="flex items-center gap-1 px-1.5 py-0.5 bg-[var(--orange)]/10 text-[var(--orange)] rounded text-[10px] font-bold">
+                  <Clock size={10} weight="fill" />
+                  <span>~{distanceInfo.travelTime}</span>
+                </div>
+              </div>
+            )}
           </div>
 
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">
+          <div className="flex items-start gap-1.5 mb-3">
+            <MapPin size={16} weight="fill" className="text-[var(--primary)] flex-shrink-0 mt-0.5" />
+            <span className="text-sm text-gray-500 line-clamp-1">{umkm.location || 'Lokasi tidak tersedia'}</span>
+          </div>
+
+          <p className="text-sm text-gray-600 mb-4 line-clamp-2 flex-1 leading-relaxed">
             {umkm.description || 'Deskripsi tidak tersedia'}
           </p>
 
-          <Link
-            href={`/umkm/${umkm.id}`}
-            className="inline-block bg-[var(--primary)] hover:bg-[var(--dark)] text-white py-2.5 px-6 rounded-md text-sm font-medium transition-all duration-300 hover:shadow-md w-fit"
-          >
-            Lihat Detail
-          </Link>
-        </div>
-
-        {/* Info Card */}
-        <div className="md:w-48 flex-shrink-0 bg-gray-50 rounded-lg p-4 flex flex-col gap-3 h-fit">
-          <h6 className="font-semibold text-sm text-[var(--dark)] mb-1">Informasi Kontak</h6>
-
-          {umkm.contact && (
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-600 flex items-center gap-1">
-                <Phone size={14} weight="fill" className="text-[var(--primary)]" />
-                Telepon
-              </span>
-              <span className="font-medium text-gray-800">Ada</span>
+          <div className="flex items-center gap-3 mt-auto">
+            <Link
+              href={`/umkm/${umkm.id}`}
+              className="inline-flex items-center justify-center bg-[var(--primary)] hover:bg-[var(--dark)] text-white py-2 px-5 rounded-lg text-xs font-semibold transition-all duration-300 hover:shadow-md active:scale-[0.98]"
+            >
+              Lihat Detail
+            </Link>
+            
+            {/* Quick Stats Row */}
+            <div className="flex items-center gap-3 ml-auto text-xs text-gray-500">
+               {umkm.contact && (
+                <div className="flex items-center gap-1" title="Telepon">
+                  <Phone size={14} weight="fill" className="text-[var(--primary)]" />
+                  <span className="hidden sm:inline">Ada</span>
+                </div>
+               )}
+               <div className="flex items-center gap-1" title="Online Shop">
+                  <ShoppingBag size={14} weight="fill" className="text-[var(--primary)]" />
+                  <span>{umkm.online_shop?.length || 0}</span>
+               </div>
+               <div className="flex items-center gap-1" title="Media Sosial">
+                  <ShareNetwork size={14} weight="fill" className="text-[var(--primary)]" />
+                  <span>{umkm.media_sosial?.length || 0}</span>
+               </div>
             </div>
-          )}
-
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-600 flex items-center gap-1">
-              <ShoppingBag size={14} weight="fill" className="text-[var(--primary)]" />
-              Online Shop
-            </span>
-            <span className="font-medium text-gray-800">{umkm.online_shop?.length || 0}</span>
           </div>
-
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-600 flex items-center gap-1">
-              <ShareNetwork size={14} weight="fill" className="text-[var(--primary)]" />
-              Media Sosial
-            </span>
-            <span className="font-medium text-gray-800">{umkm.media_sosial?.length || 0}</span>
-          </div>
-
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-600 flex items-center gap-1">
-              <ImageSquare size={14} weight="fill" className="text-[var(--primary)]" />
-              Galeri Foto
-            </span>
-            <span className="font-medium text-gray-800">{umkm.umkm_galeri?.length || 0}</span>
-          </div>
-
-          {/* Distance & Time Info */}
-          {distanceInfo && (
-            <>
-              <div className="border-t border-gray-200 my-2"></div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 p-2 bg-gradient-to-r from-[var(--primary)]/10 to-[var(--primary)]/5 rounded-md border border-[var(--primary)]/20">
-                  <NavigationArrow size={16} weight="fill" className="text-[var(--primary)] flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-[var(--primary)] truncate">{distanceInfo.distance}</p>
-                    <p className="text-xs text-gray-500">dari UGM</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 p-2 bg-gradient-to-r from-[var(--orange)]/10 to-[var(--orange)]/5 rounded-md border border-[var(--orange)]/20">
-                  <Clock size={16} weight="fill" className="text-[var(--orange)] flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-[var(--orange)] truncate">~{distanceInfo.travelTime}</p>
-                    <p className="text-xs text-gray-500">estimasi</p>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
         </div>
+
+        {/* Info Card (Desktop Only) */}
+        {distanceInfo && (
+          <div className="hidden md:flex w-40 flex-shrink-0 flex-col gap-2 justify-center border-l border-gray-100 pl-4">
+            <div className="p-3 bg-[var(--primary)] text-white rounded-lg shadow-sm text-center">
+              <NavigationArrow size={20} weight="fill" className="mx-auto mb-1" />
+              <p className="text-sm font-bold">{distanceInfo.distance}</p>
+              <p className="text-[10px] opacity-90">dari UGM</p>
+            </div>
+            <div className="p-3 bg-[var(--orange)] text-white rounded-lg shadow-sm text-center">
+              <Clock size={20} weight="fill" className="mx-auto mb-1" />
+              <p className="text-sm font-bold">~{distanceInfo.travelTime}</p>
+              <p className="text-[10px] opacity-90">estimasi</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

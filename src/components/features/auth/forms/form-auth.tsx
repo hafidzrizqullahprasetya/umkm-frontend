@@ -21,7 +21,6 @@ export default function FormAuth({
   const [showPassword, setShowPassword] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
 
-
   async function handleSubmitRegister(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
@@ -126,7 +125,10 @@ export default function FormAuth({
       }
 
       // Redirect based on user role
-      const redirectPath = result && "role" in result && result.role === "administrator" ? "/admin" : "/home";
+      const redirectPath =
+        result && "role" in result && result.role === "administrator"
+          ? "/admin"
+          : "/home";
 
       toast.success(
         result && "role" in result && result.role === "administrator"
@@ -135,7 +137,7 @@ export default function FormAuth({
         {
           position: "top-center",
           autoClose: 3000,
-        }
+        },
       );
       router.push(redirectPath);
     } catch (error) {
@@ -153,6 +155,26 @@ export default function FormAuth({
       setLoading(false);
     }
   }
+
+  // Demo Credentials Helper
+  const fillDemoCredentials = (demoNumber: 1 | 2) => {
+    const emailInput = document.querySelector(
+      'input[name="email"]',
+    ) as HTMLInputElement;
+    const passwordInput = document.querySelector(
+      'input[name="password"]',
+    ) as HTMLInputElement;
+
+    if (emailInput && passwordInput) {
+      if (demoNumber === 1) {
+        emailInput.value = "pempekwongkito@email.com";
+        passwordInput.value = "password123";
+      } else {
+        emailInput.value = "admin@gmail.com";
+        passwordInput.value = "admin123";
+      }
+    }
+  };
 
   return (
     <form
@@ -277,8 +299,8 @@ export default function FormAuth({
           {loading
             ? "Memproses..."
             : isRegister
-            ? "Daftar UMKM"
-            : "Masuk ke Dashboard UMKM"}
+              ? "Daftar UMKM"
+              : "Masuk ke Dashboard"}
         </button>
       </div>
 
@@ -388,9 +410,7 @@ export default function FormAuth({
               <div className="mb-4 inline-flex items-center justify-center w-16 h-16 bg-secondary rounded-full">
                 <Lock className="text-primary" size={32} weight="bold" />
               </div>
-              <p className="text-gray-700 text-base mb-2">
-                Mohon Maaf
-              </p>
+              <p className="text-gray-700 text-base mb-2">Mohon Maaf</p>
               <p className="text-gray-600 text-sm">
                 Fitur lupa password sedang dalam masa pengembangan.
               </p>
@@ -404,6 +424,38 @@ export default function FormAuth({
               className="w-full rounded-lg py-3 font-bold text-base text-white bg-primary hover:opacity-80 active:scale-[0.98] shadow-md hover:shadow-lg transition-all"
             >
               Mengerti
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Demo Credentials Section - Login Only */}
+      {!isRegister && (
+        <div className="mt-6 pt-6 border-t border-gray-200">
+          <div className="text-center mb-4">
+            <h3 className="font-bold text-gray-700 text-sm uppercase tracking-wider">
+              Demo Credentials
+            </h3>
+            <p className="text-xs text-gray-500 mt-1">
+              Klik untuk auto-fill dan masuk ke Dashboard UMKM
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => fillDemoCredentials(1)}
+              className={`w-full rounded-lg py-3.5 font-bold text-base text-white transition-all bg-primary hover:opacity-80 active:scale-[0.98] shadow-md hover:shadow-lg`}
+            >
+              Admin UMKM
+            </button>
+
+            <button
+              type="button"
+              onClick={() => fillDemoCredentials(2)}
+              className={`w-full rounded-lg py-3.5 font-bold text-base text-white transition-all bg-primary hover:opacity-80 active:scale-[0.98] shadow-md hover:shadow-lg`}
+            >
+              Administrator
             </button>
           </div>
         </div>
